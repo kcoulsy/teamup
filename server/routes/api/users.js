@@ -21,15 +21,4 @@ router.route('/').post((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/login').post((req, res) => {
-    const { username } = req.body;
-
-    User.findOne({username})
-        .then(user => {
-            console.log(user);
-            user.createAuthToken().then(token => res.json({token}));
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
 module.exports = router;
