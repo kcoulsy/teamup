@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Card from './../Card/Card';
 
-function LoginForm() {
+import authService from '../../services/authentication';
+import history from '../../helpers/history';
+
+function LoginForm(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const defaultErrorObj = { usernameEmpty: false, passwordEmpty: false };
+    const defaultErrorObj = { usernameEmpty: false, passwordEmpty: false, invalidLogin: false };
     const [error, setError] = useState(defaultErrorObj);
+
+    if (authService.isLoggedIn()) {
+        return <Redirect to={{pathname:'/'}} />
+    };
 
     const submitForm = (ev) => {
         ev.preventDefault();
@@ -17,6 +24,17 @@ function LoginForm() {
             });
         } else {
             setError(defaultErrorObj);
+            authService.login(username, password).then((res) => {
+                if (!authService.isLoggedIn()) {
+                    setError({
+                        invalidLogin: true
+                    });
+                } else {
+                    // This is hacky - we want the component to be called once more, but only once.
+                    // So we update one var and then it will check to redirect
+                    setUsername('');
+                }
+            });
         }
     }
 
@@ -39,6 +57,7 @@ function LoginForm() {
                         <ul className="list">
                             {error.usernameEmpty ? <li>Please enter a username</li> : null}
                             {error.passwordEmpty ? <li>Please enter a password</li> : null}
+                            {error.invalidLogin ? <li>Login Invalid</li> : null}
                         </ul>
                     </div>
                 ): null}

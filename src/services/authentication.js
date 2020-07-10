@@ -8,7 +8,7 @@ function login(username, password) {
         if (!response.ok) {
             throw Error(response.statusText);
         }
-        return response;
+        return response.json();
     })
     .then(({token}) => {
         if (!token) return;

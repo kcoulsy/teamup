@@ -17,9 +17,10 @@ import Secret from './pages/Secret';
 
 import authService from './services/authentication';
 import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 
 function App() {
-    authService.login("test", "1231412s34")
+    // authService.login("test", "123141234")/
     return (
         <Router history={history}>
             <div className="App">
@@ -32,8 +33,8 @@ function App() {
                 <h1>hello world</h1>
                 <Switch>
                     <Route exact path="/"><Home /></Route>
-                    <Route path="/register"><Register /></Route>
-                    <Route path="/login"><Login /></Route>
+                    <PublicRoute path="/register"><Register /></PublicRoute>
+                    <PublicRoute path="/login"><Login /></PublicRoute>
                     <PrivateRoute path="/secret"><Secret /></PrivateRoute>
                 </Switch>
             </div>
