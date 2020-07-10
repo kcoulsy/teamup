@@ -15,7 +15,7 @@ router.route('/').post((req, res) => {
     const newUser = new User({ username });
 
     newUser.save()
-        .then(user => res.json(user))
+        .then(user => res.json(user.toJSON()))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
