@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -19,16 +19,35 @@ import authService from './services/authentication';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 
-function App() {
+function App(props) {
     // authService.login("test", "123141234")/
+    const [authState, setAuthState] = useState(authService.isLoggedIn());
+
+    // This all needs ripping out and replacing with redux
+    const handleLogout = () => {
+        authService.logout();
+        setAuthState(authService.isLoggedIn());
+    }
+
     return (
         <Router history={history}>
             <div className="App">
                 <ul>
                     <li><Link to="/">Home</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/secret">Secret</Link></li>
+                    {
+                        !authState ?
+                        (
+                            <React.Fragment>
+                                <li><Link to="/register">Register</Link></li>
+                                <li><Link to="/login">Login</Link></li>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <li><a href="#" onClick={handleLogout}>Logout</a></li>
+                                <li><Link to="/secret">Secret</Link></li>
+                            </React.Fragment>
+                        )
+                    }
                 </ul>
                 <h1>hello world</h1>
                 <Switch>
