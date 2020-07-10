@@ -8,14 +8,14 @@ function LoginForm() {
             <form className="ui form">
                 <div className="field">
                     <label>Username</label>
-                    <input type="text" name="username" placeholder="First Name" />
+                    <input type="text" name="username" placeholder="Username" />
                 </div>
                 <div className="field">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="Last Name" />
+                    <input type="password" name="password" placeholder="Password" />
                 </div>
                 <button className="ui button" type="submit">Login</button>
-                Not registered? <Link to="/register">Click here</Link>
+                Not registered? <Link to="/register">Register</Link>
             </form>
         </Card>
     );
