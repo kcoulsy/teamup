@@ -5,6 +5,9 @@ import {
     APP_INITIALISING,
     APP_INITIALISED,
     AUTH_LOGOUT,
+    AUTH_REGISTER_ATTEMPT,
+    AUTH_REGISTER_SUCCESS,
+    AUTH_REGISTER_FAIL,
 } from './../constants/actions';
 
 const initialState = {
@@ -13,6 +16,8 @@ const initialState = {
     attemptFailed: false,
     appInitialising: false,
     appInitialised: false,
+    attempingRegister: false,
+    registerErrorMsg: null,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -34,6 +39,15 @@ export default function authReducer(state = initialState, action) {
 
         case AUTH_LOGOUT:
             return Object.assign({}, state, { token: null, attemptingLogin: false, attemptFailed: false });
+
+        case AUTH_REGISTER_ATTEMPT:
+            return Object.assign({}, state, { attempingRegister: true });
+
+        case AUTH_REGISTER_SUCCESS:
+            return Object.assign({}, state, { attempingRegister: false, registerErrorMsg: null });
+
+        case AUTH_REGISTER_FAIL:
+            return Object.assign({}, state, { attempingRegister: false, registerErrorMsg: action.errorMsg });
 
         default:
             return state;

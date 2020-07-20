@@ -5,6 +5,9 @@ import {
     APP_INITIALISED,
     APP_INITIALISING,
     AUTH_LOGOUT,
+    AUTH_REGISTER_ATTEMPT,
+    AUTH_REGISTER_SUCCESS,
+    AUTH_REGISTER_FAIL,
 } from './../constants/actions';
 import { api } from './../services/api';
 
@@ -97,5 +100,42 @@ export const startLogout = () => {
 function logout() {
     return {
         type: AUTH_LOGOUT,
+    };
+}
+
+export const startRegister = ({ username, email, password, confirm }) => {
+    return async (dispatch) => {
+        dispatch(registerAttempt());
+
+        try {
+            const res = await api('auth/register', 'POST', { username, password });
+
+            if (res.username) {
+                dispatch(registerSuccess());
+            } else {
+                dispatch(registerFail('something here'));
+            }
+        } catch (err) {
+            dispatch(registerFail('something here'));
+        }
+    };
+};
+
+function registerAttempt() {
+    return {
+        type: AUTH_REGISTER_ATTEMPT,
+    };
+}
+
+function registerSuccess() {
+    return {
+        type: AUTH_REGISTER_SUCCESS,
+    };
+}
+
+function registerFail(errorMsg) {
+    return {
+        type: AUTH_REGISTER_FAIL,
+        errorMsg: errorMsg,
     };
 }

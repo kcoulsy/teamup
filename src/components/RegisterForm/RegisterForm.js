@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Card from '../Card/Card';
+import Loader from '../Loader/Loader';
 
-function RegisterForm() {
+import { startRegister } from '../../actions/auth';
+
+function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
     const MIN_USERNAME_LENGTH = 3;
     const MIN_PASS_LENGTH = 6;
     const containsNumber = (val) => /\d/.test(val);
-    const isValidEmail = (val) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val);
+    const isValidEmail = (val) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordValid, setPasswordValid] = useState(false);
+    const [registerSubmitted, setRegisterSubmitted] = useState(false);
 
     const handlePasswordInput = (ev) => {
         const input = ev.target.value.trim();
@@ -30,6 +35,7 @@ function RegisterForm() {
         confirmPasswordEmpty: false,
         passwordMismatch: false,
         passwordInvalid: false,
+        otherError: errorMsg !== null,
     };
     const [error, setError] = useState(defaultErrorObj);
 
@@ -51,7 +57,8 @@ function RegisterForm() {
         } else if (!passwordValid) {
             setError({ ...defaultErrorObj, passwordInvalid: true });
         } else {
-            // Register
+            startRegister({ username, email, password, confirm: confirmPassword });
+            setRegisterSubmitted(true);
             setError(defaultErrorObj);
         }
     };
@@ -59,66 +66,92 @@ function RegisterForm() {
     const formError = Object.values(error).includes(true);
     return (
         <Card title="Register" centered>
-            <form className={`ui form${formError ? ' error' : ''}`}>
-                <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        onChange={(ev) => setUsername(ev.target.value.trim())}
-                    />
+            {registerSubmitted && !errorMsg && !attemptingRegister ? (
+                <div>
+                    You have successfully registered! Please check your email inbox to confirm your account and head to
+                    the <Link to="/login">Login page</Link> to sign in
                 </div>
-                <div className={`field${error.emailEmpty ? ' error' : ''}`}>
-                    <label>Email</label>
-                    <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
-                        onChange={(ev) => setEmail(ev.target.value.trim())}
-                    />
-                </div>
-                <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Password" onChange={handlePasswordInput} />
-                </div>
-                <div className={`field${error.confirmPasswordEmpty ? ' error' : ''}`}>
-                    <label>Confirm Password</label>
-                    <input
-                        type="password"
-                        name="confirm"
-                        placeholder="Confirm Password"
-                        onChange={(ev) => setConfirmPassword(ev.target.value.trim())}
-                    />
-                </div>
-                <div className="field">
-                    <div className={`ui label${passwordValid ? ' green' : ''}`}>
-                        Passwords must be at least {MIN_PASS_LENGTH} characters long and contain a number.
-                    </div>
-                </div>
-                <button className="ui button" type="submit" onClick={submitForm}>
-                    Register
-                </button>
-                Already registered? <Link to="/login">Login</Link>
-                {Object.values(error).includes(true) ? (
-                    <div className="ui error message">
-                        <ul className="list">
-                            {error.usernameEmpty ? <li>Please enter a username</li> : null}
-                            {error.usernameShort ? (
-                                <li>Please enter a username which is at least {MIN_USERNAME_LENGTH} characters</li>
-                            ) : null}
-                            {error.emailEmpty ? <li>Please enter an email</li> : null}
-                            {error.emailInvalid ? <li>Please enter a valid email</li> : null}
-                            {error.passwordEmpty ? <li>Please enter a password</li> : null}
-                            {error.confirmPasswordEmpty ? <li>Please confirm your password</li> : null}
-                            {error.passwordMismatch ? <li>Passwords do not match</li> : null}
-                            {error.passwordInvalid ? <li>Please enter a valid password</li> : null}
-                        </ul>
-                    </div>
-                ) : null}
-            </form>
+            ) : (
+                <Loader isLoading={attemptingRegister} loadingText="Registering">
+                    <form className={`ui form${formError ? ' error' : ''}`}>
+                        <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                onChange={(ev) => setUsername(ev.target.value.trim())}
+                            />
+                        </div>
+                        <div className={`field${error.emailEmpty ? ' error' : ''}`}>
+                            <label>Email</label>
+                            <input
+                                type="text"
+                                name="email"
+                                placeholder="Email"
+                                onChange={(ev) => setEmail(ev.target.value.trim())}
+                            />
+                        </div>
+                        <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                onChange={handlePasswordInput}
+                            />
+                        </div>
+                        <div className={`field${error.confirmPasswordEmpty ? ' error' : ''}`}>
+                            <label>Confirm Password</label>
+                            <input
+                                type="password"
+                                name="confirm"
+                                placeholder="Confirm Password"
+                                onChange={(ev) => setConfirmPassword(ev.target.value.trim())}
+                            />
+                        </div>
+                        <div className="field">
+                            <div className={`ui label${passwordValid ? ' green' : ''}`}>
+                                Passwords must be at least {MIN_PASS_LENGTH} characters long and contain a number.
+                            </div>
+                        </div>
+                        <button className="ui button" type="submit" onClick={submitForm}>
+                            Register
+                        </button>
+                        Already registered? <Link to="/login">Login</Link>
+                        {Object.values(error).includes(true) ? (
+                            <div className="ui error message">
+                                <ul className="list">
+                                    {error.usernameEmpty ? <li>Please enter a username</li> : null}
+                                    {error.usernameShort ? (
+                                        <li>
+                                            Please enter a username which is at least {MIN_USERNAME_LENGTH} characters
+                                        </li>
+                                    ) : null}
+                                    {error.emailEmpty ? <li>Please enter an email</li> : null}
+                                    {error.emailInvalid ? <li>Please enter a valid email</li> : null}
+                                    {error.passwordEmpty ? <li>Please enter a password</li> : null}
+                                    {error.confirmPasswordEmpty ? <li>Please confirm your password</li> : null}
+                                    {error.passwordMismatch ? <li>Passwords do not match</li> : null}
+                                    {error.passwordInvalid ? <li>Please enter a valid password</li> : null}
+                                    {error.errorMsg ? <li>{errorMsg}</li> : null}
+                                </ul>
+                            </div>
+                        ) : null}
+                    </form>
+                </Loader>
+            )}
         </Card>
     );
 }
 
-export default RegisterForm;
+const mapStateToProps = (state) => {
+    return {
+        attemptingRegister: state.auth.attempingRegister,
+        errorMsg: state.auth.registerErrorMsg,
+    };
+};
+
+const mapDispatchToProps = { startRegister };
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
