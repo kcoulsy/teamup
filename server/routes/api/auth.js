@@ -13,6 +13,21 @@ router.post('/login', (req, res) => {
         .catch((err) => res.status(400).json('Error: ' + err));
 });
 
+router.get('/verify', (req, res) => {
+    const token = req.header('x-auth');
+
+    User.findByToken(token)
+        .then((user) => {
+            if (!user) return Promise.reject();
+
+            req.user = user;
+            req.token = token;
+            res.status(200).json({valid: true});
+        })
+        .catch((err) => res.status(200).json({valid: false}));
+    // we still want a 200 if this fails
+});
+
 router.post('/register', (req, res) => {
     const {username, password} = req.body;
     // TODO: validate here

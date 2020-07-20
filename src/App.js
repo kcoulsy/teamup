@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
 import history from './helpers/history';
+
+import {initialise} from './actions/auth';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -14,7 +17,8 @@ import authService from './services/authentication';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 
-function App(props) {
+function App({initialise}) {
+    initialise();
     // authService.login("test", "123141234")/
     const [authState, setAuthState] = useState(authService.isLoggedIn());
 
@@ -71,4 +75,6 @@ function App(props) {
     );
 }
 
-export default App;
+const mapDispatchToProps = {initialise};
+
+export default connect(undefined, mapDispatchToProps)(App);

@@ -1,12 +1,58 @@
-import {AUTH_LOGIN_ATTEMPT, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAIL} from './../constants/actions';
-import authService from './../services/authentication';
+import {
+    AUTH_LOGIN_ATTEMPT,
+    AUTH_LOGIN_SUCCESS,
+    AUTH_LOGIN_FAIL,
+    APP_INITIALISED,
+    APP_INITIALISING,
+} from './../constants/actions';
+import {api} from './../services/api';
+
+export const initialise = () => {
+    return async (dispatch, getState) => {
+        if (getState().auth.appInitialising) return;
+
+        dispatch(appInitialising());
+
+        const token = localStorage.getItem('userToken');
+
+        dispatch(loginAttempt());
+
+        if (typeof token === 'string') {
+            const response = await api('auth/verify', 'GET');
+
+            if (response.valid) {
+                dispatch(loginSuccess(token));
+                dispatch(appInitialised());
+            } else {
+                dispatch(loginFail());
+                dispatch(appInitialised());
+            }
+        } else {
+            dispatch(loginFail());
+            dispatch(appInitialised());
+        }
+    };
+};
+
+function appInitialised() {
+    return {
+        type: APP_INITIALISED,
+    };
+}
+
+function appInitialising() {
+    return {
+        type: APP_INITIALISING,
+    };
+}
 
 export const startLogin = (username, password) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         dispatch(loginAttempt());
 
         try {
-            const token = await authService.login(username, password);
+            const {token} = await api('auth/login', 'POST', {username, password});
+
             if (token) {
                 dispatch(loginSuccess(token));
             } else {
@@ -25,6 +71,7 @@ function loginAttempt() {
 }
 
 function loginSuccess(token) {
+    localStorage.setItem('userToken', token);
     return {
         type: AUTH_LOGIN_SUCCESS,
         token,
@@ -32,6 +79,7 @@ function loginSuccess(token) {
 }
 
 function loginFail() {
+    localStorage.removeItem('userToken');
     return {
         type: AUTH_LOGIN_FAIL,
     };
