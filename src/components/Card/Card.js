@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Card({title, children, centered, fluid}) {
+function Card({ title, children, centered, fluid }) {
     let classNames = 'ui card';
 
     if (centered) classNames += ' centered';

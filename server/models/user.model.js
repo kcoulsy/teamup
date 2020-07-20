@@ -43,9 +43,9 @@ const userSchema = new Schema(
  */
 userSchema.methods.toJSON = function () {
     const user = this;
-    const {_id, username} = user.toObject();
+    const { _id, username } = user.toObject();
 
-    return {_id, username};
+    return { _id, username };
 };
 
 /**
@@ -64,7 +64,7 @@ userSchema.methods.createAuthToken = function () {
         )
         .toString();
 
-    user.tokens = [...user.tokens, {token, access: TOKEN_ACCESS_AUTH}];
+    user.tokens = [...user.tokens, { token, access: TOKEN_ACCESS_AUTH }];
 
     return user.save().then(() => token);
 };
@@ -120,7 +120,7 @@ userSchema.pre('save', function (next) {
 userSchema.statics.findByCredentials = function (username, password) {
     const User = this;
 
-    return User.findOne({username}).then((user) => {
+    return User.findOne({ username }).then((user) => {
         if (!user) return Promise.reject();
 
         return new Promise((resolve, reject) => {

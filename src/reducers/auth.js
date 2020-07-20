@@ -18,22 +18,22 @@ const initialState = {
 export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case APP_INITIALISING:
-            return Object.assign({}, state, {appInitialising: true});
+            return Object.assign({}, state, { appInitialising: true });
 
         case APP_INITIALISED:
-            return Object.assign({}, state, {appInitialised: true});
+            return Object.assign({}, state, { appInitialised: true });
 
         case AUTH_LOGIN_ATTEMPT:
-            return Object.assign({}, state, {attemptingLogin: true, attemptFailed: false});
+            return Object.assign({}, state, { attemptingLogin: true, attemptFailed: false });
 
         case AUTH_LOGIN_SUCCESS:
-            return Object.assign({}, state, {attemptingLogin: false, token: action.token, attemptFailed: false});
+            return Object.assign({}, state, { attemptingLogin: false, token: action.token, attemptFailed: false });
 
         case AUTH_LOGIN_FAIL:
-            return Object.assign({}, state, {attemptingLogin: false, token: null, attemptFailed: true});
+            return Object.assign({}, state, { attemptingLogin: false, token: null, attemptFailed: true });
 
         case AUTH_LOGOUT:
-            return Object.assign({}, state, {token: null, attemptingLogin: false, attemptFailed: false});
+            return Object.assign({}, state, { token: null, attemptingLogin: false, attemptFailed: false });
 
         default:
             return state;

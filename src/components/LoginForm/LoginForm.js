@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {Link, Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Card from './../Card/Card';
 
 import authService from '../../services/authentication';
-import {startLogin} from './../../actions/auth';
+import { startLogin } from './../../actions/auth';
 
-function LoginForm({startLogin}) {
+function LoginForm({ startLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const defaultErrorObj = {
@@ -18,7 +18,7 @@ function LoginForm({startLogin}) {
     const [error, setError] = useState(defaultErrorObj);
 
     if (authService.isLoggedIn()) {
-        return <Redirect to={{pathname: '/'}} />;
+        return <Redirect to={{ pathname: '/' }} />;
     }
 
     const submitForm = (ev) => {
@@ -85,6 +85,6 @@ function LoginForm({startLogin}) {
     );
 }
 
-const mapDispatchToProps = {startLogin};
+const mapDispatchToProps = { startLogin };
 
 export default connect(undefined, mapDispatchToProps)(LoginForm);

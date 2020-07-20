@@ -3,7 +3,7 @@ const router = express.Router();
 
 let User = require('../../models/user.model');
 
-const {Authenticate} = require('../../middleware/authenticate');
+const { Authenticate } = require('../../middleware/authenticate');
 
 router.route('/').get(Authenticate, (req, res) => {
     User.find()

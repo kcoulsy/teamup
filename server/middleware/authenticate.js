@@ -14,4 +14,4 @@ const Authenticate = (req, res, next) => {
         .catch((err) => res.status(401).send());
 };
 
-module.exports = {Authenticate};
+module.exports = { Authenticate };

@@ -1,12 +1,12 @@
 import React from 'react';
-import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
-import {connect} from 'react-redux';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
 import history from './helpers/history';
 
-import {initialise, startLogout} from './actions/auth';
+import { initialise, startLogout } from './actions/auth';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -16,7 +16,7 @@ import Secret from './pages/Secret';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 
-function App({initialise, isLoggedIn, startLogout}) {
+function App({ initialise, isLoggedIn, startLogout }) {
     initialise();
 
     return (
@@ -72,6 +72,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = {initialise, startLogout};
+const mapDispatchToProps = { initialise, startLogout };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -6,7 +6,7 @@ import {
     APP_INITIALISING,
     AUTH_LOGOUT,
 } from './../constants/actions';
-import {api} from './../services/api';
+import { api } from './../services/api';
 
 export const initialise = () => {
     return async (dispatch, getState) => {
@@ -52,7 +52,7 @@ export const startLogin = (username, password) => {
         dispatch(loginAttempt());
 
         try {
-            const {token} = await api('auth/login', 'POST', {username, password});
+            const { token } = await api('auth/login', 'POST', { username, password });
 
             if (token) {
                 dispatch(loginSuccess(token));
