@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Card from './../Card/Card';
+import Loader from './../Loader/Loader';
 
 import { startLogin } from './../../actions/auth';
 
-function LoginForm({ startLogin }) {
+function LoginForm({ startLogin, attemptingLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const defaultErrorObj = {
@@ -32,43 +33,50 @@ function LoginForm({ startLogin }) {
     const formError = Object.values(error).includes(true);
     return (
         <Card title="Login" centered>
-            <form className={`ui form${formError ? ' error' : ''}`}>
-                <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        onChange={(ev) => setUsername(ev.target.value)}
-                    />
-                </div>
-                <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={(ev) => setPassword(ev.target.value)}
-                    />
-                </div>
-                <button className="ui button" type="submit" onClick={submitForm}>
-                    Login
-                </button>
-                Not registered? <Link to="/register">Register</Link>
-                {Object.values(error).includes(true) ? (
-                    <div className="ui error message">
-                        <ul className="list">
-                            {error.usernameEmpty ? <li>Please enter a username</li> : null}
-                            {error.passwordEmpty ? <li>Please enter a password</li> : null}
-                            {error.invalidLogin ? <li>Login Invalid</li> : null}
-                        </ul>
+            <Loader isLoading={attemptingLogin} loadingText="Logging in">
+                <form className={`ui form${formError ? ' error' : ''}`}>
+                    <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            onChange={(ev) => setUsername(ev.target.value)}
+                        />
                     </div>
-                ) : null}
-            </form>
+                    <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            onChange={(ev) => setPassword(ev.target.value)}
+                        />
+                    </div>
+                    <button className="ui button" type="submit" onClick={submitForm}>
+                        Login
+                    </button>
+                    Not registered? <Link to="/register">Register</Link>
+                    {Object.values(error).includes(true) ? (
+                        <div className="ui error message">
+                            <ul className="list">
+                                {error.usernameEmpty ? <li>Please enter a username</li> : null}
+                                {error.passwordEmpty ? <li>Please enter a password</li> : null}
+                                {error.invalidLogin ? <li>Login Invalid</li> : null}
+                            </ul>
+                        </div>
+                    ) : null}
+                </form>
+            </Loader>
         </Card>
     );
 }
 
+const mapStateToProps = (state) => {
+    return {
+        attemptingLogin: state.auth.attemptingLogin,
+    };
+};
 const mapDispatchToProps = { startLogin };
 
-export default connect(undefined, mapDispatchToProps)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
