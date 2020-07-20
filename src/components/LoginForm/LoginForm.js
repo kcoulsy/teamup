@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Card from './../Card/Card';
 
-import authService from '../../services/authentication';
 import { startLogin } from './../../actions/auth';
 
 function LoginForm({ startLogin }) {
@@ -17,10 +16,6 @@ function LoginForm({ startLogin }) {
     };
     const [error, setError] = useState(defaultErrorObj);
 
-    if (authService.isLoggedIn()) {
-        return <Redirect to={{ pathname: '/' }} />;
-    }
-
     const submitForm = (ev) => {
         ev.preventDefault();
         if (!username.length || !password.length) {
@@ -31,17 +26,6 @@ function LoginForm({ startLogin }) {
         } else {
             setError(defaultErrorObj);
             startLogin(username, password);
-            // authService.login(username, password).then((res) => {
-            //     if (!authService.isLoggedIn()) {
-            //         setError({
-            //             invalidLogin: true,
-            //         });
-            //     } else {
-            //         // This is hacky - we want the component to be called once more, but only once.
-            //         // So we update one var and then it will check to redirect
-            //         setUsername('');
-            //     }
-            // });
         }
     };
 

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import authService from '../services/authentication';
-
-function PrivateRoute({ children, ...rest }) {
+function PrivateRoute({ isLoggedIn, children, ...rest }) {
     return (
         <Route
             {...rest}
             render={(props) => {
-                if (!authService.isLoggedIn()) {
+                if (!isLoggedIn) {
                     return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
                 }
 
@@ -18,4 +17,10 @@ function PrivateRoute({ children, ...rest }) {
     );
 }
 
-export default PrivateRoute;
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: typeof state.auth.token === 'string' && state.auth.token.length,
+    };
+};
+
+export default connect(mapStateToProps)(PrivateRoute);

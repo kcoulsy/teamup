@@ -6,14 +6,12 @@ import Register from './../pages/Register';
 import Login from './../pages/Login';
 import Secret from './../pages/Secret';
 
-import history from './../helpers/history';
-
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
 function AppRouter({ children }) {
     return (
-        <Router history={history}>
+        <Router>
             {children}
             <Switch>
                 <Route exact path="/">

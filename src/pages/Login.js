@@ -2,11 +2,11 @@ import React from 'react';
 
 import LoginForm from './../components/LoginForm/LoginForm';
 
-function Login() {
+function Login(props) {
     return (
         <div>
             <h3>Login Page</h3>
-            <LoginForm />
+            <LoginForm {...props} />
         </div>
     );
 }
