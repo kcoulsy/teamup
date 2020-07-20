@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
@@ -6,27 +6,18 @@ import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
 import history from './helpers/history';
 
-import {initialise} from './actions/auth';
+import {initialise, startLogout} from './actions/auth';
 
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Secret from './pages/Secret';
 
-import authService from './services/authentication';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 
-function App({initialise}) {
+function App({initialise, isLoggedIn, startLogout}) {
     initialise();
-    // authService.login("test", "123141234")/
-    const [authState, setAuthState] = useState(authService.isLoggedIn());
-
-    // This all needs ripping out and replacing with redux
-    const handleLogout = () => {
-        authService.logout();
-        setAuthState(authService.isLoggedIn());
-    };
 
     return (
         <Router history={history}>
@@ -35,7 +26,7 @@ function App({initialise}) {
                     <li>
                         <Link to="/">Home</Link>
                     </li>
-                    {!authState ? (
+                    {!isLoggedIn ? (
                         <React.Fragment>
                             <li>
                                 <Link to="/register">Register</Link>
@@ -47,7 +38,7 @@ function App({initialise}) {
                     ) : (
                         <React.Fragment>
                             <li>
-                                <button onClick={handleLogout}>Logout</button>
+                                <button onClick={startLogout}>Logout</button>
                             </li>
                             <li>
                                 <Link to="/secret">Secret</Link>
@@ -75,6 +66,12 @@ function App({initialise}) {
     );
 }
 
-const mapDispatchToProps = {initialise};
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: typeof state.auth.token === 'string' && state.auth.token.length,
+    };
+};
 
-export default connect(undefined, mapDispatchToProps)(App);
+const mapDispatchToProps = {initialise, startLogout};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

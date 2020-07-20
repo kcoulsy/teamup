@@ -4,6 +4,7 @@ import {
     AUTH_LOGIN_FAIL,
     APP_INITIALISING,
     APP_INITIALISED,
+    AUTH_LOGOUT,
 } from './../constants/actions';
 
 const initialState = {
@@ -30,6 +31,9 @@ export default function authReducer(state = initialState, action) {
 
         case AUTH_LOGIN_FAIL:
             return Object.assign({}, state, {attemptingLogin: false, token: null, attemptFailed: true});
+
+        case AUTH_LOGOUT:
+            return Object.assign({}, state, {token: null, attemptingLogin: false, attemptFailed: false});
 
         default:
             return state;

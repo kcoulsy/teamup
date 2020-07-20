@@ -4,6 +4,7 @@ import {
     AUTH_LOGIN_FAIL,
     APP_INITIALISED,
     APP_INITIALISING,
+    AUTH_LOGOUT,
 } from './../constants/actions';
 import {api} from './../services/api';
 
@@ -82,5 +83,19 @@ function loginFail() {
     localStorage.removeItem('userToken');
     return {
         type: AUTH_LOGIN_FAIL,
+    };
+}
+
+export const startLogout = () => {
+    return async (dispatch) => {
+        // TODO: call api here and remove any tokens from the user.
+        localStorage.removeItem('userToken');
+        dispatch(logout());
+    };
+};
+
+function logout() {
+    return {
+        type: AUTH_LOGOUT,
     };
 }
