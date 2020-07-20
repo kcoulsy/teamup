@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {Link, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+
 import Card from './../Card/Card';
 
 import authService from '../../services/authentication';
+import {startLogin} from './../../actions/auth';
 
-function LoginForm(props) {
+function LoginForm({startLogin}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const defaultErrorObj = {
@@ -27,17 +30,18 @@ function LoginForm(props) {
             });
         } else {
             setError(defaultErrorObj);
-            authService.login(username, password).then((res) => {
-                if (!authService.isLoggedIn()) {
-                    setError({
-                        invalidLogin: true,
-                    });
-                } else {
-                    // This is hacky - we want the component to be called once more, but only once.
-                    // So we update one var and then it will check to redirect
-                    setUsername('');
-                }
-            });
+            startLogin(username, password);
+            // authService.login(username, password).then((res) => {
+            //     if (!authService.isLoggedIn()) {
+            //         setError({
+            //             invalidLogin: true,
+            //         });
+            //     } else {
+            //         // This is hacky - we want the component to be called once more, but only once.
+            //         // So we update one var and then it will check to redirect
+            //         setUsername('');
+            //     }
+            // });
         }
     };
 
@@ -81,4 +85,6 @@ function LoginForm(props) {
     );
 }
 
-export default LoginForm;
+const mapDispatchToProps = {startLogin};
+
+export default connect(undefined, mapDispatchToProps)(LoginForm);
