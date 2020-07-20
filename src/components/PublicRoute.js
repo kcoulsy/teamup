@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import isLoggedIn from '../helpers/isLoggedIn';
 
 function PublicRoute({ isLoggedIn, children, ...rest }) {
     return (
@@ -19,7 +20,7 @@ function PublicRoute({ isLoggedIn, children, ...rest }) {
 
 const mapStateToProps = (state) => {
     return {
-        isLoggedIn: typeof state.auth.token === 'string' && state.auth.token.length,
+        isLoggedIn: isLoggedIn(state.auth.token),
     };
 };
 

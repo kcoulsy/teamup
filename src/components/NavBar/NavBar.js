@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { startLogout } from './../../actions/auth';
+import isLoggedIn from '../../helpers/isLoggedIn';
 
 function NavBar({ isLoggedIn, startLogout }) {
     return (
@@ -34,7 +35,7 @@ function NavBar({ isLoggedIn, startLogout }) {
 }
 const mapStateToProps = (state) => {
     return {
-        isLoggedIn: typeof state.auth.token === 'string' && state.auth.token.length,
+        isLoggedIn: isLoggedIn(state.auth.token),
     };
 };
 
