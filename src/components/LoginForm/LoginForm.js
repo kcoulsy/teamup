@@ -1,33 +1,36 @@
-import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link, Redirect} from 'react-router-dom';
 import Card from './../Card/Card';
 
 import authService from '../../services/authentication';
-import history from '../../helpers/history';
 
 function LoginForm(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const defaultErrorObj = { usernameEmpty: false, passwordEmpty: false, invalidLogin: false };
+    const defaultErrorObj = {
+        usernameEmpty: false,
+        passwordEmpty: false,
+        invalidLogin: false,
+    };
     const [error, setError] = useState(defaultErrorObj);
 
     if (authService.isLoggedIn()) {
-        return <Redirect to={{pathname:'/'}} />
-    };
+        return <Redirect to={{pathname: '/'}} />;
+    }
 
     const submitForm = (ev) => {
         ev.preventDefault();
         if (!username.length || !password.length) {
             setError({
                 usernameEmpty: !username.length,
-                passwordEmpty: !password.length
+                passwordEmpty: !password.length,
             });
         } else {
             setError(defaultErrorObj);
             authService.login(username, password).then((res) => {
                 if (!authService.isLoggedIn()) {
                     setError({
-                        invalidLogin: true
+                        invalidLogin: true,
                     });
                 } else {
                     // This is hacky - we want the component to be called once more, but only once.
@@ -36,7 +39,7 @@ function LoginForm(props) {
                 }
             });
         }
-    }
+    };
 
     const formError = Object.values(error).includes(true);
     return (
@@ -44,13 +47,25 @@ function LoginForm(props) {
             <form className={`ui form${formError ? ' error' : ''}`}>
                 <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
                     <label>Username</label>
-                    <input type="text" name="username" placeholder="Username" onChange={ev => setUsername(ev.target.value)}/>
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        onChange={(ev) => setUsername(ev.target.value)}
+                    />
                 </div>
                 <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="Password" onChange={ev => setPassword(ev.target.value)}/>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        onChange={(ev) => setPassword(ev.target.value)}
+                    />
                 </div>
-                <button className="ui button" type="submit" onClick={submitForm}>Login</button>
+                <button className="ui button" type="submit" onClick={submitForm}>
+                    Login
+                </button>
                 Not registered? <Link to="/register">Register</Link>
                 {Object.values(error).includes(true) ? (
                     <div className="ui error message">
@@ -60,10 +75,10 @@ function LoginForm(props) {
                             {error.invalidLogin ? <li>Login Invalid</li> : null}
                         </ul>
                     </div>
-                ): null}
+                ) : null}
             </form>
         </Card>
     );
-};
+}
 
 export default LoginForm;

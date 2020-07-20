@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 function Card({title, children, centered, fluid}) {
     let classNames = 'ui card';
@@ -8,12 +8,12 @@ function Card({title, children, centered, fluid}) {
 
     return (
         <div className={classNames}>
-            {title ? (<div className="content">
-                <div className="header">{title}</div>
-            </div>) : null}
-            <div className="content">
-                {children}
-            </div>
+            {title ? (
+                <div className="content">
+                    <div className="header">{title}</div>
+                </div>
+            ) : null}
+            <div className="content">{children}</div>
         </div>
     );
 }

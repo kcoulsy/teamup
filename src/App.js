@@ -1,10 +1,5 @@
-import React, { useState } from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from 'react-router-dom';
+import React, {useState} from 'react';
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 
 import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
@@ -27,34 +22,49 @@ function App(props) {
     const handleLogout = () => {
         authService.logout();
         setAuthState(authService.isLoggedIn());
-    }
+    };
 
     return (
         <Router history={history}>
             <div className="App">
                 <ul>
-                    <li><Link to="/">Home</Link></li>
-                    {
-                        !authState ?
-                        (
-                            <React.Fragment>
-                                <li><Link to="/register">Register</Link></li>
-                                <li><Link to="/login">Login</Link></li>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <li><a href="#" onClick={handleLogout}>Logout</a></li>
-                                <li><Link to="/secret">Secret</Link></li>
-                            </React.Fragment>
-                        )
-                    }
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    {!authState ? (
+                        <React.Fragment>
+                            <li>
+                                <Link to="/register">Register</Link>
+                            </li>
+                            <li>
+                                <Link to="/login">Login</Link>
+                            </li>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <li>
+                                <button onClick={handleLogout}>Logout</button>
+                            </li>
+                            <li>
+                                <Link to="/secret">Secret</Link>
+                            </li>
+                        </React.Fragment>
+                    )}
                 </ul>
                 <h1>hello world</h1>
                 <Switch>
-                    <Route exact path="/"><Home /></Route>
-                    <PublicRoute path="/register"><Register /></PublicRoute>
-                    <PublicRoute path="/login"><Login /></PublicRoute>
-                    <PrivateRoute path="/secret"><Secret /></PrivateRoute>
+                    <Route exact path="/">
+                        <Home />
+                    </Route>
+                    <PublicRoute path="/register">
+                        <Register />
+                    </PublicRoute>
+                    <PublicRoute path="/login">
+                        <Login />
+                    </PublicRoute>
+                    <PrivateRoute path="/secret">
+                        <Secret />
+                    </PrivateRoute>
                 </Switch>
             </div>
         </Router>

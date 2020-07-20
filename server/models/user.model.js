@@ -4,49 +4,54 @@ const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
 
-const TOKEN_ACCESS_AUTH = "auth";
+const TOKEN_ACCESS_AUTH = 'auth';
 
-const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 3
-    },
-    password: {
-        type: String,
-        require: true,
-        minlength: 6
-    },
-    tokens: [{
-        token: {
+const userSchema = new Schema(
+    {
+        username: {
             type: String,
-            required: true
+            required: true,
+            unique: true,
+            trim: true,
+            minlength: 3,
         },
-        access: {
+        password: {
             type: String,
-            require: true
-        }
-    }]
-}, {
-    timestamps: true
-});
+            require: true,
+            minlength: 6,
+        },
+        tokens: [
+            {
+                token: {
+                    type: String,
+                    required: true,
+                },
+                access: {
+                    type: String,
+                    require: true,
+                },
+            },
+        ],
+    },
+    {
+        timestamps: true,
+    }
+);
 
 /**
  * Overriting default with Custom method to get the user object without including the password
  */
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
     const user = this;
-    const { _id, username } = user.toObject();
+    const {_id, username} = user.toObject();
 
-    return { _id, username };
-}
+    return {_id, username};
+};
 
 /**
  * Generates an auth token and saves it with the user
  */
-userSchema.methods.createAuthToken = function() {
+userSchema.methods.createAuthToken = function () {
     const user = this;
 
     const token = jwt
@@ -69,29 +74,29 @@ userSchema.methods.createAuthToken = function() {
  *
  * @param {string} token
  */
-userSchema.statics.findByToken = function(token) {
+userSchema.statics.findByToken = function (token) {
     var User = this;
     var decodedJwt;
 
     try {
         decodedJwt = jwt.verify(token, process.env.JWT_SECRET);
-    } catch(err) {
+    } catch (err) {
         return Promise.reject();
     }
 
     return User.findOne({
         _id: decodedJwt._id,
         'tokens.token': token,
-        'tokens.access': TOKEN_ACCESS_AUTH
+        'tokens.access': TOKEN_ACCESS_AUTH,
     });
-}
+};
 
 // TODO: add remove token method
 
 /**
  * Hashing passwords before saving
  */
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
     const user = this;
 
     if (user.isModified('password')) {
@@ -112,24 +117,23 @@ userSchema.pre('save', function(next) {
  * @param {string} username
  * @param {string} password
  */
-userSchema.statics.findByCredentials = function(username, password) {
+userSchema.statics.findByCredentials = function (username, password) {
     const User = this;
 
-    return User.findOne({ username })
-        .then(user => {
-            if (!user) return Promise.reject();
+    return User.findOne({username}).then((user) => {
+        if (!user) return Promise.reject();
 
-            return new Promise((resolve, reject) => {
-                bcrypt.compare(password, user.password, (err, res) => {
-                    if (res) {
-                        resolve(user);
-                    } else {
-                        reject();
-                    }
-                })
-            })
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    resolve(user);
+                } else {
+                    reject();
+                }
+            });
         });
-}
+    });
+};
 
 const User = mongoose.model('User', userSchema);
 
