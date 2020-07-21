@@ -10,7 +10,6 @@ import { startLogin } from './../../actions/auth';
 function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [submitted, setSubmitted] = useState(false);
 
     const defaultErrorObj = {
         usernameEmpty: false,
@@ -29,25 +28,11 @@ function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
             });
         } else {
             setError(defaultErrorObj);
-            setSubmitted(true);
             startLogin(username, password);
         }
     };
 
-    useEffect(() => {
-        if (formError) {
-            if (attemptingLogin) {
-                setError({ ...defaultErrorObj });
-            } else {
-                setError({
-                    ...defaultErrorObj,
-                    invalidLogin: loginAttemptFailed && submitted,
-                });
-            }
-        }
-    }, [attemptingLogin, defaultErrorObj, formError, loginAttemptFailed, submitted]);
-
-    const formError = Object.values(error).includes(true);
+    const formError = loginAttemptFailed || Object.values(error).includes(true);
 
     return (
         <Card title="Login" centered>
@@ -75,12 +60,12 @@ function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
                         Login
                     </button>
                     Not registered? <Link to="/register">Register</Link>
-                    {Object.values(error).includes(true) ? (
+                    {formError ? (
                         <div className="ui error message">
                             <ul className="list">
                                 {error.usernameEmpty ? <li>Please enter a username</li> : null}
                                 {error.passwordEmpty ? <li>Please enter a password</li> : null}
-                                {error.invalidLogin ? <li>Login Invalid</li> : null}
+                                {loginAttemptFailed ? <li>Login Invalid</li> : null}
                             </ul>
                         </div>
                     ) : null}
