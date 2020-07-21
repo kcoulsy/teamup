@@ -35,17 +35,20 @@ function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
     };
 
     useEffect(() => {
-        if (attemptingLogin) {
-            setError({ ...defaultErrorObj });
-        } else {
-            setError({
-                ...defaultErrorObj,
-                invalidLogin: loginAttemptFailed && submitted,
-            });
+        if (formError) {
+            if (attemptingLogin) {
+                setError({ ...defaultErrorObj });
+            } else {
+                setError({
+                    ...defaultErrorObj,
+                    invalidLogin: loginAttemptFailed && submitted,
+                });
+            }
         }
-    }, [attemptingLogin, defaultErrorObj, loginAttemptFailed, submitted]);
+    }, [attemptingLogin, defaultErrorObj, formError, loginAttemptFailed, submitted]);
 
     const formError = Object.values(error).includes(true);
+
     return (
         <Card title="Login" centered>
             <Loader isLoading={attemptingLogin} loadingText="Logging in">
