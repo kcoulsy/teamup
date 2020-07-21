@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -7,14 +7,17 @@ import Loader from './../Loader/Loader';
 
 import { startLogin } from './../../actions/auth';
 
-function LoginForm({ startLogin, attemptingLogin }) {
+function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+
     const defaultErrorObj = {
         usernameEmpty: false,
         passwordEmpty: false,
         invalidLogin: false,
     };
+
     const [error, setError] = useState(defaultErrorObj);
 
     const submitForm = (ev) => {
@@ -26,9 +29,21 @@ function LoginForm({ startLogin, attemptingLogin }) {
             });
         } else {
             setError(defaultErrorObj);
+            setSubmitted(true);
             startLogin(username, password);
         }
     };
+
+    useEffect(() => {
+        if (attemptingLogin) {
+            setError({ ...defaultErrorObj });
+        } else {
+            setError({
+                ...defaultErrorObj,
+                invalidLogin: loginAttemptFailed && submitted,
+            });
+        }
+    }, [attemptingLogin, defaultErrorObj, loginAttemptFailed, submitted]);
 
     const formError = Object.values(error).includes(true);
     return (
@@ -75,6 +90,7 @@ function LoginForm({ startLogin, attemptingLogin }) {
 const mapStateToProps = (state) => {
     return {
         attemptingLogin: state.auth.attemptingLogin,
+        loginAttemptFailed: state.auth.loginAttemptFailed,
     };
 };
 const mapDispatchToProps = { startLogin };
