@@ -12,7 +12,7 @@ function NavBar({ isLoggedIn, startLogout }) {
     };
 
     return (
-        <div className="ui menu">
+        <div className="ui stackable menu">
             <Link to="/" className="header item">
                 Home
             </Link>

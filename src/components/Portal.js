@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 const modalRoot = document.getElementById('modal-root');
@@ -6,7 +6,7 @@ const modalRoot = document.getElementById('modal-root');
 /**
  * https://reactjs.org/docs/portals.html
  */
-class Portal extends Component {
+class Portal extends React.Component {
     constructor(props) {
         super(props);
         this.el = document.createElement('div');
