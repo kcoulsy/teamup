@@ -35,7 +35,6 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
         confirmPasswordEmpty: false,
         passwordMismatch: false,
         passwordInvalid: false,
-        otherError: errorMsg !== null,
     };
     const [error, setError] = useState(defaultErrorObj);
 
@@ -63,7 +62,7 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
         }
     };
 
-    const formError = Object.values(error).includes(true);
+    const formError = errorMsg || Object.values(error).includes(true);
     return (
         <Card title="Register" centered>
             {registerSubmitted && !errorMsg && !attemptingRegister ? (
@@ -119,7 +118,7 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
                             Register
                         </button>
                         Already registered? <Link to="/login">Login</Link>
-                        {Object.values(error).includes(true) ? (
+                        {errorMsg ? (
                             <div className="ui error message">
                                 <ul className="list">
                                     {error.usernameEmpty ? <li>Please enter a username</li> : null}
@@ -134,7 +133,7 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
                                     {error.confirmPasswordEmpty ? <li>Please confirm your password</li> : null}
                                     {error.passwordMismatch ? <li>Passwords do not match</li> : null}
                                     {error.passwordInvalid ? <li>Please enter a valid password</li> : null}
-                                    {error.errorMsg ? <li>{errorMsg}</li> : null}
+                                    {errorMsg ? <li>{errorMsg}</li> : null}
                                 </ul>
                             </div>
                         ) : null}

@@ -108,15 +108,15 @@ export const startRegister = ({ username, email, password, confirm }) => {
         dispatch(registerAttempt());
 
         try {
-            const res = await api('auth/register', 'POST', { username, password });
+            const res = await api('auth/register', 'POST', { username, email, password, confirm });
 
             if (res.username) {
                 dispatch(registerSuccess());
             } else {
-                dispatch(registerFail('something here'));
+                dispatch(registerFail(res.error));
             }
         } catch (err) {
-            dispatch(registerFail('something here'));
+            dispatch(registerFail('Something went wrong'));
         }
     };
 };
