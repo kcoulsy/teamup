@@ -6,6 +6,8 @@ The project uses ESLint and Prettier for consistent formatting. This includes a 
 
 For UI it uses [Fomantic UI](https://fomantic-ui.com/) (a fork from Semantic UI).
 
+Commits follow [ConventionalCommits](https://www.conventionalcommits.org/en/v1.0.0/) guidelines with a pre-commit hook to check.
+
 The intention of the project is to create a starting off point for creating Progressive Web Apps, without having to setup everything up every time. So this includes a complete login system and development tools to get going straight away.
 
 ## Available Scripts
