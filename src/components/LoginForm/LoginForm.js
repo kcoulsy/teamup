@@ -7,7 +7,7 @@ import Loader from './../Loader/Loader';
 
 import { startLogin } from './../../actions/auth';
 
-function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
+export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -75,7 +75,7 @@ function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
     );
 }
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     return {
         attemptingLogin: state.auth.attemptingLogin,
         loginAttemptFailed: state.auth.loginAttemptFailed,

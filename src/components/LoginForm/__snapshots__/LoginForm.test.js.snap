@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render login form component should call startLogin on submit 1`] = `
+<Card
+  centered={true}
+  title="Login"
+>
+  <Loader
+    loadingText="Logging in"
+  >
+    <form
+      className="ui form"
+    >
+      <div
+        className="field"
+      >
+        <label>
+          Username
+        </label>
+        <input
+          name="username"
+          onChange={[Function]}
+          placeholder="Username"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Password
+        </label>
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          type="password"
+        />
+      </div>
+      <button
+        className="ui button"
+        onClick={[Function]}
+        type="submit"
+      >
+        Login
+      </button>
+      Not registered? 
+      <Link
+        to="/register"
+      >
+        Register
+      </Link>
+    </form>
+  </Loader>
+</Card>
+`;
+
+exports[`render login form component should render LoginForm component 1`] = `
+<Card
+  centered={true}
+  title="Login"
+>
+  <Loader
+    loadingText="Logging in"
+  >
+    <form
+      className="ui form"
+    >
+      <div
+        className="field"
+      >
+        <label>
+          Username
+        </label>
+        <input
+          name="username"
+          onChange={[Function]}
+          placeholder="Username"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Password
+        </label>
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          type="password"
+        />
+      </div>
+      <button
+        className="ui button"
+        onClick={[Function]}
+        type="submit"
+      >
+        Login
+      </button>
+      Not registered? 
+      <Link
+        to="/register"
+      >
+        Register
+      </Link>
+    </form>
+  </Loader>
+</Card>
+`;
