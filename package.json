@@ -21,6 +21,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
+        "test:c": "react-scripts test --coverage --watchAll=false",
         "lint": "eslint ./src ./server",
         "lint:fix": "eslint --fix ./src ./server",
         "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\""
