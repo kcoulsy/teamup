@@ -38,13 +38,13 @@ export const initialise = () => {
     };
 };
 
-function appInitialised() {
+export function appInitialised() {
     return {
         type: APP_INITIALISED,
     };
 }
 
-function appInitialising() {
+export function appInitialising() {
     return {
         type: APP_INITIALISING,
     };
@@ -68,13 +68,13 @@ export const startLogin = (username, password) => {
     };
 };
 
-function loginAttempt() {
+export function loginAttempt() {
     return {
         type: AUTH_LOGIN_ATTEMPT,
     };
 }
 
-function loginSuccess(token) {
+export function loginSuccess(token) {
     localStorage.setItem('userToken', token);
     return {
         type: AUTH_LOGIN_SUCCESS,
@@ -82,7 +82,7 @@ function loginSuccess(token) {
     };
 }
 
-function loginFail() {
+export function loginFail() {
     localStorage.removeItem('userToken');
     return {
         type: AUTH_LOGIN_FAIL,
@@ -97,7 +97,7 @@ export const startLogout = () => {
     };
 };
 
-function logout() {
+export function logout() {
     return {
         type: AUTH_LOGOUT,
     };
@@ -121,19 +121,19 @@ export const startRegister = ({ username, email, password, confirm }) => {
     };
 };
 
-function registerAttempt() {
+export function registerAttempt() {
     return {
         type: AUTH_REGISTER_ATTEMPT,
     };
 }
 
-function registerSuccess() {
+export function registerSuccess() {
     return {
         type: AUTH_REGISTER_SUCCESS,
     };
 }
 
-function registerFail(errorMsg) {
+export function registerFail(errorMsg) {
     return {
         type: AUTH_REGISTER_FAIL,
         errorMsg: errorMsg,
