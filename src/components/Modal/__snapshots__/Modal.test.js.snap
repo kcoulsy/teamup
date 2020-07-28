@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render modal component should be active if isActive is true 1`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible  active"
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="content"
+      />
+      <div
+        className="actions"
+      />
+    </div>
+  </div>
+</Portal>
+`;
+
+exports[`render modal component should render buttons when actions are passed 1`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible "
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="content"
+      />
+      <div
+        className="actions"
+      />
+      <div
+        className="actions"
+      >
+        <div
+          className="ui button testbutton"
+          key="Test Button_0"
+          onClick={[Function]}
+        >
+          Test Button
+        </div>
+      </div>
+    </div>
+  </div>
+</Portal>
+`;
+
+exports[`render modal component should render children 1`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible "
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="content"
+      >
+        <p>
+          JSX Child
+        </p>
+      </div>
+      <div
+        className="actions"
+      />
+    </div>
+  </div>
+</Portal>
+`;
+
+exports[`render modal component should render correctly 1`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible "
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="content"
+      />
+      <div
+        className="actions"
+      />
+    </div>
+  </div>
+</Portal>
+`;
+
+exports[`render modal component should render headerTitle 1`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible "
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="header"
+      >
+        test title
+      </div>
+      <div
+        className="content"
+      />
+      <div
+        className="actions"
+      />
+    </div>
+  </div>
+</Portal>
+`;
+
+exports[`render modal component should render headerTitle 2`] = `
+<Portal>
+  <div
+    className="ui dimmer modals page visible "
+    style={
+      Object {
+        "display": "flex !important",
+      }
+    }
+  >
+    <div
+      className="ui standard test modal visible active front"
+      style={
+        Object {
+          "display": "flex !important",
+        }
+      }
+    >
+      <div
+        className="header"
+      >
+        <h4>
+          Test Title
+        </h4>
+      </div>
+      <div
+        className="content"
+      />
+      <div
+        className="actions"
+      />
+    </div>
+  </div>
+</Portal>
+`;
