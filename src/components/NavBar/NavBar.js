@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { startLogout } from './../../actions/auth';
 import isLoggedIn from '../../helpers/isLoggedIn';
 
-function NavBar({ isLoggedIn, startLogout }) {
+export function NavBar({ isLoggedIn, startLogout }) {
     const handleLogout = (ev) => {
         ev.preventDefault();
         startLogout();
@@ -31,7 +31,7 @@ function NavBar({ isLoggedIn, startLogout }) {
                         <Link to="/secret" className="item">
                             Secret
                         </Link>
-                        <a href="/" className="item" onClick={handleLogout}>
+                        <a href="/" className="item" id="logout" onClick={handleLogout}>
                             Logout
                         </a>
                     </Fragment>
@@ -40,7 +40,8 @@ function NavBar({ isLoggedIn, startLogout }) {
         </div>
     );
 }
-const mapStateToProps = (state) => {
+
+export const mapStateToProps = (state) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
     };
