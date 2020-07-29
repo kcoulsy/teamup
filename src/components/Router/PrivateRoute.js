@@ -3,22 +3,20 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import isLoggedIn from '../../helpers/isLoggedIn';
 
-function PrivateRoute({ isLoggedIn, children, ...rest }) {
-    return (
-        <Route
-            {...rest}
-            render={(props) => {
-                if (!isLoggedIn) {
-                    return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
-                }
+export const PrivateRoute = ({ isLoggedIn, children, ...rest }) => {
+    return <Route {...rest} render={privateRouteRender(isLoggedIn, children)} />;
+};
 
-                return children;
-            }}
-        />
-    );
-}
+export const privateRouteRender = (isLoggedIn, children) => {
+    return (props) => {
+        if (!isLoggedIn) {
+            return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
+        }
 
-const mapStateToProps = (state) => {
+        return children;
+    };
+};
+export const mapStateToProps = (state) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
     };
