@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render AppRouter component should render AppRouter component 1`] = `
+<BrowserRouter>
+  <Switch>
+    <Route
+      exact={true}
+      path="/"
+    >
+      <Home />
+    </Route>
+    <Connect(PublicRoute)
+      path="/register"
+    >
+      <Register />
+    </Connect(PublicRoute)>
+    <Connect(PublicRoute)
+      path="/login"
+    >
+      <Login />
+    </Connect(PublicRoute)>
+    <Connect(PrivateRoute)
+      path="/secret"
+    >
+      <Secret />
+    </Connect(PrivateRoute)>
+  </Switch>
+</BrowserRouter>
+`;
