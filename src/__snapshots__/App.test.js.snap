@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render AppRouter component should render AppRouter component 1`] = `
+<AppRouter>
+  <div
+    className="App"
+  >
+    <Connect(NavBar) />
+    <h1>
+      hello world
+    </h1>
+  </div>
+</AppRouter>
+`;

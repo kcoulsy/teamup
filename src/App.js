@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 
 import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
-import { initialise, startLogout } from './actions/auth';
+import { initialise } from './actions/auth';
 
 import AppRouter from './components/Router/AppRouter';
 import NavBar from './components/NavBar/NavBar';
 
-function App({ initialise, isLoggedIn, startLogout }) {
+export const App = ({ initialise }) => {
     initialise();
 
     return (
@@ -19,14 +19,8 @@ function App({ initialise, isLoggedIn, startLogout }) {
             </div>
         </AppRouter>
     );
-}
-
-const mapStateToProps = (state) => {
-    return {
-        isLoggedIn: typeof state.auth.token === 'string' && state.auth.token.length,
-    };
 };
 
-const mapDispatchToProps = { initialise, startLogout };
+const mapDispatchToProps = { initialise };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(undefined, mapDispatchToProps)(App);
