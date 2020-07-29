@@ -8,9 +8,9 @@ import {
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-} from './../constants/actions';
+} from './../../constants/actions';
 
-import reducer from './auth';
+import reducer from './../auth';
 
 describe('auth reducer', () => {
     const initialStateSearch = {

@@ -8,7 +8,8 @@ import {
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-} from './../constants/actions';
+} from './../../constants/actions';
+
 import {
     initialise,
     appInitialised,
@@ -23,10 +24,10 @@ import {
     startLogin,
     startLogout,
     startRegister,
-} from './auth';
+} from './../auth';
 
-import { testUsers } from './../services/__mocks__/api';
-jest.mock('./../services/api');
+import { testUsers } from './../../services/__mocks__/api';
+jest.mock('./../../services/api');
 
 describe('auth actions INITIALISE', () => {
     it('should not initialise if already initialising', () => {
