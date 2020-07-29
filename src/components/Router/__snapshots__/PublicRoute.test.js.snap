@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render PublicRoute component should handle isLoggedIn prop 1`] = `
+<Route
+  render={[Function]}
+/>
+`;
+
+exports[`render PublicRoute component should handle publicRouteRender prop 1`] = `
+<ContextConsumer>
+  <Component />
+</ContextConsumer>
+`;
+
+exports[`render PublicRoute component should handle publicRouteRender when logged in 1`] = `
+<ContextConsumer>
+  <Component />
+</ContextConsumer>
+`;
+
+exports[`render PublicRoute component should handle publicRouteRender when not logged in 1`] = `
+<p>
+  JSX Child
+</p>
+`;
+
+exports[`render PublicRoute component should render PublicRoute component 1`] = `
+<Route
+  render={[Function]}
+/>
+`;
