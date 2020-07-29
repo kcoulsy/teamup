@@ -29,6 +29,9 @@
     "jest": {
         "snapshotSerializers": [
             "enzyme-to-json/serializer"
+        ],
+        "coveragePathIgnorePatterns": [
+            "<rootDir>/src/index.js"
         ]
     },
     "eslintConfig": {
