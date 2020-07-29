@@ -25,6 +25,7 @@ import {
     startRegister,
 } from './auth';
 
+import { testUsers } from './../services/__mocks__/api';
 jest.mock('./../services/api');
 
 describe('auth actions INITIALISE', () => {
@@ -74,7 +75,7 @@ describe('auth actions INITIALISE', () => {
     it('should create an action to initialize app with valid token', async () => {
         const dispatch = jest.fn();
         const getState = jest.fn();
-        const token = 'thisisatoken';
+        const token = testUsers[0].token;
 
         getState.mockReturnValueOnce({
             auth: {
@@ -102,7 +103,6 @@ describe('auth actions INITIALISE', () => {
     it('should create an action to initialize app without valid token', async () => {
         const dispatch = jest.fn();
         const getState = jest.fn();
-        const token = 'thisisatoken';
 
         getState.mockReturnValueOnce({
             auth: {
@@ -143,17 +143,18 @@ describe('auth actions INITIALISE', () => {
 describe('auth actions LOGIN', () => {
     it('should create an action to startLogin with success', async () => {
         const dispatch = jest.fn();
-        const startLoginDispatch = startLogin('testuser1', '123');
+        const { username, password, token } = testUsers[0];
+        const startLoginDispatch = startLogin(username, password);
 
         await startLoginDispatch(dispatch);
 
         expect(dispatch).toHaveBeenCalledWith(loginAttempt());
-        expect(dispatch).toHaveBeenCalledWith(loginSuccess('testusertoken'));
+        expect(dispatch).toHaveBeenCalledWith(loginSuccess(token));
     });
 
     it('should create an action to startLogin with fail', async () => {
         const dispatch = jest.fn();
-        const startLoginDispatch = startLogin('testuser2', '123');
+        const startLoginDispatch = startLogin('invalidusername', 'password');
 
         await startLoginDispatch(dispatch);
 
@@ -178,7 +179,7 @@ describe('auth actions LOGIN', () => {
     });
 
     it('should create an action creator to set login success', () => {
-        const testToken = 'testtoken';
+        const testToken = testUsers[0].token;
 
         jest.spyOn(global.localStorage.__proto__, 'setItem');
 
@@ -237,7 +238,7 @@ describe('auth actions REGISTER', () => {
     it('should create an action to startRegister with fail', async () => {
         const dispatch = jest.fn();
         const startRegisterDispatch = startRegister({
-            username: 'testuser1', // mock api will fail with this username
+            username: testUsers[0].username, // mock api will fail with this username
             email: 'test@test.com',
             password: '123',
             confirm: '123',
