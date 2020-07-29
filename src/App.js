@@ -5,7 +5,7 @@ import '../node_modules/fomantic-ui/dist/semantic.min.css';
 
 import { initialise, startLogout } from './actions/auth';
 
-import AppRouter from './components/AppRouter';
+import AppRouter from './components/Router/AppRouter';
 import NavBar from './components/NavBar/NavBar';
 
 function App({ initialise, isLoggedIn, startLogout }) {
