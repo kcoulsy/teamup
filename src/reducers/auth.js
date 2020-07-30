@@ -16,7 +16,7 @@ const initialState = {
     loginAttemptFailed: false,
     appInitialising: false,
     appInitialised: false,
-    attempingRegister: false,
+    attemptingRegister: false,
     registerErrorMsg: null,
 };
 
@@ -41,13 +41,13 @@ export default function authReducer(state = initialState, action) {
             return Object.assign({}, state, { token: null, attemptingLogin: false, loginAttemptFailed: false });
 
         case AUTH_REGISTER_ATTEMPT:
-            return Object.assign({}, state, { attempingRegister: true });
+            return Object.assign({}, state, { attemptingRegister: true });
 
         case AUTH_REGISTER_SUCCESS:
-            return Object.assign({}, state, { attempingRegister: false, registerErrorMsg: null });
+            return Object.assign({}, state, { attemptingRegister: false, registerErrorMsg: null });
 
         case AUTH_REGISTER_FAIL:
-            return Object.assign({}, state, { attempingRegister: false, registerErrorMsg: action.errorMsg });
+            return Object.assign({}, state, { attemptingRegister: false, registerErrorMsg: action.errorMsg });
 
         default:
             return state;

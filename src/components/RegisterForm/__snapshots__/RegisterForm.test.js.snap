@@ -1,0 +1,186 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render login form component should render RegisterForm component 1`] = `
+<Card
+  centered={true}
+  title="Register"
+>
+  <Loader
+    loadingText="Registering"
+  >
+    <form
+      className="ui form"
+    >
+      <div
+        className="field"
+      >
+        <label>
+          Username
+        </label>
+        <input
+          name="username"
+          onChange={[Function]}
+          placeholder="Username"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Email
+        </label>
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="Email"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Password
+        </label>
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          type="password"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Confirm Password
+        </label>
+        <input
+          name="confirm"
+          onChange={[Function]}
+          placeholder="Confirm Password"
+          type="password"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <div
+          className="ui label"
+        >
+          Passwords must be at least 
+          6
+           characters long and contain a number.
+        </div>
+      </div>
+      <button
+        className="ui button"
+        onClick={[Function]}
+        type="submit"
+      >
+        Register
+      </button>
+      Already registered? 
+      <Link
+        to="/login"
+      >
+        Login
+      </Link>
+    </form>
+  </Loader>
+</Card>
+`;
+
+exports[`render login form component should show loader with attemptingRegister 1`] = `
+<Card
+  centered={true}
+  title="Register"
+>
+  <Loader
+    isLoading={true}
+    loadingText="Registering"
+  >
+    <form
+      className="ui form"
+    >
+      <div
+        className="field"
+      >
+        <label>
+          Username
+        </label>
+        <input
+          name="username"
+          onChange={[Function]}
+          placeholder="Username"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Email
+        </label>
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="Email"
+          type="text"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Password
+        </label>
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          type="password"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <label>
+          Confirm Password
+        </label>
+        <input
+          name="confirm"
+          onChange={[Function]}
+          placeholder="Confirm Password"
+          type="password"
+        />
+      </div>
+      <div
+        className="field"
+      >
+        <div
+          className="ui label"
+        >
+          Passwords must be at least 
+          6
+           characters long and contain a number.
+        </div>
+      </div>
+      <button
+        className="ui button"
+        onClick={[Function]}
+        type="submit"
+      >
+        Register
+      </button>
+      Already registered? 
+      <Link
+        to="/login"
+      >
+        Login
+      </Link>
+    </form>
+  </Loader>
+</Card>
+`;

@@ -19,7 +19,7 @@ describe('auth reducer', () => {
         loginAttemptFailed: false,
         appInitialising: false,
         appInitialised: false,
-        attempingRegister: false,
+        attemptingRegister: false,
         registerErrorMsg: null,
     };
 
@@ -82,7 +82,7 @@ describe('auth reducer', () => {
             reducer(initialStateSearch, {
                 type: AUTH_REGISTER_ATTEMPT,
             })
-        ).toEqual({ ...initialStateSearch, attempingRegister: true });
+        ).toEqual({ ...initialStateSearch, attemptingRegister: true });
     });
 
     it('should handle AUTH_REGISTER_SUCCESS', () => {
@@ -90,7 +90,7 @@ describe('auth reducer', () => {
             reducer(initialStateSearch, {
                 type: AUTH_REGISTER_SUCCESS,
             })
-        ).toEqual({ ...initialStateSearch, attempingRegister: false, registerErrorMsg: null });
+        ).toEqual({ ...initialStateSearch, attemptingRegister: false, registerErrorMsg: null });
     });
 
     it('should handle AUTH_REGISTER_FAIL', () => {
@@ -100,6 +100,6 @@ describe('auth reducer', () => {
                 type: AUTH_REGISTER_FAIL,
                 errorMsg,
             })
-        ).toEqual({ ...initialStateSearch, attempingRegister: false, registerErrorMsg: errorMsg });
+        ).toEqual({ ...initialStateSearch, attemptingRegister: false, registerErrorMsg: errorMsg });
     });
 });

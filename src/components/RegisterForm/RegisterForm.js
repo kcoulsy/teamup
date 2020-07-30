@@ -6,7 +6,7 @@ import Loader from '../Loader/Loader';
 
 import { startRegister } from '../../actions/auth';
 
-function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
+export const RegisterForm = ({ attemptingRegister, errorMsg, startRegister }) => {
     const MIN_USERNAME_LENGTH = 3;
     const MIN_PASS_LENGTH = 6;
     const containsNumber = (val) => /\d/.test(val);
@@ -55,7 +55,7 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
             setError({ ...defaultErrorObj, emailInvalid: true });
         } else if (!passwordValid) {
             setError({ ...defaultErrorObj, passwordInvalid: true });
-        } else {
+        } else if (!errorMsg) {
             startRegister({ username, email, password, confirm: confirmPassword });
             setRegisterSubmitted(true);
             setError(defaultErrorObj);
@@ -118,22 +118,34 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
                             Register
                         </button>
                         Already registered? <Link to="/login">Login</Link>
-                        {errorMsg ? (
+                        {formError ? (
                             <div className="ui error message">
                                 <ul className="list">
-                                    {error.usernameEmpty ? <li>Please enter a username</li> : null}
+                                    {error.usernameEmpty ? (
+                                        <li data-error="username-empty">Please enter a username</li>
+                                    ) : null}
                                     {error.usernameShort ? (
-                                        <li>
+                                        <li data-error="username-short">
                                             Please enter a username which is at least {MIN_USERNAME_LENGTH} characters
                                         </li>
                                     ) : null}
-                                    {error.emailEmpty ? <li>Please enter an email</li> : null}
-                                    {error.emailInvalid ? <li>Please enter a valid email</li> : null}
-                                    {error.passwordEmpty ? <li>Please enter a password</li> : null}
-                                    {error.confirmPasswordEmpty ? <li>Please confirm your password</li> : null}
-                                    {error.passwordMismatch ? <li>Passwords do not match</li> : null}
-                                    {error.passwordInvalid ? <li>Please enter a valid password</li> : null}
-                                    {errorMsg ? <li>{errorMsg}</li> : null}
+                                    {error.emailEmpty ? <li data-error="email-empty">Please enter an email</li> : null}
+                                    {error.emailInvalid ? (
+                                        <li data-error="email-invalid">Please enter a valid email</li>
+                                    ) : null}
+                                    {error.passwordEmpty ? (
+                                        <li data-error="password-empty">Please enter a password</li>
+                                    ) : null}
+                                    {error.confirmPasswordEmpty ? (
+                                        <li data-error="confirm-empty">Please confirm your password</li>
+                                    ) : null}
+                                    {error.passwordMismatch ? (
+                                        <li data-error="password-mismatch">Passwords do not match</li>
+                                    ) : null}
+                                    {error.passwordInvalid ? (
+                                        <li data-error="password-invalid">Please enter a valid password</li>
+                                    ) : null}
+                                    {errorMsg ? <li data-error="error-msg">{errorMsg}</li> : null}
                                 </ul>
                             </div>
                         ) : null}
@@ -142,11 +154,11 @@ function RegisterForm({ attemptingRegister, errorMsg, startRegister }) {
             )}
         </Card>
     );
-}
+};
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     return {
-        attemptingRegister: state.auth.attempingRegister,
+        attemptingRegister: state.auth.attemptingRegister,
         errorMsg: state.auth.registerErrorMsg,
     };
 };
