@@ -1,23 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const modalRoot = document.getElementById('modal-root');
-
 /**
  * https://reactjs.org/docs/portals.html
  */
 class Portal extends React.Component {
     constructor(props) {
         super(props);
+        this.modalRoot = document.getElementById('modal-root');
         this.el = document.createElement('div');
     }
 
     componentDidMount() {
-        modalRoot.appendChild(this.el);
+        this.modalRoot.appendChild(this.el);
     }
 
     componentWillUnmount() {
-        modalRoot.removeChild(this.el);
+        this.modalRoot.removeChild(this.el);
     }
 
     render() {
