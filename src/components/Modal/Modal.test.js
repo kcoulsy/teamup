@@ -47,14 +47,21 @@ describe('render modal component', () => {
 
     it('should render buttons when actions are passed', () => {
         let count = 0;
-        const buttonLabel = 'Test Button';
+        const incLabel = 'Inc';
+        const decLabel = 'Dec';
         const actions = [
             {
-                buttonLabel,
+                buttonLabel: incLabel,
                 onClick: () => {
                     count++;
                 },
                 klasses: 'testbutton',
+            },
+            {
+                buttonLabel: decLabel,
+                onClick: () => {
+                    count--;
+                },
             },
         ];
 
@@ -64,7 +71,7 @@ describe('render modal component', () => {
         const buttonWrapper = wrapper.find('.testbutton');
 
         expect(buttonWrapper.length).toBe(1);
-        expect(buttonWrapper.contains(buttonLabel)).toBe(true);
+        expect(buttonWrapper.contains(incLabel)).toBe(true);
         expect(count).toBe(0);
         buttonWrapper.simulate('click');
         expect(count).toBe(1);

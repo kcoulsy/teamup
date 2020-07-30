@@ -58,10 +58,17 @@ exports[`render modal component should render buttons when actions are passed 1`
       >
         <div
           className="ui button testbutton"
-          key="Test Button_0"
+          key="Inc_0"
           onClick={[Function]}
         >
-          Test Button
+          Inc
+        </div>
+        <div
+          className="ui button"
+          key="Dec_1"
+          onClick={[Function]}
+        >
+          Dec
         </div>
       </div>
     </div>
