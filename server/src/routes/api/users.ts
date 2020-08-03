@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // Unused but left in as an example of using the Auth middleware
@@ -13,4 +14,4 @@ const router = express.Router();
 //         .catch((err) => res.status(400).json('Error: ' + err));
 // });
 
-module.exports = router;
+export default router;

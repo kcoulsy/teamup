@@ -1,12 +1,38 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import mongoose, { Document, Schema, Model } from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
+import { TOKEN_ACCESS_AUTH } from '../constants/auth';
 
-const Schema = mongoose.Schema;
+export interface UserAccessTokenData {
+    _id: string,
+    access: string
+}
 
-const TOKEN_ACCESS_AUTH = 'auth';
+export interface UserAccessToken {
+    token: string,
+    access: string
+}
 
-const userSchema = new Schema(
+interface IUserSchema extends Document {
+    username: string,
+    email: string,
+    password: string,
+}
+
+interface IUserBase extends IUserSchema {
+    createAuthToken(): Promise<string>
+}
+
+export interface IUser extends IUserBase {
+    tokens: UserAccessToken[]
+}
+
+export interface IUserModel extends Model<IUser> {
+    findByToken(token: string): Promise<IUser>
+    findByCredentials(username : string, password : string): Promise<IUser>
+}
+
+const userSchema : Schema = new Schema(
     {
         username: {
             type: String,
@@ -81,17 +107,16 @@ userSchema.methods.createAuthToken = function () {
  *
  * @param {string} token
  */
-userSchema.statics.findByToken = function (token) {
-    var User = this;
-    var decodedJwt;
+userSchema.statics.findByToken = function (token: string) {
+    let decodedJwt : UserAccessTokenData;
 
     try {
-        decodedJwt = jwt.verify(token, process.env.JWT_SECRET);
+        decodedJwt = jwt.verify(token, process.env.JWT_SECRET) as UserAccessTokenData;
     } catch (err) {
         return Promise.reject();
     }
 
-    return User.findOne({
+    return this.findOne({
         _id: decodedJwt._id,
         'tokens.token': token,
         'tokens.access': TOKEN_ACCESS_AUTH,
@@ -104,11 +129,11 @@ userSchema.statics.findByToken = function (token) {
  * Hashing passwords before saving
  */
 userSchema.pre('save', function (next) {
-    const user = this;
+    const user = this as IUser;
 
     if (user.isModified('password')) {
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(user.password, salt, (err, hash) => {
+        bcrypt.genSalt(10, (_, salt) => {
+            bcrypt.hash(user.password, salt, (__, hash) => {
                 user.password = hash;
                 next();
             });
@@ -124,10 +149,10 @@ userSchema.pre('save', function (next) {
  * @param {string} username
  * @param {string} password
  */
-userSchema.statics.findByCredentials = function (username, password) {
-    const User = this;
+userSchema.statics.findByCredentials = function (username : string, password : string) {
+    // const User = this;
 
-    return User.findOne({ username }).then((user) => {
+    return this.findOne({ username }).then((user: IUser) => {
         if (!user) return Promise.reject();
 
         return new Promise((resolve, reject) => {
@@ -142,6 +167,4 @@ userSchema.statics.findByCredentials = function (username, password) {
     });
 };
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+export default mongoose.model<IUser, IUserModel>('User', userSchema);

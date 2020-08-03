@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const config = require('./config/config');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+
+import config from './config/config';
+import apiRouter from './routes/api';
 
 const app = express();
 
@@ -17,10 +18,10 @@ mongoose.connect(config.mongo.uri, {
 
 const connection = mongoose.connection;
 connection.once('open', () => {
+    // tslint:disable-next-line
     console.log('MongoDB connection established');
 });
 
-const apiRouter = require('./routes/api');
 app.use('/api', apiRouter);
 
-module.exports = app;
+export default app;

@@ -1,8 +1,9 @@
-const User = require('../models/user.model');
+import User from '../models/user.model';
+import * as express from 'express';
+import { RES_AUTH_HEADER } from '../constants/auth'
+import { NextFunction} from 'express';
 
-const { RES_AUTH_HEADER } = require('../constants/auth');
-
-const Authenticate = (req, res, next) => {
+const Authenticate = (req : express.Request, res : express.Response, next : NextFunction) => {
     const token = req.header(RES_AUTH_HEADER);
 
     User.findByToken(token)
