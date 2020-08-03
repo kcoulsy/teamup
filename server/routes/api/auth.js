@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
+const isValidEmail = require('../../utils/isValidEmail');
+const containsNumber = require('../../utils/containsNumber');
+const { MIN_PASSWORD_LEN, MIN_USER_LEN, RES_AUTH_HEADER } = require('../../constants/auth');
+
 let User = require('../../models/user.model');
 
 router.post('/login', (req, res) => {
@@ -14,7 +18,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/verify', (req, res) => {
-    const token = req.header('x-auth');
+    const token = req.header(RES_AUTH_HEADER);
 
     User.findByToken(token)
         .then((user) => {
@@ -29,11 +33,7 @@ router.get('/verify', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const MIN_USER_LEN = 3; // Move this to a constants file
-    const MIN_PASSWORD_LEN = 6;
     const { username, email, password, confirm } = req.body;
-    const containsNumber = (val) => /\d/.test(val); // Move to a helpers file
-    const isValidEmail = (val) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val);
     const error400WithMsg = (msg) => res.status(400).json({ error: msg });
 
     try {

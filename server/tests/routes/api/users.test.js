@@ -1,6 +1,9 @@
 const request = require('supertest');
 const app = require('../../../app');
 const User = require('../../../models/user.model');
+const { RES_AUTH_HEADER, MIN_USER_LEN, MIN_PASSWORD_LEN } = require('../../../constants/auth');
+const containsNumber = require('../../../utils/containsNumber');
+const isValidEmail = require('../../../utils/isValidEmail');
 
 const userOne = {
     username: 'testuser',
@@ -86,6 +89,8 @@ describe('POST /api/auth/register', () => {
             password: 'password123',
             confirm: 'password123',
         };
+        expect(newUser.username.length < MIN_USER_LEN).toBeTruthy();
+
         await request(app)
             .post('/api/auth/register')
             .send({ ...newUser })
@@ -99,6 +104,7 @@ describe('POST /api/auth/register', () => {
             password: 'password123',
             confirm: 'password123',
         };
+        expect(isValidEmail(newUser.email)).toBeFalsy();
         await request(app)
             .post('/api/auth/register')
             .send({ ...newUser })
@@ -108,10 +114,11 @@ describe('POST /api/auth/register', () => {
         // PASSWORDS NOT VALID - TOO SHORT
         const newUserOne = {
             username: 'thisisatest',
-            email: 'NOTANEMAIL',
+            email: 'testemail@email.com',
             password: 'abc',
             confirm: 'abc',
         };
+        expect(newUserOne.password.length < MIN_PASSWORD_LEN).toBeTruthy();
         await request(app)
             .post('/api/auth/register')
             .send({ ...newUserOne })
@@ -120,10 +127,13 @@ describe('POST /api/auth/register', () => {
         // PASSWORDS NOT VALID - NO NUMBER
         const newUserTwo = {
             username: 'thisisatest',
-            email: 'NOTANEMAIL',
+            email: 'testemail@email.com',
             password: 'abcdefchi',
             confirm: 'abcdefchi',
         };
+
+        expect(containsNumber(newUserTwo.password)).toBeFalsy();
+
         await request(app)
             .post('/api/auth/register')
             .send({ ...newUserTwo })
@@ -132,10 +142,13 @@ describe('POST /api/auth/register', () => {
         // PASSWORDS NOT MATCHING
         const newUserThree = {
             username: 'a',
-            email: 'NOTANEMAIL',
+            email: 'testemail@email.com',
             password: 'password123',
             confirm: 'dontmatch',
         };
+
+        expect(newUserThree.password).not.toBe(newUserThree.confirm);
+
         await request(app)
             .post('/api/auth/register')
             .send({ ...newUserThree })
@@ -148,7 +161,7 @@ describe('POST /api/auth/verify', () => {
         const testUser = await User.findOne({ username: userOne.username });
         await request(app)
             .get('/api/auth/verify')
-            .set('x-auth', testUser.tokens[0].token)
+            .set(RES_AUTH_HEADER, testUser.tokens[0].token)
             .expect(200)
             .expect((res) => {
                 expect(res.body.valid).toBeTruthy();
@@ -158,7 +171,7 @@ describe('POST /api/auth/verify', () => {
     it('should return false if token is not valid', async () => {
         await request(app)
             .get('/api/auth/verify')
-            .set('x-auth', 'invalidtoken')
+            .set(RES_AUTH_HEADER, 'invalidtoken')
             .expect(200)
             .expect((res) => {
                 expect(res.body.valid).toBeFalsy();
