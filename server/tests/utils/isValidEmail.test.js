@@ -1,4 +1,4 @@
-const isValidEmail = require('../../utils/isValidEmail');
+const isValidEmail = require('../../src/utils/isValidEmail');
 
 describe('isValidEmail helper method', () => {
     const validEmail = 'hello@email.com';

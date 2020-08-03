@@ -1,9 +1,9 @@
 const request = require('supertest');
-const app = require('../../../app');
-const User = require('../../../models/user.model');
-const { RES_AUTH_HEADER, MIN_USER_LEN, MIN_PASSWORD_LEN } = require('../../../constants/auth');
-const containsNumber = require('../../../utils/containsNumber');
-const isValidEmail = require('../../../utils/isValidEmail');
+const app = require('../../../src/app');
+const User = require('../../../src/models/user.model');
+const { RES_AUTH_HEADER, MIN_USER_LEN, MIN_PASSWORD_LEN } = require('../../../src/constants/auth');
+const containsNumber = require('../../../src/utils/containsNumber');
+const isValidEmail = require('../../../src/utils/isValidEmail');
 
 const userOne = {
     username: 'testuser',
