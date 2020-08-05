@@ -1,9 +1,10 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const User = require('../../../src/models/user.model');
-const { RES_AUTH_HEADER, MIN_USER_LEN, MIN_PASSWORD_LEN } = require('../../../src/constants/auth');
-const containsNumber = require('../../../src/utils/containsNumber');
-const isValidEmail = require('../../../src/utils/isValidEmail');
+import request from 'supertest';
+import app from '../../../app';
+import User from '../../../models/user.model';
+import { RES_AUTH_HEADER, MIN_USER_LEN, MIN_PASSWORD_LEN } from '../../../constants/auth';
+
+import containsNumber from '../../../utils/containsNumber';
+import isValidEmail from '../../../utils/isValidEmail';
 
 const userOne = {
     username: 'testuser',
@@ -12,7 +13,7 @@ const userOne = {
 };
 
 beforeEach(async () => {
-    await User.deleteMany();
+    await User.deleteMany({});
     const user = await new User({ ...userOne }).save();
     await user.createAuthToken();
 });
@@ -26,7 +27,7 @@ describe('POST /api/auth/login', () => {
                 password: userOne.password,
             })
             .expect(200)
-            .expect((res) => {
+            .expect((res: request.Response) => {
                 expect(res.body.token).not.toBeUndefined();
             });
     });

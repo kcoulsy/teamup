@@ -1,4 +1,4 @@
-const isValidEmail = require('../../src/utils/isValidEmail');
+import isValidEmail from '../../utils/isValidEmail';
 
 describe('isValidEmail helper method', () => {
     const validEmail = 'hello@email.com';

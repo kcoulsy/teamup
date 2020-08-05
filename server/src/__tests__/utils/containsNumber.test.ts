@@ -1,4 +1,4 @@
-const containsNumber = require('../../src/utils/containsNumber');
+import containsNumber from '../../utils/containsNumber';
 
 describe('containsNumber helper method', () => {
     const stringWithNumber = 'hello123';
