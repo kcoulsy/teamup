@@ -8,7 +8,11 @@ import { initialise } from './actions/auth';
 import AppRouter from './components/Router/AppRouter';
 import NavBar from './components/NavBar/NavBar';
 
-export const App = ({ initialise }) => {
+interface AppProps {
+    initialise: Function;
+}
+
+export const App : React.FunctionComponent<AppProps> = ({ initialise }) => {
     initialise();
 
     return (
