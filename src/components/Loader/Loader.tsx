@@ -1,6 +1,12 @@
 import React, { Fragment } from 'react';
 
-function Loader({ isLoading, loadingText, dark, children }) {
+interface LoaderProps {
+    isLoading: boolean;
+    loadingText: string;
+    dark: boolean;
+}
+
+const Loader: React.FunctionComponent<LoaderProps> = ({ isLoading, loadingText, dark, children }) => {
     let classNames = 'ui dimmer';
 
     if (isLoading) classNames += ' active';
