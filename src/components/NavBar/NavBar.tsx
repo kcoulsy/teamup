@@ -2,11 +2,16 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { startLogout } from './../../actions/auth';
+import { startLogout } from '../../actions/auth';
 import isLoggedIn from '../../helpers/isLoggedIn';
 
-export function NavBar({ isLoggedIn, startLogout }) {
-    const handleLogout = (ev) => {
+interface NavBarProps {
+    isLoggedIn: boolean;
+    startLogout: Function;
+}
+
+export const NavBar: React.FunctionComponent<NavBarProps> = ({ isLoggedIn, startLogout }) => {
+    const handleLogout = (ev: React.MouseEvent<HTMLAnchorElement>) => {
         ev.preventDefault();
         startLogout();
     };
@@ -41,7 +46,8 @@ export function NavBar({ isLoggedIn, startLogout }) {
     );
 }
 
-export const mapStateToProps = (state) => {
+// TODO : ROOT STATE TYPE
+export const mapStateToProps = (state: { auth: { token: string } }) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
     };
