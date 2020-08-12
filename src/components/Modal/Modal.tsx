@@ -1,19 +1,20 @@
 import React from 'react';
 
-import Portal from './../Portal/Portal';
+import Portal from '../Portal/Portal';
 
-/**
- * Modal
- *
- * @param {actionsObject[]} actions - an array of objects containing button details
- *
- * @interface actionsObject
- * @type {Object}
- * @property {string} buttonLabel -label for the buttons
- * @property {function} onClick - onClick event handlers
- * @property {string} klasses - single string appended to existing classNames
- */
-function Modal({ isActive = false, children, headerTitle, actions = [] }) {
+export interface ModalAction {
+    buttonLabel: string;
+    onClick: Function;
+    klasses: string[];
+}
+
+interface ModalProps {
+    isActive: boolean;
+    headerTitle?: string;
+    actions: ModalAction[];
+}
+
+const Modal: React.FunctionComponent<ModalProps> = ({ isActive = false, children, headerTitle, actions = [] }) => {
     return (
         <Portal>
             <div
@@ -31,8 +32,16 @@ function Modal({ isActive = false, children, headerTitle, actions = [] }) {
 
                                 if (actionObj.klasses) klasses += ` ${actionObj.klasses}`;
 
+                                const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+                                    event.preventDefault();
+                                    actionObj.onClick();
+                                }
+
                                 return (
-                                    <div key={key} className={klasses} onClick={actionObj.onClick}>
+                                    <div
+                                        key={key}
+                                        className={klasses}
+                                        onClick={handleClick}>
                                         {actionObj.buttonLabel}
                                     </div>
                                 );
@@ -43,6 +52,6 @@ function Modal({ isActive = false, children, headerTitle, actions = [] }) {
             </div>
         </Portal>
     );
-}
+};
 
 export default Modal;

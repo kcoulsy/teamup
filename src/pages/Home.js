@@ -3,8 +3,7 @@ import Modal from '../components/Modal/Modal';
 
 function Home() {
     const [modalActive, setModalActive] = useState(true);
-    const toggleModal = (ev) => {
-        ev.preventDefault();
+    const toggleModal = () => {
         setModalActive(!modalActive);
     };
     return (
