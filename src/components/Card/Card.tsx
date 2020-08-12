@@ -1,6 +1,12 @@
 import React from 'react';
 
-function Card({ title, children, centered, fluid }) {
+interface CardProps {
+    title: string;
+    centered: boolean;
+    fluid: boolean;
+}
+
+const Card : React.FunctionComponent<CardProps> = ({ title, children, centered, fluid }) => {
     let classNames = 'ui card';
 
     if (centered) classNames += ' centered';
