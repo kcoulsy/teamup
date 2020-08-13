@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../components/Modal/Modal';
 
-function Home() {
+const Home: React.FunctionComponent = () => {
     const [modalActive, setModalActive] = useState(true);
     const toggleModal = () => {
         setModalActive(!modalActive);
@@ -15,11 +15,17 @@ function Home() {
             <Modal
                 headerTitle="hello"
                 isActive={modalActive}
-                actions={[{ buttonLabel: 'Close', klasses: 'positive right labeled icon ', onClick: toggleModal }]}>
+                actions={[
+                    {
+                        buttonLabel: 'Close',
+                        klasses: 'positive right labeled icon ',
+                        onClick: toggleModal,
+                    },
+                ]}>
                 this is content
             </Modal>
         </div>
     );
-}
+};
 
 export default Home;

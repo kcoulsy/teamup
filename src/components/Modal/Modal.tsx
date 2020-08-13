@@ -5,7 +5,7 @@ import Portal from '../Portal/Portal';
 export interface ModalAction {
     buttonLabel: string;
     onClick: Function;
-    klasses: string[];
+    klasses: string;
 }
 
 interface ModalProps {
