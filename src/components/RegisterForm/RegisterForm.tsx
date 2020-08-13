@@ -5,6 +5,12 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 
 import { startRegister } from '../../actions/auth';
+import containsNumber from '../../helpers/containsNumber';
+import isValidEmail from '../../helpers/isValidEmail';
+import {
+    MIN_USERNAME_LENGTH,
+    MIN_PASS_LENGTH,
+} from './../../constants/register';
 
 interface RegisterFormProps {
     attemptingRegister: boolean;
@@ -22,12 +28,11 @@ interface RegisterFormErrorObj {
     passwordMismatch?: boolean;
     passwordInvalid?: boolean;
 }
-export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attemptingRegister, errorMsg, startRegister }) => {
-    // TODO Move a lot of this out of here
-    const MIN_USERNAME_LENGTH = 3;
-    const MIN_PASS_LENGTH = 6;
-    const containsNumber = (val: string) => /\d/.test(val);
-    const isValidEmail = (val: string) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val);
+export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({
+    attemptingRegister,
+    errorMsg,
+    startRegister,
+}) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -40,7 +45,9 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
 
         setPassword(ev.target.value);
 
-        setPasswordValid(input.length >= MIN_PASS_LENGTH && containsNumber(input));
+        setPasswordValid(
+            input.length >= MIN_PASS_LENGTH && containsNumber(input)
+        );
     };
 
     const defaultErrorObj = {
@@ -57,7 +64,12 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
 
     const submitForm = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.preventDefault();
-        if (!username.length || !email.length || !password.length || !confirmPassword.length) {
+        if (
+            !username.length ||
+            !email.length ||
+            !password.length ||
+            !confirmPassword.length
+        ) {
             setError({
                 usernameEmpty: !username.length,
                 emailEmpty: !email.length,
@@ -73,7 +85,12 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
         } else if (!passwordValid) {
             setError({ ...defaultErrorObj, passwordInvalid: true });
         } else if (!errorMsg) {
-            startRegister({ username, email, password, confirm: confirmPassword });
+            startRegister({
+                username,
+                email,
+                password,
+                confirm: confirmPassword,
+            });
             setRegisterSubmitted(true);
             setError(defaultErrorObj);
         }
@@ -84,31 +101,47 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
         <Card title="Register" centered>
             {registerSubmitted && !errorMsg && !attemptingRegister ? (
                 <div>
-                    You have successfully registered! Please check your email inbox to confirm your account and head to
-                    the <Link to="/login">Login page</Link> to sign in
+                    You have successfully registered! Please check your email
+                    inbox to confirm your account and head to the{' '}
+                    <Link to="/login">Login page</Link> to sign in
                 </div>
             ) : (
-                <Loader isLoading={attemptingRegister} loadingText="Registering">
+                <Loader
+                    isLoading={attemptingRegister}
+                    loadingText="Registering">
                     <form className={`ui form${formError ? ' error' : ''}`}>
-                        <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
+                        <div
+                            className={`field${
+                                error.usernameEmpty ? ' error' : ''
+                            }`}>
                             <label>Username</label>
                             <input
                                 type="text"
                                 name="username"
                                 placeholder="Username"
-                                onChange={(ev) => setUsername(ev.target.value.trim())}
+                                onChange={(ev) =>
+                                    setUsername(ev.target.value.trim())
+                                }
                             />
                         </div>
-                        <div className={`field${error.emailEmpty ? ' error' : ''}`}>
+                        <div
+                            className={`field${
+                                error.emailEmpty ? ' error' : ''
+                            }`}>
                             <label>Email</label>
                             <input
                                 type="text"
                                 name="email"
                                 placeholder="Email"
-                                onChange={(ev) => setEmail(ev.target.value.trim())}
+                                onChange={(ev) =>
+                                    setEmail(ev.target.value.trim())
+                                }
                             />
                         </div>
-                        <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
+                        <div
+                            className={`field${
+                                error.passwordEmpty ? ' error' : ''
+                            }`}>
                             <label>Password</label>
                             <input
                                 type="password"
@@ -117,21 +150,33 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
                                 onChange={handlePasswordInput}
                             />
                         </div>
-                        <div className={`field${error.confirmPasswordEmpty ? ' error' : ''}`}>
+                        <div
+                            className={`field${
+                                error.confirmPasswordEmpty ? ' error' : ''
+                            }`}>
                             <label>Confirm Password</label>
                             <input
                                 type="password"
                                 name="confirm"
                                 placeholder="Confirm Password"
-                                onChange={(ev) => setConfirmPassword(ev.target.value.trim())}
+                                onChange={(ev) =>
+                                    setConfirmPassword(ev.target.value.trim())
+                                }
                             />
                         </div>
                         <div className="field">
-                            <div className={`ui label${passwordValid ? ' green' : ''}`}>
-                                Passwords must be at least {MIN_PASS_LENGTH} characters long and contain a number.
+                            <div
+                                className={`ui label${
+                                    passwordValid ? ' green' : ''
+                                }`}>
+                                Passwords must be at least {MIN_PASS_LENGTH}{' '}
+                                characters long and contain a number.
                             </div>
                         </div>
-                        <button className="ui button" type="submit" onClick={submitForm}>
+                        <button
+                            className="ui button"
+                            type="submit"
+                            onClick={submitForm}>
                             Register
                         </button>
                         Already registered? <Link to="/login">Login</Link>
@@ -139,30 +184,52 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
                             <div className="ui error message">
                                 <ul className="list">
                                     {error.usernameEmpty ? (
-                                        <li data-error="username-empty">Please enter a username</li>
+                                        <li data-error="username-empty">
+                                            Please enter a username
+                                        </li>
                                     ) : null}
                                     {error.usernameShort ? (
                                         <li data-error="username-short">
-                                            Please enter a username which is at least {MIN_USERNAME_LENGTH} characters
+                                            Please enter a username which is at
+                                            least {MIN_USERNAME_LENGTH}{' '}
+                                            characters
                                         </li>
                                     ) : null}
-                                    {error.emailEmpty ? <li data-error="email-empty">Please enter an email</li> : null}
+                                    {error.emailEmpty ? (
+                                        <li data-error="email-empty">
+                                            Please enter an email
+                                        </li>
+                                    ) : null}
                                     {error.emailInvalid ? (
-                                        <li data-error="email-invalid">Please enter a valid email</li>
+                                        <li data-error="email-invalid">
+                                            Please enter a valid email
+                                        </li>
                                     ) : null}
                                     {error.passwordEmpty ? (
-                                        <li data-error="password-empty">Please enter a password</li>
+                                        <li data-error="password-empty">
+                                            Please enter a password
+                                        </li>
                                     ) : null}
                                     {error.confirmPasswordEmpty ? (
-                                        <li data-error="confirm-empty">Please confirm your password</li>
+                                        <li data-error="confirm-empty">
+                                            Please confirm your password
+                                        </li>
                                     ) : null}
                                     {error.passwordMismatch ? (
-                                        <li data-error="password-mismatch">Passwords do not match</li>
+                                        <li data-error="password-mismatch">
+                                            Passwords do not match
+                                        </li>
                                     ) : null}
                                     {error.passwordInvalid ? (
-                                        <li data-error="password-invalid">Please enter a valid password</li>
+                                        <li data-error="password-invalid">
+                                            Please enter a valid password
+                                        </li>
                                     ) : null}
-                                    {errorMsg ? <li data-error="error-msg">{errorMsg}</li> : null}
+                                    {errorMsg ? (
+                                        <li data-error="error-msg">
+                                            {errorMsg}
+                                        </li>
+                                    ) : null}
                                 </ul>
                             </div>
                         ) : null}
@@ -173,7 +240,9 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attem
     );
 };
 
-export const mapStateToProps = (state: { auth: { attemptingRegister: boolean; registerErrorMsg: string; }}) => {
+export const mapStateToProps = (state: {
+    auth: { attemptingRegister: boolean; registerErrorMsg: string };
+}) => {
     return {
         attemptingRegister: state.auth.attemptingRegister,
         errorMsg: state.auth.registerErrorMsg,
