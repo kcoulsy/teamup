@@ -6,11 +6,28 @@ import Loader from '../Loader/Loader';
 
 import { startRegister } from '../../actions/auth';
 
-export const RegisterForm = ({ attemptingRegister, errorMsg, startRegister }) => {
+interface RegisterFormProps {
+    attemptingRegister: boolean;
+    errorMsg?: string;
+    startRegister: Function;
+}
+
+interface RegisterFormErrorObj {
+    usernameShort?: boolean;
+    usernameEmpty?: boolean;
+    emailEmpty?: boolean;
+    emailInvalid?: boolean;
+    passwordEmpty?: boolean;
+    confirmPasswordEmpty?: boolean;
+    passwordMismatch?: boolean;
+    passwordInvalid?: boolean;
+}
+export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({ attemptingRegister, errorMsg, startRegister }) => {
+    // TODO Move a lot of this out of here
     const MIN_USERNAME_LENGTH = 3;
     const MIN_PASS_LENGTH = 6;
-    const containsNumber = (val) => /\d/.test(val);
-    const isValidEmail = (val) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val);
+    const containsNumber = (val: string) => /\d/.test(val);
+    const isValidEmail = (val: string) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,7 +35,7 @@ export const RegisterForm = ({ attemptingRegister, errorMsg, startRegister }) =>
     const [passwordValid, setPasswordValid] = useState(false);
     const [registerSubmitted, setRegisterSubmitted] = useState(false);
 
-    const handlePasswordInput = (ev) => {
+    const handlePasswordInput = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const input = ev.target.value.trim();
 
         setPassword(ev.target.value);
@@ -36,9 +53,9 @@ export const RegisterForm = ({ attemptingRegister, errorMsg, startRegister }) =>
         passwordMismatch: false,
         passwordInvalid: false,
     };
-    const [error, setError] = useState(defaultErrorObj);
+    const [error, setError] = useState<RegisterFormErrorObj>(defaultErrorObj);
 
-    const submitForm = (ev) => {
+    const submitForm = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.preventDefault();
         if (!username.length || !email.length || !password.length || !confirmPassword.length) {
             setError({
@@ -156,7 +173,7 @@ export const RegisterForm = ({ attemptingRegister, errorMsg, startRegister }) =>
     );
 };
 
-export const mapStateToProps = (state) => {
+export const mapStateToProps = (state: { auth: { attemptingRegister: boolean; registerErrorMsg: string; }}) => {
     return {
         attemptingRegister: state.auth.attemptingRegister,
         errorMsg: state.auth.registerErrorMsg,
