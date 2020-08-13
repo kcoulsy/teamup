@@ -2,8 +2,8 @@ import React from 'react';
 
 interface CardProps {
     title: string;
-    centered: boolean;
-    fluid: boolean;
+    centered?: boolean;
+    fluid?: boolean;
 }
 
 const Card : React.FunctionComponent<CardProps> = ({ title, children, centered, fluid }) => {

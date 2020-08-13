@@ -2,12 +2,28 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Card from './../Card/Card';
-import Loader from './../Loader/Loader';
+import Card from '../Card/Card';
+import Loader from '../Loader/Loader';
 
-import { startLogin } from './../../actions/auth';
+import { startLogin } from '../../actions/auth';
 
-export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
+interface LoginFormProps {
+    startLogin: Function;
+    attemptingLogin: boolean;
+    loginAttemptFailed: boolean;
+}
+
+interface LoginFormErrorStateObj {
+    usernameEmpty?: boolean;
+    passwordEmpty?: boolean;
+    invalidLogin?: boolean;
+}
+
+export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
+    startLogin,
+    attemptingLogin,
+    loginAttemptFailed,
+}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -17,9 +33,9 @@ export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
         invalidLogin: false,
     };
 
-    const [error, setError] = useState(defaultErrorObj);
+    const [error, setError] = useState<LoginFormErrorStateObj>(defaultErrorObj);
 
-    const submitForm = (ev) => {
+    const submitForm = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.preventDefault();
         if (!username.length || !password.length) {
             setError({
@@ -38,7 +54,10 @@ export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
         <Card title="Login" centered>
             <Loader isLoading={attemptingLogin} loadingText="Logging in">
                 <form className={`ui form${formError ? ' error' : ''}`}>
-                    <div className={`field${error.usernameEmpty ? ' error' : ''}`}>
+                    <div
+                        className={`field${
+                            error.usernameEmpty ? ' error' : ''
+                        }`}>
                         <label>Username</label>
                         <input
                             type="text"
@@ -47,7 +66,10 @@ export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
                             onChange={(ev) => setUsername(ev.target.value)}
                         />
                     </div>
-                    <div className={`field${error.passwordEmpty ? ' error' : ''}`}>
+                    <div
+                        className={`field${
+                            error.passwordEmpty ? ' error' : ''
+                        }`}>
                         <label>Password</label>
                         <input
                             type="password"
@@ -56,16 +78,25 @@ export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
                             onChange={(ev) => setPassword(ev.target.value)}
                         />
                     </div>
-                    <button className="ui button" type="submit" onClick={submitForm}>
+                    <button
+                        className="ui button"
+                        type="submit"
+                        onClick={submitForm}>
                         Login
                     </button>
                     Not registered? <Link to="/register">Register</Link>
                     {formError ? (
                         <div className="ui error message">
                             <ul className="list">
-                                {error.usernameEmpty ? <li>Please enter a username</li> : null}
-                                {error.passwordEmpty ? <li>Please enter a password</li> : null}
-                                {loginAttemptFailed ? <li>Login Invalid</li> : null}
+                                {error.usernameEmpty ? (
+                                    <li>Please enter a username</li>
+                                ) : null}
+                                {error.passwordEmpty ? (
+                                    <li>Please enter a password</li>
+                                ) : null}
+                                {loginAttemptFailed ? (
+                                    <li>Login Invalid</li>
+                                ) : null}
                             </ul>
                         </div>
                     ) : null}
@@ -73,9 +104,10 @@ export function LoginForm({ startLogin, attemptingLogin, loginAttemptFailed }) {
             </Loader>
         </Card>
     );
-}
+};
 
-export const mapStateToProps = (state) => {
+// TODO ROOT STATE
+export const mapStateToProps = (state: { auth: { attemptingLogin: boolean; loginAttemptFailed: boolean; }}) => {
     return {
         attemptingLogin: state.auth.attemptingLogin,
         loginAttemptFailed: state.auth.loginAttemptFailed,

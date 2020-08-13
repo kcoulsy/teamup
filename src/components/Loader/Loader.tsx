@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 
 interface LoaderProps {
     isLoading: boolean;
-    loadingText: string;
-    dark: boolean;
+    loadingText?: string;
+    dark?: boolean;
 }
 
 const Loader: React.FunctionComponent<LoaderProps> = ({ isLoading, loadingText, dark, children }) => {
