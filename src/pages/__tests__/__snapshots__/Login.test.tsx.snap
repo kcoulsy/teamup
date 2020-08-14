@@ -5,6 +5,6 @@ exports[`render Login component should render Login page component 1`] = `
   <h3>
     Login Page
   </h3>
-  <Connect(LoginForm) />
+  <Connect(Component) />
 </div>
 `;

@@ -5,6 +5,6 @@ exports[`render Register component should render Register page component 1`] = `
   <h3>
     Register Page
   </h3>
-  <Connect(RegisterForm) />
+  <Connect(Component) />
 </div>
 `;
