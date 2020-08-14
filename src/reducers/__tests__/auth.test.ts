@@ -8,23 +8,23 @@ import {
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-} from './../../constants/actions';
+} from './../../types/actions';
+import { AuthState } from './../../types/auth';
 
-import reducer from './../auth';
+import reducer from '../auth';
 
 describe('auth reducer', () => {
-    const initialStateSearch = {
+    const initialStateSearch : AuthState = {
         attemptingLogin: false,
         token: null,
         loginAttemptFailed: false,
         appInitialising: false,
         appInitialised: false,
         attemptingRegister: false,
-        registerErrorMsg: null,
     };
 
     it('should return the initial state', () => {
-        expect(reducer(undefined, {})).toEqual(initialStateSearch);
+        expect(reducer()).toEqual(initialStateSearch);
     });
 
     it('should handle APP_INITIALISING', () => {

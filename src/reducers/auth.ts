@@ -24,9 +24,9 @@ const initialState: AuthState = {
 
 export default function authReducer(
     state = initialState,
-    action: AppActions
+    action?: AppActions
 ) : AuthState {
-    switch (action.type) {
+    switch (action?.type) {
         case APP_INITIALISING:
             return Object.assign({}, state, { appInitialising: true });
 
