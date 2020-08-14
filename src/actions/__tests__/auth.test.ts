@@ -8,7 +8,7 @@ import {
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-} from './../../constants/actions';
+} from '../../types/actions';
 
 import {
     initialise,
@@ -24,9 +24,9 @@ import {
     startLogin,
     startLogout,
     startRegister,
-} from './../auth';
+} from '../auth';
 
-import { testUsers } from './../../services/__mocks__/api';
+import { testUsers } from '../../services/__mocks__/api';
 jest.mock('./../../services/api');
 
 describe('auth actions INITIALISE', () => {
@@ -86,9 +86,11 @@ describe('auth actions INITIALISE', () => {
 
         const startInitialiseDispatch = initialise();
 
-        jest.spyOn(global.localStorage.__proto__, 'getItem').mockImplementation(function () {
-            return token;
-        });
+        jest.spyOn(global.localStorage.__proto__, 'getItem').mockImplementation(
+            function () {
+                return token;
+            }
+        );
 
         await startInitialiseDispatch(dispatch, getState);
 
@@ -113,9 +115,11 @@ describe('auth actions INITIALISE', () => {
 
         const startInitialiseDispatch = initialise();
 
-        jest.spyOn(global.localStorage.__proto__, 'getItem').mockImplementation(function () {
-            return 'invalidtoken';
-        });
+        jest.spyOn(global.localStorage.__proto__, 'getItem').mockImplementation(
+            function () {
+                return 'invalidtoken';
+            }
+        );
 
         await startInitialiseDispatch(dispatch, getState);
 
@@ -263,7 +267,9 @@ describe('auth actions REGISTER', () => {
         await startRegisterDispatch(dispatch);
 
         expect(dispatch).toHaveBeenCalledWith(registerAttempt());
-        expect(dispatch).toHaveBeenCalledWith(registerFail('Something went wrong'));
+        expect(dispatch).toHaveBeenCalledWith(
+            registerFail('Something went wrong')
+        );
     });
 
     it('should create an action creator to set register attempt', () => {

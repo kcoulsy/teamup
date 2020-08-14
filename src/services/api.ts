@@ -1,10 +1,10 @@
-export enum ApiMethod {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    PATCH = 'PATCH',
-    DELETE = 'DELETE'
-}
+export const API_GET = 'GET';
+export const API_POST = 'POST';
+export const API_PUT = 'PUT';
+export const API_PATCH = 'PATCH';
+export const API_DELETE = 'DELETE';
+
+export type ApiMethod = typeof API_GET | typeof API_POST | typeof API_PUT | typeof API_PATCH | typeof API_DELETE;
 
 interface configBody extends RequestInit {
     method: ApiMethod;
@@ -22,7 +22,7 @@ export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
         config.headers = { ...config.headers, 'x-auth': token };
     }
 
-    if (method !== ApiMethod.GET) {
+    if (method !== API_GET) {
         config.body = JSON.stringify(bodyObject);
     }
 
