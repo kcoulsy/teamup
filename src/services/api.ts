@@ -1,5 +1,18 @@
-export const api = async (path, method, bodyObject = {}) => {
-    const config = {
+export enum ApiMethod {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    PATCH = 'PATCH',
+    DELETE = 'DELETE'
+}
+
+interface configBody extends RequestInit {
+    method: ApiMethod;
+    body?: string;
+}
+
+export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
+    const config: configBody = {
         method: method,
         headers: { 'Content-Type': 'application/json' },
     };
@@ -9,7 +22,7 @@ export const api = async (path, method, bodyObject = {}) => {
         config.headers = { ...config.headers, 'x-auth': token };
     }
 
-    if (method !== 'GET') {
+    if (method !== ApiMethod.GET) {
         config.body = JSON.stringify(bodyObject);
     }
 

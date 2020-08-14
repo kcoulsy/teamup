@@ -10,7 +10,7 @@ import {
     AUTH_REGISTER_FAIL,
     AppActions
 } from '../types/actions';
-import { api } from '../services/api';
+import { api, ApiMethod } from '../services/api';
 import { Dispatch } from '@reduxjs/toolkit';
 import { RootState } from '../store/configure';
 
@@ -25,7 +25,7 @@ export const initialise = () => {
         dispatch(loginAttempt());
 
         if (typeof token === 'string') {
-            const response = await api('auth/verify', 'GET');
+            const response = await api('auth/verify', ApiMethod.GET);
 
             if (response.valid) {
                 dispatch(loginSuccess(token));
@@ -58,7 +58,7 @@ export const startLogin = (username: string, password: string) => {
         dispatch(loginAttempt());
 
         try {
-            const { token } = await api('auth/login', 'POST', {
+            const { token } = await api('auth/login', ApiMethod.POST, {
                 username,
                 password,
             });
@@ -121,7 +121,7 @@ export const startRegister = ({ username, email, password, confirm }: IRegister)
         dispatch(registerAttempt());
 
         try {
-            const res = await api('auth/register', 'POST', {
+            const res = await api('auth/register', ApiMethod.POST, {
                 username,
                 email,
                 password,
