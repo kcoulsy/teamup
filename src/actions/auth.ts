@@ -8,11 +8,14 @@ import {
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-} from './../constants/actions';
-import { api } from './../services/api';
+    AppActions
+} from '../types/actions';
+import { api } from '../services/api';
+import { Dispatch } from '@reduxjs/toolkit';
+import { RootState } from '../store/configure';
 
 export const initialise = () => {
-    return async (dispatch, getState) => {
+    return async (dispatch: Dispatch<AppActions>, getState: () => RootState) => {
         if (getState().auth.appInitialising) return;
 
         dispatch(appInitialising());
@@ -38,24 +41,27 @@ export const initialise = () => {
     };
 };
 
-export function appInitialised() {
+export function appInitialised(): AppActions {
     return {
         type: APP_INITIALISED,
     };
 }
 
-export function appInitialising() {
+export function appInitialising(): AppActions {
     return {
         type: APP_INITIALISING,
     };
 }
 
-export const startLogin = (username, password) => {
-    return async (dispatch) => {
+export const startLogin = (username: string, password: string) => {
+    return async (dispatch: Dispatch<AppActions>) => {
         dispatch(loginAttempt());
 
         try {
-            const { token } = await api('auth/login', 'POST', { username, password });
+            const { token } = await api('auth/login', 'POST', {
+                username,
+                password,
+            });
 
             if (token) {
                 dispatch(loginSuccess(token));
@@ -68,13 +74,13 @@ export const startLogin = (username, password) => {
     };
 };
 
-export function loginAttempt() {
+export function loginAttempt(): AppActions {
     return {
         type: AUTH_LOGIN_ATTEMPT,
     };
 }
 
-export function loginSuccess(token) {
+export function loginSuccess(token: string): AppActions {
     localStorage.setItem('userToken', token);
     return {
         type: AUTH_LOGIN_SUCCESS,
@@ -82,7 +88,7 @@ export function loginSuccess(token) {
     };
 }
 
-export function loginFail() {
+export function loginFail(): AppActions {
     localStorage.removeItem('userToken');
     return {
         type: AUTH_LOGIN_FAIL,
@@ -90,25 +96,37 @@ export function loginFail() {
 }
 
 export const startLogout = () => {
-    return async (dispatch) => {
+    return async (dispatch: Dispatch<AppActions>) => {
         // TODO: call api here and remove any tokens from the user.
         localStorage.removeItem('userToken');
         dispatch(logout());
     };
 };
 
-export function logout() {
+export function logout(): AppActions {
     return {
         type: AUTH_LOGOUT,
     };
 }
 
-export const startRegister = ({ username, email, password, confirm }) => {
-    return async (dispatch) => {
+interface IRegister {
+    username: string;
+    email: string;
+    password: string;
+    confirm: string;
+}
+
+export const startRegister = ({ username, email, password, confirm }: IRegister) => {
+    return async (dispatch: Dispatch<AppActions>) => {
         dispatch(registerAttempt());
 
         try {
-            const res = await api('auth/register', 'POST', { username, email, password, confirm });
+            const res = await api('auth/register', 'POST', {
+                username,
+                email,
+                password,
+                confirm,
+            });
 
             if (res.username) {
                 dispatch(registerSuccess());
@@ -121,19 +139,19 @@ export const startRegister = ({ username, email, password, confirm }) => {
     };
 };
 
-export function registerAttempt() {
+export function registerAttempt(): AppActions {
     return {
         type: AUTH_REGISTER_ATTEMPT,
     };
 }
 
-export function registerSuccess() {
+export function registerSuccess(): AppActions {
     return {
         type: AUTH_REGISTER_SUCCESS,
     };
 }
 
-export function registerFail(errorMsg) {
+export function registerFail(errorMsg: string): AppActions {
     return {
         type: AUTH_REGISTER_FAIL,
         errorMsg: errorMsg,

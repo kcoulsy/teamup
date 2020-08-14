@@ -6,6 +6,7 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 
 import { startLogin } from '../../actions/auth';
+import { RootState } from '../../store/configure';
 
 interface LoginFormProps {
     startLogin: Function;
@@ -106,8 +107,7 @@ export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
     );
 };
 
-// TODO ROOT STATE
-export const mapStateToProps = (state: { auth: { attemptingLogin: boolean; loginAttemptFailed: boolean; }}) => {
+export const mapStateToProps = (state: RootState) => {
     return {
         attemptingLogin: state.auth.attemptingLogin,
         loginAttemptFailed: state.auth.loginAttemptFailed,

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { startLogout } from '../../actions/auth';
 import isLoggedIn from '../../helpers/isLoggedIn';
+import { RootState } from '../../store/configure';
 
 interface NavBarProps {
     isLoggedIn: boolean;
@@ -46,8 +47,7 @@ export const NavBar: React.FunctionComponent<NavBarProps> = ({ isLoggedIn, start
     );
 }
 
-// TODO : ROOT STATE TYPE
-export const mapStateToProps = (state: { auth: { token: string } }) => {
+export const mapStateToProps = (state: RootState) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
     };

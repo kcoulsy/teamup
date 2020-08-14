@@ -11,6 +11,7 @@ import {
     MIN_USERNAME_LENGTH,
     MIN_PASS_LENGTH,
 } from './../../constants/register';
+import { RootState } from '../../store/configure';
 
 interface RegisterFormProps {
     attemptingRegister: boolean;
@@ -240,12 +241,10 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({
     );
 };
 
-export const mapStateToProps = (state: {
-    auth: { attemptingRegister: boolean; registerErrorMsg: string };
-}) => {
+export const mapStateToProps = (state: RootState) => {
     return {
         attemptingRegister: state.auth.attemptingRegister,
-        errorMsg: state.auth.registerErrorMsg,
+        errorMsg: state.auth.registerErrorMsg
     };
 };
 
