@@ -14,6 +14,13 @@ import isLoggedIn from '../helpers/isLoggedIn';
 import { startLogout } from '../actions/auth';
 import { RootState } from '../store/configure';
 
+import {
+    PATH_HOME,
+    PATH_LOGIN,
+    PATH_REGISTER,
+    PATH_SECRET,
+} from './../constants/pageRoutes';
+
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -68,7 +75,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         icon={<HomeOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.HOME]);
-                            history.push('/');
+                            history.push(PATH_HOME);
                         }}>
                         Home
                     </Menu.Item>
@@ -77,7 +84,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         icon={<LoginOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.LOGIN]);
-                            history.push('/login');
+                            history.push(PATH_LOGIN);
                         }}>
                         Login
                     </Menu.Item>
@@ -86,7 +93,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         icon={<LoginOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.REGISTER]);
-                            history.push('/register');
+                            history.push(PATH_REGISTER);
                         }}>
                         Register
                     </Menu.Item>
@@ -102,7 +109,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         icon={<HomeOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.HOME]);
-                            history.push('/');
+                            history.push(PATH_HOME);
                         }}>
                         Home
                     </Menu.Item>
@@ -110,7 +117,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         key={MenuItemKey.SECRET}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.SECRET]);
-                            history.push('/secret');
+                            history.push(PATH_SECRET);
                         }}>
                         Secret
                     </Menu.Item>
@@ -129,7 +136,7 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.HOME]);
                             startLogout();
-                            history.push('/');
+                            history.push(PATH_HOME);
                         }}>
                         Logout
                     </Menu.Item>
