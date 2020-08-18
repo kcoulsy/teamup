@@ -6,7 +6,12 @@ import AppLayout from './../AppLayout/AppLayout';
 import Home from '../../pages/Home';
 import Register from '../../pages/Register';
 import Login from '../../pages/Login';
-import Secret from '../../pages/Secret';
+import MyProfile from './../../pages/MyProfile';
+import AccountSettings from './../../pages/AccountSettings';
+import MyProjects from './../../pages/MyProjects';
+import TeamProfile from './../../pages/TeamProfile';
+import TeamProjects from './../../pages/TeamProjects';
+import TeamSettings from './../../pages/TeamSettings';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -15,7 +20,12 @@ import {
     PATH_HOME,
     PATH_LOGIN,
     PATH_REGISTER,
-    PATH_SECRET,
+    PATH_MY_PROFILE,
+    PATH_ACCOUNT_SETTINGS,
+    PATH_MY_PROJECTS,
+    PATH_TEAM_PROFILE,
+    PATH_TEAM_PROJECTS,
+    PATH_TEAM_SETTINGS,
 } from './../../constants/pageRoutes';
 
 const AppRouter: React.FunctionComponent = ({ children }) => {
@@ -33,8 +43,23 @@ const AppRouter: React.FunctionComponent = ({ children }) => {
                     <PublicRoute path={PATH_LOGIN}>
                         <Login />
                     </PublicRoute>
-                    <PrivateRoute path={PATH_SECRET}>
-                        <Secret />
+                    <PrivateRoute path={PATH_MY_PROFILE}>
+                        <MyProfile />
+                    </PrivateRoute>
+                    <PrivateRoute path={PATH_MY_PROJECTS}>
+                        <MyProjects />
+                    </PrivateRoute>
+                    <PrivateRoute path={PATH_ACCOUNT_SETTINGS}>
+                        <AccountSettings />
+                    </PrivateRoute>
+                    <PrivateRoute exact path={PATH_TEAM_PROFILE}>
+                        <TeamProfile />
+                    </PrivateRoute>
+                    <PrivateRoute path={PATH_TEAM_PROJECTS}>
+                        <TeamProjects />
+                    </PrivateRoute>
+                    <PrivateRoute path={PATH_TEAM_SETTINGS}>
+                        <TeamSettings />
                     </PrivateRoute>
                 </Switch>
             </AppLayout>

@@ -1,4 +1,9 @@
 export const PATH_HOME = '/';
 export const PATH_LOGIN = '/login';
 export const PATH_REGISTER = '/register';
-export const PATH_SECRET = '/secret';
+export const PATH_MY_PROFILE = '/me';
+export const PATH_MY_PROJECTS = '/projects';
+export const PATH_ACCOUNT_SETTINGS = '/settings';
+export const PATH_TEAM_PROFILE = '/team';
+export const PATH_TEAM_PROJECTS = '/team/projects';
+export const PATH_TEAM_SETTINGS = '/team/settings';

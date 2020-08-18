@@ -18,7 +18,12 @@ import {
     PATH_HOME,
     PATH_LOGIN,
     PATH_REGISTER,
-    PATH_SECRET,
+    PATH_MY_PROFILE,
+    PATH_MY_PROJECTS,
+    PATH_ACCOUNT_SETTINGS,
+    PATH_TEAM_PROFILE,
+    PATH_TEAM_PROJECTS,
+    PATH_TEAM_SETTINGS,
 } from './../constants/pageRoutes';
 
 const { Sider } = Layout;
@@ -34,8 +39,15 @@ enum MenuItemKey {
     HOME = 'home',
     LOGIN = 'login',
     REGISTER = 'register',
-    SECRET = 'secret',
     LOGOUT = 'logout',
+    USER = 'user',
+    USER_PROFILE = 'user_profile',
+    USER_PROJECTS = 'user_projects',
+    USER_SETTINGS = 'user_settings',
+    TEAM = 'team',
+    TEAM_PROFILE = 'team_profile',
+    TEAM_PROJECTS = 'team_projects',
+    TEAM_SETTINGS = 'team_settings',
 }
 
 const SideNav: React.FunctionComponent<SideNavProps> = ({
@@ -113,22 +125,63 @@ const SideNav: React.FunctionComponent<SideNavProps> = ({
                         }}>
                         Home
                     </Menu.Item>
-                    <Menu.Item
-                        key={MenuItemKey.SECRET}
-                        onClick={() => {
-                            setSelectedKeys([MenuItemKey.SECRET]);
-                            history.push(PATH_SECRET);
-                        }}>
-                        Secret
-                    </Menu.Item>
-                    <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                        <Menu.Item key="3">Tom</Menu.Item>
-                        <Menu.Item key="4">Bill</Menu.Item>
-                        <Menu.Item key="5">Alex</Menu.Item>
+                    <SubMenu
+                        key={MenuItemKey.USER}
+                        icon={<UserOutlined />}
+                        title="User">
+                        <Menu.Item
+                            key={MenuItemKey.USER_PROFILE}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.USER_PROFILE]);
+                                history.push(PATH_MY_PROFILE);
+                            }}>
+                            My Profile
+                        </Menu.Item>
+                        <Menu.Item
+                            key={MenuItemKey.USER_PROJECTS}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.USER_PROJECTS]);
+                                history.push(PATH_MY_PROJECTS);
+                            }}>
+                            My Projects
+                        </Menu.Item>
+                        <Menu.Item
+                            key={MenuItemKey.USER_SETTINGS}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.USER_SETTINGS]);
+                                history.push(PATH_ACCOUNT_SETTINGS);
+                            }}>
+                            Account Settings
+                        </Menu.Item>
                     </SubMenu>
-                    <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                        <Menu.Item key="6">Team 1</Menu.Item>
-                        <Menu.Item key="8">Team 2</Menu.Item>
+                    <SubMenu
+                        key={MenuItemKey.TEAM}
+                        icon={<TeamOutlined />}
+                        title="Team">
+                        <Menu.Item
+                            key={MenuItemKey.TEAM_PROFILE}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.TEAM_PROFILE]);
+                                history.push(PATH_TEAM_PROFILE);
+                            }}>
+                            My Team
+                        </Menu.Item>
+                        <Menu.Item
+                            key={MenuItemKey.TEAM_PROJECTS}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.TEAM_PROJECTS]);
+                                history.push(PATH_TEAM_PROJECTS);
+                            }}>
+                            Team Projects
+                        </Menu.Item>
+                        <Menu.Item
+                            key={MenuItemKey.TEAM_SETTINGS}
+                            onClick={() => {
+                                setSelectedKeys([MenuItemKey.TEAM_SETTINGS]);
+                                history.push(PATH_TEAM_SETTINGS);
+                            }}>
+                            Team Settings
+                        </Menu.Item>
                     </SubMenu>
                     <Menu.Item
                         key={MenuItemKey.LOGOUT}
