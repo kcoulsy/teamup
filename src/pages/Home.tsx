@@ -1,9 +1,10 @@
 import React from 'react';
+import UserSettings from '../components/UserSettings/UserSettings';
 
 const Home: React.FunctionComponent = () => {
     return (
         <div>
-            Home Page
+            <UserSettings />
         </div>
     );
 };
