@@ -18,9 +18,7 @@ export const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = ({
     children,
     ...rest
 }) => {
-    return (
-        <Route {...rest} render={privateRouteRender(isLoggedIn, children)} />
-    );
+    return <Route {...rest} render={privateRouteRender(isLoggedIn, children)} />;
 };
 
 export interface PrivateRouteRenderProps {
@@ -31,11 +29,11 @@ export const privateRouteRender = (
     isLoggedIn: boolean,
     children: React.ReactNode
 ) => {
-    return ({ location }: PrivateRouteRenderProps) : React.ReactNode => {
+    return (props: PrivateRouteRenderProps) : React.ReactNode => {
         if (!isLoggedIn) {
             return (
                 <Redirect
-                    to={{ pathname: '/login', state: { from: location } }}
+                    to={{ pathname: '/login', state: { from: props.location } }}
                 />
             );
         }

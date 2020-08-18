@@ -6,12 +6,9 @@ import { shallowToJson } from 'enzyme-to-json';
 import isLoggedIn from '../../helpers/isLoggedIn';
 import * as H from 'history';
 import { RootState } from '../../store/configure';
+import TestComponentWrapper from './TestComponentWrapper';
 
 describe('render PublicRoute component', () => {
-    const WrapFunc : React.FunctionComponent = ({ children }) => {
-        return <div>{children}</div>;
-    }
-
     it('should render PublicRoute component', () => {
         const wrapper = shallow(<PublicRoute isLoggedIn={false} />);
 
@@ -26,10 +23,14 @@ describe('render PublicRoute component', () => {
             search: '',
             state: '',
             hash: '',
-            key: ''
-        }
-        
-        const wrapper = shallow(<WrapFunc>{publicRouteRender(isLoggedIn, child)({ location })}</WrapFunc>);
+            key: '',
+        };
+
+        const wrapper = shallow(
+            <TestComponentWrapper>
+                {publicRouteRender(isLoggedIn, child)({ location })}
+            </TestComponentWrapper>
+        );
 
         expect(wrapper.contains(child)).toBe(false);
         expect(wrapper).toMatchSnapshot();
@@ -43,9 +44,13 @@ describe('render PublicRoute component', () => {
             search: '',
             state: '',
             hash: '',
-            key: ''
-        }
-        const wrapper = shallow(<WrapFunc>{publicRouteRender(isLoggedIn, child)({ location })}</WrapFunc>);
+            key: '',
+        };
+        const wrapper = shallow(
+            <TestComponentWrapper>
+                {publicRouteRender(isLoggedIn, child)({ location })}
+            </TestComponentWrapper>
+        );
 
         expect(wrapper.contains(child)).toBe(true);
         expect(wrapper).toMatchSnapshot();

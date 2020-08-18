@@ -25,7 +25,7 @@ export const publicRouteRender = (
     isLoggedIn: boolean,
     children: React.ReactNode
 ) => {
-    return (props: PublicRouteRenderProps) => {
+    return (props: PublicRouteRenderProps) : React.ReactNode => {
         if (isLoggedIn) {
             return (
                 <Redirect

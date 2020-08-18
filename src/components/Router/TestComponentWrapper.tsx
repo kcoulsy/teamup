@@ -1,7 +1,7 @@
 import React from 'react';
 
-const TestCompnentWrapper: React.FunctionComponent = ({children}) => {
+const TestComponentWrapper: React.FunctionComponent = ({children}) => {
     return <div>{children}</div>
 }
 
-export default TestCompnentWrapper;
+export default TestComponentWrapper;
