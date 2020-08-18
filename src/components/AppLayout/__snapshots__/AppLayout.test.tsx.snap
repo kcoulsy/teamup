@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render AppLayout component should render AppLayout component 1`] = `
+<Layout
+  style={
+    Object {
+      "minHeight": "100vh",
+    }
+  }
+>
+  <Connect(Component) />
+  <Layout
+    className="site-layout"
+  >
+    <Header
+      className="site-layout-background"
+      style={
+        Object {
+          "padding": 0,
+        }
+      }
+    />
+    <Content
+      style={
+        Object {
+          "margin": "0 16px",
+        }
+      }
+    >
+      <div
+        className="site-layout-background"
+        style={
+          Object {
+            "minHeight": 360,
+            "padding": 24,
+          }
+        }
+      >
+        <Component />
+      </div>
+    </Content>
+  </Layout>
+</Layout>
+`;

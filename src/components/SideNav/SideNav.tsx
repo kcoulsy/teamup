@@ -10,9 +10,9 @@ import {
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import isLoggedIn from '../helpers/isLoggedIn';
-import { startLogout } from '../actions/auth';
-import { RootState } from '../store/configure';
+import isLoggedIn from '../../helpers/isLoggedIn';
+import { startLogout } from '../../actions/auth';
+import { RootState } from '../../store/configure';
 
 import {
     PATH_HOME,
@@ -24,7 +24,7 @@ import {
     PATH_TEAM_PROFILE,
     PATH_TEAM_PROJECTS,
     PATH_TEAM_SETTINGS,
-} from './../constants/pageRoutes';
+} from '../../constants/pageRoutes';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -50,7 +50,7 @@ enum MenuItemKey {
     TEAM_SETTINGS = 'team_settings',
 }
 
-const SideNav: React.FunctionComponent<SideNavProps> = ({
+export const SideNav: React.FunctionComponent<SideNavProps> = ({
     isLoggedIn,
     startLogout,
 }) => {

@@ -2,28 +2,56 @@
 
 exports[`render AppRouter component should render AppRouter component 1`] = `
 <BrowserRouter>
-  <Switch>
-    <Route
-      exact={true}
-      path="/"
-    >
-      <Home />
-    </Route>
-    <Connect(Component)
-      path="/register"
-    >
-      <Register />
-    </Connect(Component)>
-    <Connect(Component)
-      path="/login"
-    >
-      <Login />
-    </Connect(Component)>
-    <Connect(Component)
-      path="/secret"
-    >
-      <Secret />
-    </Connect(Component)>
-  </Switch>
+  <Component>
+    <Switch>
+      <Route
+        exact={true}
+        path="/"
+      >
+        <Home />
+      </Route>
+      <Connect(Component)
+        path="/register"
+      >
+        <Register />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/login"
+      >
+        <Login />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/me"
+      >
+        <MyProfile />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/projects"
+      >
+        <MyProjects />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/settings"
+      >
+        <AccountSettings />
+      </Connect(Component)>
+      <Connect(Component)
+        exact={true}
+        path="/team"
+      >
+        <TeamProfile />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/team/projects"
+      >
+        <TeamProjects />
+      </Connect(Component)>
+      <Connect(Component)
+        path="/team/settings"
+      >
+        <TeamSettings />
+      </Connect(Component)>
+    </Switch>
+  </Component>
 </BrowserRouter>
 `;
