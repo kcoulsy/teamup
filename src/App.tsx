@@ -10,17 +10,10 @@ interface AppProps {
     initialise: Function;
 }
 
-export const App : React.FunctionComponent<AppProps> = ({ initialise }) => {
+export const App: React.FunctionComponent<AppProps> = ({ initialise }) => {
     initialise();
 
-    return (
-        <AppRouter>
-            <div className="App">
-                <NavBar />
-                <h1>hello world</h1>
-            </div>
-        </AppRouter>
-    );
+    return <AppRouter />;
 };
 
 const mapDispatchToProps = { initialise };
