@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import '../node_modules/fomantic-ui/dist/semantic.min.css';
-
 import { initialise } from './actions/auth';
 
 import AppRouter from './components/Router/AppRouter';
-import NavBar from './components/NavBar/NavBar';
+import 'antd/dist/antd.css';
 
 interface AppProps {
     initialise: Function;
