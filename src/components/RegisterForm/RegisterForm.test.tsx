@@ -2,17 +2,18 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import { RegisterForm, mapStateToProps } from './RegisterForm';
+import { RootState } from '../../store/configure';
 
 describe('render login form component', () => {
     it('should render RegisterForm component', () => {
         const startRegister = jest.fn();
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} />);
         expect(shallowToJson(wrapper)).toMatchSnapshot();
     });
 
     it('should call startRegister on submit', () => {
         const startRegister = jest.fn();
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} />);
         const testUser = {
             username: 'username',
             email: 'test@test.com',
@@ -31,7 +32,7 @@ describe('render login form component', () => {
 
     it('should show errors if there are password problems', () => {
         const startRegister = jest.fn();
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} />);
         const testUser = {
             username: 'username',
             email: 'test@test.com',
@@ -76,7 +77,7 @@ describe('render login form component', () => {
 
     it('should show errors if there are username problems', () => {
         const startRegister = jest.fn();
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} />);
         const testUser = {
             username: 'username',
             email: 'test@test.com',
@@ -117,7 +118,7 @@ describe('render login form component', () => {
 
     it('should show errors if there are email problems', () => {
         const startRegister = jest.fn();
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} />);
         const testUser = {
             username: 'username',
             email: 'test@test.com',
@@ -159,7 +160,7 @@ describe('render login form component', () => {
     it('should show errors if errorMsg is passed in as a prop', () => {
         const startRegister = jest.fn();
         const ERROR_MSG = 'Test error message';
-        const wrapper = shallow(<RegisterForm startRegister={startRegister} errorMsg={ERROR_MSG} />);
+        const wrapper = shallow(<RegisterForm attemptingRegister={false} startRegister={startRegister} errorMsg={ERROR_MSG} />);
         const testUser = {
             username: 'username',
             email: 'test@test.com',
@@ -197,9 +198,14 @@ describe('render login form component', () => {
     });
 
     it('should correctly map state to props', () => {
-        const mockState = {
+        const mockState: RootState = {
             auth: {
-                attemptingRegister: true,
+                attemptingLogin: false,
+                token: null,
+                loginAttemptFailed: false,
+                appInitialising: false,
+                appInitialised: false,
+                attemptingRegister: false,
                 registerErrorMsg: 'error message',
             },
         };

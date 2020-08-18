@@ -6,7 +6,7 @@ import { shallowToJson } from 'enzyme-to-json';
 
 describe('render Loader component', () => {
     it('should render correctly', () => {
-        const wrapper = shallow(<Loader />);
+        const wrapper = shallow(<Loader isLoading={false} />);
 
         expect(shallowToJson(wrapper)).toMatchSnapshot();
     });
@@ -22,7 +22,7 @@ describe('render Loader component', () => {
     });
 
     it('should render as inverted when dark is false (inverted = light theme)', () => {
-        const wrapper = shallow(<Loader />);
+        const wrapper = shallow(<Loader isLoading={false} />);
 
         expect(wrapper.find('.inverted').length).toBe(1);
         expect(shallowToJson(wrapper)).toMatchSnapshot();
@@ -33,7 +33,7 @@ describe('render Loader component', () => {
 
     it('should render children correctly', () => {
         const wrapper = shallow(
-            <Loader>
+            <Loader isLoading={false}>
                 <p>JSX Child</p>
             </Loader>
         );

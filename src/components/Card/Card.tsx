@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CardProps {
-    title: string;
+    title?: string;
     centered?: boolean;
     fluid?: boolean;
 }

@@ -5,7 +5,7 @@ import Modal from './Modal';
 
 describe('render modal component', () => {
     it('should render correctly', () => {
-        const wrapper = shallow(<Modal />);
+        const wrapper = shallow(<Modal isActive={false} />);
 
         expect(shallowToJson(wrapper)).toMatchSnapshot();
     });
@@ -22,7 +22,7 @@ describe('render modal component', () => {
 
     it('should render children', () => {
         const wrapper = shallow(
-            <Modal>
+            <Modal isActive>
                 <p>JSX Child</p>
             </Modal>
         );
@@ -33,13 +33,15 @@ describe('render modal component', () => {
 
     it('should render headerTitle', () => {
         const title = 'test title';
-        const wrapper = shallow(<Modal headerTitle={title} />);
+        const wrapper = shallow(<Modal isActive headerTitle={title} />);
 
         expect(wrapper.contains(title)).toBe(true);
         expect(shallowToJson(wrapper)).toMatchSnapshot();
 
         const titleWithJSX = <h4>Test Title</h4>;
-        const wrapperWithJSX = shallow(<Modal headerTitle={titleWithJSX} />);
+        const wrapperWithJSX = shallow(
+            <Modal isActive headerTitle={titleWithJSX} />
+        );
 
         expect(wrapperWithJSX.contains(titleWithJSX)).toBe(true);
         expect(shallowToJson(wrapperWithJSX)).toMatchSnapshot();
@@ -65,7 +67,7 @@ describe('render modal component', () => {
             },
         ];
 
-        const wrapper = shallow(<Modal actions={actions} />);
+        const wrapper = shallow(<Modal isActive actions={actions} />);
         expect(shallowToJson(wrapper)).toMatchSnapshot();
 
         const buttonWrapper = wrapper.find('.testbutton');
@@ -73,7 +75,7 @@ describe('render modal component', () => {
         expect(buttonWrapper.length).toBe(1);
         expect(buttonWrapper.contains(incLabel)).toBe(true);
         expect(count).toBe(0);
-        buttonWrapper.simulate('click');
+        buttonWrapper.simulate('click', { preventDefault: jest.fn() });
         expect(count).toBe(1);
     });
 });

@@ -1,19 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`render PrivateRoute component should handle PrivateRouteRender when logged in 1`] = `
-<p>
-  JSX Child
-</p>
+<div>
+  <p>
+    JSX Child
+  </p>
+</div>
 `;
 
 exports[`render PrivateRoute component should handle PrivateRouteRender when not logged in 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+<div>
+  <Component
+    to={
+      Object {
+        "pathname": "/login",
+        "state": Object {
+          "from": Object {
+            "hash": "",
+            "key": "",
+            "pathname": "",
+            "search": "",
+            "state": "",
+          },
+        },
+      }
+    }
+  />
+</div>
 `;
 
 exports[`render PrivateRoute component should render PrivateRoute component 1`] = `
-<Route
+<Component
   render={[Function]}
 />
 `;

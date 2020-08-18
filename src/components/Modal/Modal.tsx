@@ -5,13 +5,13 @@ import Portal from '../Portal/Portal';
 export interface ModalAction {
     buttonLabel: string;
     onClick: Function;
-    klasses: string;
+    klasses?: string;
 }
 
 interface ModalProps {
     isActive: boolean;
-    headerTitle?: string;
-    actions: ModalAction[];
+    headerTitle?: string | JSX.Element;
+    actions?: ModalAction[];
 }
 
 const Modal: React.FunctionComponent<ModalProps> = ({ isActive = false, children, headerTitle, actions = [] }) => {

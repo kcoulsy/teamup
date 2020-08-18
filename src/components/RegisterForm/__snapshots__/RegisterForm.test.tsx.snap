@@ -6,6 +6,7 @@ exports[`render login form component should render RegisterForm component 1`] = 
   title="Register"
 >
   <Loader
+    isLoading={false}
     loadingText="Registering"
   >
     <form
@@ -71,7 +72,8 @@ exports[`render login form component should render RegisterForm component 1`] = 
         >
           Passwords must be at least 
           6
-           characters long and contain a number.
+           
+          characters long and contain a number.
         </div>
       </div>
       <button
@@ -164,7 +166,8 @@ exports[`render login form component should show loader with attemptingRegister 
         >
           Passwords must be at least 
           6
-           characters long and contain a number.
+           
+          characters long and contain a number.
         </div>
       </div>
       <button

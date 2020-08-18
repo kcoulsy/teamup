@@ -5,7 +5,7 @@ exports[`render AppRouter component should render AppRouter component 1`] = `
   <div
     className="App"
   >
-    <Connect(NavBar) />
+    <Connect(Component) />
     <h1>
       hello world
     </h1>

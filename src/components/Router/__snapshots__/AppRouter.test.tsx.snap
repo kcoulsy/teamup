@@ -9,21 +9,21 @@ exports[`render AppRouter component should render AppRouter component 1`] = `
     >
       <Home />
     </Route>
-    <Connect(PublicRoute)
+    <Connect(Component)
       path="/register"
     >
       <Register />
-    </Connect(PublicRoute)>
-    <Connect(PublicRoute)
+    </Connect(Component)>
+    <Connect(Component)
       path="/login"
     >
       <Login />
-    </Connect(PublicRoute)>
-    <Connect(PrivateRoute)
+    </Connect(Component)>
+    <Connect(Component)
       path="/secret"
     >
       <Secret />
-    </Connect(PrivateRoute)>
+    </Connect(Component)>
   </Switch>
 </BrowserRouter>
 `;

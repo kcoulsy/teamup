@@ -2,17 +2,18 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import { LoginForm, mapStateToProps } from './LoginForm';
+import { RootState } from '../../store/configure';
 
 describe('render login form component', () => {
     it('should render LoginForm component', () => {
         const startLogin = jest.fn();
-        const wrapper = shallow(<LoginForm startLogin={startLogin} />);
+        const wrapper = shallow(<LoginForm startLogin={startLogin} attemptingLogin={false} loginAttemptFailed={false} />);
         expect(shallowToJson(wrapper)).toMatchSnapshot();
     });
 
     it('should call startLogin on submit', () => {
         const startLogin = jest.fn();
-        const wrapper = shallow(<LoginForm startLogin={startLogin} />);
+        const wrapper = shallow(<LoginForm startLogin={startLogin} attemptingLogin={false} loginAttemptFailed={false} />);
         const testUser = {
             username: 'username',
             password: 'password',
@@ -29,7 +30,7 @@ describe('render login form component', () => {
 
     it('should show errors if field is empty', () => {
         const startLogin = jest.fn();
-        const wrapper = shallow(<LoginForm startLogin={startLogin} />);
+        const wrapper = shallow(<LoginForm startLogin={startLogin} attemptingLogin={false} loginAttemptFailed={false} />);
         const testUser = {
             username: 'username',
             password: 'password',
@@ -73,7 +74,7 @@ describe('render login form component', () => {
 
     it('should show error login attempt failed', () => {
         const startLogin = jest.fn();
-        const wrapper = shallow(<LoginForm startLogin={startLogin} loginAttemptFailed={false} />);
+        const wrapper = shallow(<LoginForm startLogin={startLogin} attemptingLogin={false} loginAttemptFailed={false} />);
 
         expect(wrapper.find('.error.message').length).toBe(0);
 
@@ -83,10 +84,14 @@ describe('render login form component', () => {
     });
 
     it('should correctly map state to props', () => {
-        const mockState = {
+        const mockState: RootState = {
             auth: {
                 attemptingLogin: false,
+                token: null,
                 loginAttemptFailed: false,
+                appInitialising: false,
+                appInitialised: false,
+                attemptingRegister: false,
             },
         };
 

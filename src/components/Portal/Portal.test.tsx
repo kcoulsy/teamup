@@ -1,16 +1,16 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow, mount, ShallowWrapper, ReactWrapper } from 'enzyme';
 import { mountToJson } from 'enzyme-to-json';
 import Portal from './Portal';
 
 describe('render Portal component', () => {
     const childJSX = <p>Child JSX</p>;
-    let component;
+    let component: ReactWrapper;
 
     const modalRoot = global.document.createElement('div');
     modalRoot.setAttribute('id', 'modal-root');
     const body = global.document.querySelector('body');
-    body.appendChild(modalRoot);
+    body?.appendChild(modalRoot);
 
     afterEach(() => {
         if (component) {

@@ -2,11 +2,12 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { shallowToJson } from 'enzyme-to-json';
 import { NavBar, mapStateToProps } from './NavBar';
+import { RootState } from '../../store/configure';
 
 describe('NavBar component tests', () => {
     it('should render correctly', () => {
         const startLogout = jest.fn();
-        const wrapper = shallow(<NavBar startLogout={startLogout} />);
+        const wrapper = shallow(<NavBar isLoggedIn={false} startLogout={startLogout} />);
 
         expect(shallowToJson(wrapper)).toMatchSnapshot();
     });
@@ -57,11 +58,17 @@ describe('NavBar component tests', () => {
     });
 
     it('mapStateToProps should return isLoggedIn prop', () => {
-        const mockState = {
+        const mockState: RootState = {
             auth: {
+                attemptingLogin: false,
                 token: 'testtoken',
+                loginAttemptFailed: false,
+                appInitialising: false,
+                appInitialised: false,
+                attemptingRegister: false,
             },
         };
+
         expect(mapStateToProps(mockState).isLoggedIn).toBe(true);
     });
 });

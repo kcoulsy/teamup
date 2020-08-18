@@ -32,7 +32,7 @@ exports[`render modal component should be active if isActive is true 1`] = `
 exports[`render modal component should render buttons when actions are passed 1`] = `
 <Portal>
   <div
-    className="ui dimmer modals page visible "
+    className="ui dimmer modals page visible  active"
     style={
       Object {
         "display": "flex !important",
@@ -79,7 +79,7 @@ exports[`render modal component should render buttons when actions are passed 1`
 exports[`render modal component should render children 1`] = `
 <Portal>
   <div
-    className="ui dimmer modals page visible "
+    className="ui dimmer modals page visible  active"
     style={
       Object {
         "display": "flex !important",
@@ -141,7 +141,7 @@ exports[`render modal component should render correctly 1`] = `
 exports[`render modal component should render headerTitle 1`] = `
 <Portal>
   <div
-    className="ui dimmer modals page visible "
+    className="ui dimmer modals page visible  active"
     style={
       Object {
         "display": "flex !important",
@@ -175,7 +175,7 @@ exports[`render modal component should render headerTitle 1`] = `
 exports[`render modal component should render headerTitle 2`] = `
 <Portal>
   <div
-    className="ui dimmer modals page visible "
+    className="ui dimmer modals page visible  active"
     style={
       Object {
         "display": "flex !important",

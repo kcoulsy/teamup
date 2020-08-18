@@ -1,15 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`render PublicRoute component should handle publicRouteRender when logged in 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+<div>
+  <Redirect
+    to={
+      Object {
+        "pathname": "/",
+        "state": Object {
+          "from": Object {
+            "hash": "",
+            "key": "",
+            "pathname": "",
+            "search": "",
+            "state": "",
+          },
+        },
+      }
+    }
+  />
+</div>
 `;
 
 exports[`render PublicRoute component should handle publicRouteRender when not logged in 1`] = `
-<p>
-  JSX Child
-</p>
+<div>
+  <p>
+    JSX Child
+  </p>
+</div>
 `;
 
 exports[`render PublicRoute component should render PublicRoute component 1`] = `

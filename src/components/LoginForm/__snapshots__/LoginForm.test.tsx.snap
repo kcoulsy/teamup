@@ -6,6 +6,7 @@ exports[`render login form component should call startLogin on submit 1`] = `
   title="Login"
 >
   <Loader
+    isLoading={false}
     loadingText="Logging in"
   >
     <form
@@ -61,6 +62,7 @@ exports[`render login form component should render LoginForm component 1`] = `
   title="Login"
 >
   <Loader
+    isLoading={false}
     loadingText="Logging in"
   >
     <form
