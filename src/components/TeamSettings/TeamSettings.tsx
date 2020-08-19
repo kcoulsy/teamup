@@ -13,7 +13,7 @@ const views: SettingsPanelView[] = [
         key: 'general-settings',
         label: 'General Settings',
         icon: <TeamOutlined />,
-        viewComponent: <TeamRoles />,
+        viewComponent: <TeamMembers />,
     },
     {
         key: 'team-members',
