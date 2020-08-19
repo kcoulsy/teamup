@@ -1,9 +1,12 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Typography } from 'antd';
+
+const { Title } = Typography;
 
 const ChangePassword: React.FunctionComponent = () => {
     return (
         <div>
+            <Title level={4} style={{marginBottom: '20px'}}>Change Password</Title>
             <Form
                 labelCol={{
                     sm: {
