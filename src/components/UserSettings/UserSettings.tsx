@@ -25,4 +25,5 @@ const views: SettingsPanelView[] = [
 const UserSettings: React.FunctionComponent = () => {
     return <SettingsPanel views={views} />;
 };
+
 export default UserSettings;

@@ -1,16 +1,16 @@
 import React from 'react';
 import { PageHeader } from 'antd';
-import UserSettings from '../components/UserSettings/UserSettings';
+import TeamSettings from '../components/TeamSettings/TeamSettings';
 
 const Home: React.FunctionComponent = () => {
     return (
         <div>
             <PageHeader
                 className="site-page-header"
-                title="Account Settings"
+                title="Team Settings"
                 style={{margin: 0, padding: 0, paddingBottom: '10px'}}
             />
-            <UserSettings />
+            <TeamSettings />
         </div>
     );
 };
