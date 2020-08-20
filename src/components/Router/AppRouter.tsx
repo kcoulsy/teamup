@@ -12,6 +12,7 @@ import MyProjects from './../../pages/MyProjects';
 import TeamProfile from './../../pages/TeamProfile';
 import TeamProjects from './../../pages/TeamProjects';
 import TeamSettings from './../../pages/TeamSettings';
+import ProjectPage from './../../pages/ProjectPage';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -26,6 +27,7 @@ import {
     PATH_TEAM_PROFILE,
     PATH_TEAM_PROJECTS,
     PATH_TEAM_SETTINGS,
+    PATH_PROJECT_PAGE
 } from './../../constants/pageRoutes';
 
 const AppRouter: React.FunctionComponent = ({ children }) => {
@@ -60,6 +62,9 @@ const AppRouter: React.FunctionComponent = ({ children }) => {
                     </PrivateRoute>
                     <PrivateRoute path={PATH_TEAM_SETTINGS}>
                         <TeamSettings />
+                    </PrivateRoute>
+                    <PrivateRoute path={PATH_PROJECT_PAGE}>
+                        <ProjectPage />
                     </PrivateRoute>
                 </Switch>
             </AppLayout>

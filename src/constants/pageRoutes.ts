@@ -7,3 +7,4 @@ export const PATH_ACCOUNT_SETTINGS = '/settings';
 export const PATH_TEAM_PROFILE = '/team';
 export const PATH_TEAM_PROJECTS = '/team/projects';
 export const PATH_TEAM_SETTINGS = '/team/settings';
+export const PATH_PROJECT_PAGE = '/project/:uuid';

@@ -1,18 +1,18 @@
 import React from 'react';
 import { PageHeader } from 'antd';
-import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
+import ProjectView from '../components/ProjectView/ProjectView';
 
-const MyProjects: React.FunctionComponent = () => {
+const ProjectPage: React.FunctionComponent = () => {
     return (
         <div>
             <PageHeader
                 className="site-page-header"
-                title="My Projects"
+                title="Project View"
                 style={{margin: 0, padding: 0, paddingBottom: '10px'}}
             />
-            <ProjectBrowser />
+            <ProjectView />
         </div>
     );
 };
 
-export default MyProjects;
+export default ProjectPage;
