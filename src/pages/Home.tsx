@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { PageHeader, Button, Modal } from 'antd';
-import ProjectView from '../components/ProjectView/ProjectView';
+import TaskView from '../components/TaskView/TaskView';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import AddTask from '../components/AddTask/AddTask';
 
 const Home: React.FunctionComponent = () => {
@@ -14,10 +14,10 @@ const Home: React.FunctionComponent = () => {
         <div>
             <PageHeader
                 className="site-page-header"
-                title="Project View"
+                title="Task View"
                 style={{margin: 0, padding: 0, paddingBottom: '10px'}}
                 extra={[
-                    <Button key="3" type="primary" onClick={handleAddTask}>Add Task <PlusOutlined/></Button>
+                    <Button key="3" onClick={handleAddTask}>Edit Task <EditOutlined/></Button>
                 ]}
             />
             <Modal
@@ -28,7 +28,7 @@ const Home: React.FunctionComponent = () => {
                 >
                 <AddTask />
                 </Modal>
-            <ProjectView />
+            <TaskView />
         </div>
     );
 };
