@@ -36,6 +36,7 @@ interface SideNavProps {
 
 // Have to be strings for Antd Menu
 enum MenuItemKey {
+    DEFAULT = 'default',
     HOME = 'home',
     LOGIN = 'login',
     REGISTER = 'register',
@@ -83,13 +84,22 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                     selectedKeys={selectedKeys}
                     mode="inline">
                     <Menu.Item
+                        key={MenuItemKey.DEFAULT}
+                        style={{
+                            fontFamily: "'Lobster', cursive",
+                            color: 'white',
+                            fontSize: 22
+                        }}>
+                        TeamUp
+                    </Menu.Item>
+                    <Menu.Item
                         key={MenuItemKey.HOME}
                         icon={<HomeOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.HOME]);
                             history.push(PATH_HOME);
                         }}>
-                        Home
+                        Dashboard
                     </Menu.Item>
                     <Menu.Item
                         key={MenuItemKey.LOGIN}
@@ -117,13 +127,22 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                     selectedKeys={selectedKeys}
                     mode="inline">
                     <Menu.Item
+                        key={MenuItemKey.DEFAULT}
+                        style={{
+                            fontFamily: "'Lobster', cursive",
+                            color: 'white',
+                            fontSize: 22
+                        }}>
+                        TeamUp
+                    </Menu.Item>
+                    <Menu.Item
                         key={MenuItemKey.HOME}
                         icon={<HomeOutlined />}
                         onClick={() => {
                             setSelectedKeys([MenuItemKey.HOME]);
                             history.push(PATH_HOME);
                         }}>
-                        Home
+                        Dashboard
                     </Menu.Item>
                     <SubMenu
                         key={MenuItemKey.USER}
