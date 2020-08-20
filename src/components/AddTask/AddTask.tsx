@@ -6,6 +6,7 @@ import {
     DatePicker,
     InputNumber,
     AutoComplete,
+    Button
 } from 'antd';
 
 const options = [
@@ -58,6 +59,9 @@ const AddTask: React.FunctionComponent = () => {
                         <Select.Option value="testing">Testing</Select.Option>
                         <Select.Option value="done">Done</Select.Option>
                     </Select>
+                </Form.Item>
+                <Form.Item>
+                        <Button type="primary">Add Task</Button>
                 </Form.Item>
             </Form>
         </>

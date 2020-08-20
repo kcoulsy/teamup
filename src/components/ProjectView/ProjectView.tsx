@@ -1,7 +1,7 @@
 import React from 'react';
-import { Layout, Card, Table, Tag, Form, Select } from 'antd';
-const { Sider, Content } = Layout;
-const { Option } = Select;
+import { Card, Table, Tag } from 'antd';
+import { Link } from 'react-router-dom';
+
 interface ITask {
     key: string;
     title: string;
@@ -18,7 +18,9 @@ const columns = [
     {
         title: 'Title',
         dataIndex: 'title',
-        render: (text: string) => <a>{text}</a>,
+        render: (text: string) => (
+            <Link to="/project/123/task/123">{text}</Link>
+        ),
     },
     {
         title: 'Assignee',
@@ -27,12 +29,14 @@ const columns = [
     {
         title: 'Status',
         dataIndex: 'status',
-        render: (status: IStatus) => <Tag color={status.color}>{status.label}</Tag>,
+        render: (status: IStatus) => (
+            <Tag color={status.color}>{status.label}</Tag>
+        ),
     },
     {
         title: 'Time Remaining',
-        dataIndex: 'timeRemaining'
-    }
+        dataIndex: 'timeRemaining',
+    },
 ];
 const data: ITask[] = [
     {
@@ -41,9 +45,9 @@ const data: ITask[] = [
         assignee: 'John',
         status: {
             color: 'green',
-            label: 'Complete'
+            label: 'Complete',
         },
-        timeRemaining: 'Done'
+        timeRemaining: 'Done',
     },
     {
         key: '2',
@@ -51,9 +55,9 @@ const data: ITask[] = [
         assignee: 'Sarah',
         status: {
             color: 'gold',
-            label: 'In Progress'
+            label: 'In Progress',
         },
-        timeRemaining: '7 Hours'
+        timeRemaining: '7 Hours',
     },
     {
         key: '3',
@@ -61,9 +65,9 @@ const data: ITask[] = [
         assignee: 'Unassigned',
         status: {
             color: 'red',
-            label: 'Not Started'
+            label: 'Not Started',
         },
-        timeRemaining: '2 Weeks'
+        timeRemaining: '2 Weeks',
     },
 ];
 
@@ -71,11 +75,7 @@ const ProjectView: React.FunctionComponent = () => {
     return (
         <div>
             <Card title="Tasks" size="small">
-                <Table
-                    size="middle"
-                    columns={columns}
-                    dataSource={data}
-                />
+                <Table size="middle" columns={columns} dataSource={data} />
             </Card>
         </div>
     );
