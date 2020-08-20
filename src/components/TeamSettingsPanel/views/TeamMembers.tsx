@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Typography, Space, Select, Form, Input, Button } from 'antd';
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 const { Option } = Select;
 
 interface TeamMemberTableRowData {
@@ -68,7 +68,7 @@ const columns = [
         key: 'actions',
         render: (_: any, record: TeamMemberTableRowData) => (
             <Space size="middle">
-                <a>Remove</a>
+                <Link>Remove</Link>
             </Space>
         ),
     },

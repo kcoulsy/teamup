@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Form,
     Input,
@@ -6,7 +6,7 @@ import {
     DatePicker,
     InputNumber,
     AutoComplete,
-    Button
+    Button,
 } from 'antd';
 
 const options = [
@@ -61,7 +61,7 @@ const AddTask: React.FunctionComponent = () => {
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                        <Button type="primary">Add Task</Button>
+                    <Button type="primary">Add Task</Button>
                 </Form.Item>
             </Form>
         </>

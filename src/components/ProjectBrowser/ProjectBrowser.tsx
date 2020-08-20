@@ -13,6 +13,7 @@ const ProjectBrowser: React.FunctionComponent = () => {
                         if (index % 3 === 0) {
                             return <ProjectCard key={index} title={`Project Num ${index}`} description={sampleDesc} />;
                         }
+                        return null;
                     })}
                 </Col>
                 <Col span={8}>
@@ -20,6 +21,7 @@ const ProjectBrowser: React.FunctionComponent = () => {
                         if (index % 3 === 1) {
                             return <ProjectCard key={index} title={`Project ${index}`} description={sampleDesc} />;
                         }
+                        return null;
                     })}
                 </Col>
                 <Col span={8}>
@@ -27,6 +29,7 @@ const ProjectBrowser: React.FunctionComponent = () => {
                         if (index % 3 === 2) {
                             return <ProjectCard key={index} title={`Project ${index}`} description={sampleDesc} />;
                         }
+                        return null;
                     })}
                 </Col>
             </Row>

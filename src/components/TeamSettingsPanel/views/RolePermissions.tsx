@@ -13,7 +13,7 @@ const roles = [
 
 const RolePermissions: React.FunctionComponent = (props) => {
     const [targetKeys, setTargetKeys] = useState(['role.team.settings.manage']);
-    const [data, setData] = useState([
+    const data = [
         {
             key: 'role.team.settings.manage',
             label: 'Manage Team Settings',
@@ -54,9 +54,8 @@ const RolePermissions: React.FunctionComponent = (props) => {
             key: 'role.team.project.remove',
             label: 'Remove Team Project',
         },
-    ]);
+    ];
 
-    const handleChange = () => {};
     return (
         <div>
             <Title level={4} style={{ marginBottom: '20px' }}>

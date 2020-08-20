@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageHeader, Button, Modal, Drawer } from 'antd';
+import { PageHeader, Button, Drawer } from 'antd';
 import TaskView from '../components/TaskView/TaskView';
 
 import { EditOutlined } from '@ant-design/icons';
