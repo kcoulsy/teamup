@@ -3,7 +3,11 @@ import express from 'express';
 import User, { IUser } from './../../models/user.model';
 import isValidEmail from '../../utils/isValidEmail';
 import containsNumber from '../../utils/containsNumber';
-import { MIN_PASSWORD_LEN, MIN_USER_LEN, RES_AUTH_HEADER } from '../../constants/auth';
+import {
+    MIN_PASSWORD_LEN,
+    MIN_USER_LEN,
+    RES_AUTH_HEADER,
+} from '../../constants/auth';
 
 const router = express.Router();
 
@@ -32,7 +36,8 @@ router.get('/verify', (req, res) => {
 
 router.post('/register', async (req, res) => {
     const { username, email, password, confirm } = req.body;
-    const error400WithMsg = (msg: string) => res.status(400).json({ error: msg });
+    const error400WithMsg = (msg: string) =>
+        res.status(400).json({ error: msg });
 
     try {
         const usersWithUsername = await User.find({ username });
@@ -43,7 +48,9 @@ router.post('/register', async (req, res) => {
         }
 
         if (username.length < MIN_USER_LEN) {
-            error400WithMsg(`Username must be at least ${MIN_USER_LEN} length!`);
+            error400WithMsg(
+                `Username must be at least ${MIN_USER_LEN} length!`
+            );
             return;
         }
 
@@ -65,7 +72,9 @@ router.post('/register', async (req, res) => {
         }
 
         if (password.length < MIN_PASSWORD_LEN) {
-            error400WithMsg(`Password must be at least ${MIN_PASSWORD_LEN} length!`);
+            error400WithMsg(
+                `Password must be at least ${MIN_PASSWORD_LEN} length!`
+            );
             return;
         }
 
@@ -82,7 +91,9 @@ router.post('/register', async (req, res) => {
             res.json(user);
         }
     } catch (err) {
-        res.status(400).json({ error: 'Something went wrong trying to register you' });
+        res.status(400).json({
+            error: 'Something went wrong trying to register you',
+        });
     }
 });
 

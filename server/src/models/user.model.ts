@@ -1,38 +1,40 @@
 import mongoose, { Document, Schema, Model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import { TOKEN_ACCESS_AUTH } from '../constants/auth';
+import { ITeam } from './team.model';
 
 export interface UserAccessTokenData {
-    _id: string,
-    access: string
+    _id: string;
+    access: string;
 }
 
 export interface UserAccessToken {
-    token: string,
-    access: string
+    token: string;
+    access: string;
 }
 
 interface IUserSchema extends Document {
-    username: string,
-    email: string,
-    password: string,
+    username: string;
+    email: string;
+    password: string;
+    team: ITeam;
 }
 
 interface IUserBase extends IUserSchema {
-    createAuthToken(): Promise<string>
+    createAuthToken(): Promise<string>;
 }
 
 export interface IUser extends IUserBase {
-    tokens: UserAccessToken[]
+    tokens: UserAccessToken[];
 }
 
 export interface IUserModel extends Model<IUser> {
-    findByToken(token: string): Promise<IUser>
-    findByCredentials(username : string, password : string): Promise<IUser>
+    findByToken(token: string): Promise<IUser>;
+    findByCredentials(username: string, password: string): Promise<IUser>;
 }
 
-const userSchema : Schema = new Schema(
+const userSchema: Schema = new Schema(
     {
         username: {
             type: String,
@@ -65,6 +67,10 @@ const userSchema : Schema = new Schema(
                 },
             },
         ],
+        team: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Team',
+        },
     },
     {
         timestamps: true,
@@ -76,9 +82,9 @@ const userSchema : Schema = new Schema(
  */
 userSchema.methods.toJSON = function () {
     const user = this;
-    const { _id, username } = user.toObject();
+    const { _id, username, team } = user.toObject();
 
-    return { _id, username };
+    return { _id, username, team };
 };
 
 /**
@@ -108,10 +114,13 @@ userSchema.methods.createAuthToken = function () {
  * @param {string} token
  */
 userSchema.statics.findByToken = function (token: string) {
-    let decodedJwt : UserAccessTokenData;
+    let decodedJwt: UserAccessTokenData;
 
     try {
-        decodedJwt = jwt.verify(token, process.env.JWT_SECRET) as UserAccessTokenData;
+        decodedJwt = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        ) as UserAccessTokenData;
     } catch (err) {
         return Promise.reject();
     }
@@ -149,7 +158,10 @@ userSchema.pre('save', function (next) {
  * @param {string} username
  * @param {string} password
  */
-userSchema.statics.findByCredentials = function (username : string, password : string) {
+userSchema.statics.findByCredentials = function (
+    username: string,
+    password: string
+) {
     // const User = this;
 
     return this.findOne({ username }).then((user: IUser) => {
