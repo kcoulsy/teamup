@@ -11,7 +11,12 @@ const initialState = {
 export default (state = initialState, action?: AppActions) => {
     switch (action?.type) {
         case TEAM_MY_FETCH:
-            return state;
+            console.log(action.payload);
+            return Object.assign({}, state, {
+                members: action.payload.members,
+                roles: action.payload.roles,
+                rolePermissions: action.payload.rolePermissions,
+            });
     }
 
     return state;

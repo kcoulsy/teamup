@@ -1,5 +1,15 @@
 import React from 'react';
-import { Table, Typography, Space, Select, Form, Input, Button } from 'antd';
+import {
+    Table,
+    Typography,
+    Space,
+    Select,
+    Form,
+    Input,
+    Button,
+    notification,
+} from 'antd';
+import { api } from './../../../services/api';
 
 const { Title, Link } = Typography;
 const { Option } = Select;
@@ -75,6 +85,7 @@ const columns = [
 ];
 
 const TeamMembers: React.FunctionComponent = (props) => {
+    // api;
     return (
         <div>
             <Title level={4} style={{ marginBottom: '20px' }}>
@@ -87,7 +98,14 @@ const TeamMembers: React.FunctionComponent = (props) => {
             <Form
                 layout="inline"
                 name="invite"
-                initialValues={{ remember: true }}>
+                initialValues={{ remember: true }}
+                onFinish={async (values) => {
+                    const res = await api('/team/invite', 'POST', {
+                        email: values.email,
+                    });
+                    console.log(res);
+                    console.log(values);
+                }}>
                 <Form.Item label="Email" name="email">
                     <Input />
                 </Form.Item>

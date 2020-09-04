@@ -51,6 +51,11 @@ export interface AuthRegisterFailAction {
 
 export interface TeamMyFetchAction {
     type: typeof TEAM_MY_FETCH;
+    payload: {
+        members: any[];
+        roles: string[];
+        rolePermissions: any[];
+    };
 }
 
 export type AuthActionTypes =

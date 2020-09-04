@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', Authenticate, async (req, res) => {
     await req.user.populate('team').execPopulate();
 
-    res.send(req.user.team);
+    res.json({ team: req.user.team });
 });
 
 /**
