@@ -30,7 +30,7 @@ const RequireTeamPermission = (permission: string) => (
                 );
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
         }
     });
 };

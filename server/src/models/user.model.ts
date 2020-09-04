@@ -19,6 +19,7 @@ interface IUserSchema extends Document {
     email: string;
     password: string;
     team: ITeam;
+    teamInvites: ITeam[];
 }
 
 interface IUserBase extends IUserSchema {
@@ -71,6 +72,7 @@ const userSchema: Schema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Team',
         },
+        teamInvites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Team' }],
     },
     {
         timestamps: true,
