@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { initialise } from './actions/auth';
+import { initialise } from './actions/initialise';
 
 import AppRouter from './components/Router/AppRouter';
 import 'antd/dist/antd.css';

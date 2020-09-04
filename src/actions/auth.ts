@@ -2,56 +2,14 @@ import {
     AUTH_LOGIN_ATTEMPT,
     AUTH_LOGIN_SUCCESS,
     AUTH_LOGIN_FAIL,
-    APP_INITIALISED,
-    APP_INITIALISING,
     AUTH_LOGOUT,
     AUTH_REGISTER_ATTEMPT,
     AUTH_REGISTER_SUCCESS,
     AUTH_REGISTER_FAIL,
-    AppActions
+    AppActions,
 } from '../types/actions';
 import { api } from './../services/api';
 import { Dispatch } from '@reduxjs/toolkit';
-import { RootState } from '../store/configure';
-
-export const initialise = () => {
-    return async (dispatch: Dispatch<AppActions>, getState: () => RootState) => {
-        if (getState().auth.appInitialising) return;
-
-        dispatch(appInitialising());
-
-        const token = localStorage.getItem('userToken');
-
-        dispatch(loginAttempt());
-
-        if (typeof token === 'string') {
-            const response = await api('auth/verify', 'GET');
-
-            if (response.valid) {
-                dispatch(loginSuccess(token));
-                dispatch(appInitialised());
-            } else {
-                dispatch(loginFail());
-                dispatch(appInitialised());
-            }
-        } else {
-            dispatch(loginFail());
-            dispatch(appInitialised());
-        }
-    };
-};
-
-export function appInitialised(): AppActions {
-    return {
-        type: APP_INITIALISED,
-    };
-}
-
-export function appInitialising(): AppActions {
-    return {
-        type: APP_INITIALISING,
-    };
-}
 
 export const startLogin = (username: string, password: string) => {
     return async (dispatch: Dispatch<AppActions>) => {
@@ -116,7 +74,12 @@ interface IRegister {
     confirm: string;
 }
 
-export const startRegister = ({ username, email, password, confirm }: IRegister) => {
+export const startRegister = ({
+    username,
+    email,
+    password,
+    confirm,
+}: IRegister) => {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch(registerAttempt());
 

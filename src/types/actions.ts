@@ -7,6 +7,7 @@ export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const AUTH_REGISTER_ATTEMPT = 'AUTH_REGISTER_ATTEMPT';
 export const AUTH_REGISTER_SUCCESS = 'AUTH_REGISTER_SUCCESS';
 export const AUTH_REGISTER_FAIL = 'AUTH_REGISTER_FAIL';
+export const TEAM_MY_FETCH = 'TEAM_MY_FETCH';
 
 export interface AppInitialisingAction {
     type: typeof APP_INITIALISING;
@@ -42,9 +43,14 @@ export interface AuthRegisterAttemptAction {
 export interface AuthRegisterSuccessAction {
     type: typeof AUTH_REGISTER_SUCCESS;
 }
+
 export interface AuthRegisterFailAction {
     type: typeof AUTH_REGISTER_FAIL;
     errorMsg: string;
+}
+
+export interface TeamMyFetchAction {
+    type: typeof TEAM_MY_FETCH;
 }
 
 export type AuthActionTypes =
@@ -56,4 +62,6 @@ export type AuthActionTypes =
     | AuthRegisterSuccessAction
     | AuthRegisterFailAction;
 
-export type AppActions = AuthActionTypes | AppActionTypes;
+export type TeamActions = TeamMyFetchAction;
+
+export type AppActions = AuthActionTypes | AppActionTypes | TeamActions;
