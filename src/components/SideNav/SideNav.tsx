@@ -25,6 +25,8 @@ import {
     PATH_TEAM_PROJECTS,
     PATH_TEAM_SETTINGS,
 } from '../../constants/pageRoutes';
+import hasTeam from '../../helpers/hasTeam';
+import hasTeamRole from '../../helpers/hasTeamRole';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -229,21 +231,6 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
         </Sider>
     );
 };
-
-//TODO: move these to a helper
-function hasTeamRole(state: RootState, permissionToCheck: string) {
-    const teamUser = state.team.members.find((user) => true); // we don't know the _id yet, so just fetch the first one.
-    const role = teamUser?.role;
-    const rolePerm = state.team.rolePermissions.find(
-        (rolePerm) => rolePerm.role === role
-    );
-    console.log(teamUser, role, rolePerm);
-    return rolePerm?.permissions.includes(permissionToCheck);
-}
-
-function hasTeam(state: RootState) {
-    return state.team.id !== null;
-}
 
 export const mapStateToProps = (state: RootState) => {
     return {
