@@ -32,6 +32,7 @@ const { SubMenu } = Menu;
 interface SideNavProps {
     isLoggedIn: boolean;
     startLogout: Function;
+    showTeamSettings: boolean;
 }
 
 // Have to be strings for Antd Menu
@@ -54,13 +55,14 @@ enum MenuItemKey {
 export const SideNav: React.FunctionComponent<SideNavProps> = ({
     isLoggedIn,
     startLogout,
+    showTeamSettings,
 }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedKeys, setSelectedKeys] = useState<MenuItemKey[]>([
         MenuItemKey.HOME,
     ]);
     const history = useHistory();
-
+    console.log('show nav?', showTeamSettings);
     useEffect(() => {
         if (
             isLoggedIn &&
@@ -88,7 +90,7 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                         style={{
                             fontFamily: "'Lobster', cursive",
                             color: 'white',
-                            fontSize: 22
+                            fontSize: 22,
                         }}>
                         TeamUp
                     </Menu.Item>
@@ -131,7 +133,7 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                         style={{
                             fontFamily: "'Lobster', cursive",
                             color: 'white',
-                            fontSize: 22
+                            fontSize: 22,
                         }}>
                         TeamUp
                     </Menu.Item>
@@ -218,9 +220,19 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
     );
 };
 
+function hasTeamRole(state: RootState, permissionToCheck: string) {
+    const teamUser = state.team.members.find((user) => true); // we don't know the _id yet, so just fetch the first one.
+    const role = teamUser?.role;
+    const rolePerm = state.team.rolePermissions.find(
+        (rolePerm) => rolePerm.role === role
+    );
+    console.log(teamUser, role, rolePerm);
+    return rolePerm?.permissions.includes(permissionToCheck);
+}
 export const mapStateToProps = (state: RootState) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
+        showTeamSettings: hasTeamRole(state, 'team.project.create'),
     };
 };
 

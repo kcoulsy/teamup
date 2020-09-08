@@ -48,11 +48,18 @@ export interface AuthRegisterFailAction {
     type: typeof AUTH_REGISTER_FAIL;
     errorMsg: string;
 }
+// TODO move to types
+export interface TeamMember {
+    _id: string;
+    user: string;
+    role: string;
+}
 
 export interface TeamMyFetchAction {
     type: typeof TEAM_MY_FETCH;
     payload: {
-        members: any[];
+        id: string | null;
+        members: TeamMember[];
         roles: string[];
         rolePermissions: any[];
     };

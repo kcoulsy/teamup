@@ -26,9 +26,10 @@ export const initialise = () => {
                 dispatch(loginSuccess(token));
                 const teamResponse = await api('team/', 'GET');
                 if (Object.keys(teamResponse?.team).length) {
-                    console.log(teamResponse.team);
+                    console.log('id', teamResponse.team._id);
                     dispatch(
                         storeTeam({
+                            id: teamResponse.team._id,
                             members: teamResponse.team.users,
                             roles: teamResponse.team.roles,
                             rolePermissions: teamResponse.team.rolePermissions,
