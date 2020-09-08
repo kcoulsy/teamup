@@ -5,6 +5,7 @@ export const PATH_MY_PROFILE = '/me';
 export const PATH_MY_PROJECTS = '/projects';
 export const PATH_ACCOUNT_SETTINGS = '/settings';
 export const PATH_TEAM_PROFILE = '/team';
+export const PATH_TEAM_CREATE = '/team/create';
 export const PATH_TEAM_PROJECTS = '/team/projects';
 export const PATH_TEAM_SETTINGS = '/team/settings';
 export const PATH_PROJECT_PAGE = '/project/:projectid';

@@ -66,7 +66,6 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
         MenuItemKey.HOME,
     ]);
     const history = useHistory();
-    console.log('show nav?', showTeamSettings);
     useEffect(() => {
         if (
             isLoggedIn &&
