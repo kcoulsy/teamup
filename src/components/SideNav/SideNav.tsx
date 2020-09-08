@@ -32,6 +32,7 @@ const { SubMenu } = Menu;
 interface SideNavProps {
     isLoggedIn: boolean;
     startLogout: Function;
+    showTeamProjects: boolean;
     showTeamSettings: boolean;
 }
 
@@ -55,6 +56,7 @@ enum MenuItemKey {
 export const SideNav: React.FunctionComponent<SideNavProps> = ({
     isLoggedIn,
     startLogout,
+    showTeamProjects,
     showTeamSettings,
 }) => {
     const [collapsed, setCollapsed] = useState(false);
@@ -187,22 +189,30 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                             }}>
                             My Team
                         </Menu.Item>
-                        <Menu.Item
-                            key={MenuItemKey.TEAM_PROJECTS}
-                            onClick={() => {
-                                setSelectedKeys([MenuItemKey.TEAM_PROJECTS]);
-                                history.push(PATH_TEAM_PROJECTS);
-                            }}>
-                            Team Projects
-                        </Menu.Item>
-                        <Menu.Item
-                            key={MenuItemKey.TEAM_SETTINGS}
-                            onClick={() => {
-                                setSelectedKeys([MenuItemKey.TEAM_SETTINGS]);
-                                history.push(PATH_TEAM_SETTINGS);
-                            }}>
-                            Team Settings
-                        </Menu.Item>
+                        {showTeamProjects ? (
+                            <Menu.Item
+                                key={MenuItemKey.TEAM_PROJECTS}
+                                onClick={() => {
+                                    setSelectedKeys([
+                                        MenuItemKey.TEAM_PROJECTS,
+                                    ]);
+                                    history.push(PATH_TEAM_PROJECTS);
+                                }}>
+                                Team Projects
+                            </Menu.Item>
+                        ) : null}
+                        {showTeamSettings ? (
+                            <Menu.Item
+                                key={MenuItemKey.TEAM_SETTINGS}
+                                onClick={() => {
+                                    setSelectedKeys([
+                                        MenuItemKey.TEAM_SETTINGS,
+                                    ]);
+                                    history.push(PATH_TEAM_SETTINGS);
+                                }}>
+                                Team Settings
+                            </Menu.Item>
+                        ) : null}
                     </SubMenu>
                     <Menu.Item
                         key={MenuItemKey.LOGOUT}
@@ -220,6 +230,7 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
     );
 };
 
+//TODO: move these to a helper
 function hasTeamRole(state: RootState, permissionToCheck: string) {
     const teamUser = state.team.members.find((user) => true); // we don't know the _id yet, so just fetch the first one.
     const role = teamUser?.role;
@@ -229,10 +240,18 @@ function hasTeamRole(state: RootState, permissionToCheck: string) {
     console.log(teamUser, role, rolePerm);
     return rolePerm?.permissions.includes(permissionToCheck);
 }
+
+function hasTeam(state: RootState) {
+    return state.team.id !== null;
+}
+
 export const mapStateToProps = (state: RootState) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
-        showTeamSettings: hasTeamRole(state, 'team.project.create'),
+        showTeamProjects:
+            hasTeam(state) && hasTeamRole(state, 'team.project.create'),
+        showTeamSettings:
+            hasTeam(state) && hasTeamRole(state, 'team.project.create'),
     };
 };
 

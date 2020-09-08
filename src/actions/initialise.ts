@@ -24,15 +24,14 @@ export const initialise = () => {
 
             if (response.valid) {
                 dispatch(loginSuccess(token));
-                const teamResponse = await api('team/', 'GET');
-                if (Object.keys(teamResponse?.team).length) {
-                    console.log('id', teamResponse.team._id);
+                const { team } = await api('team/', 'GET');
+                if (team && Object.keys(team).length) {
                     dispatch(
                         storeTeam({
-                            id: teamResponse.team._id,
-                            members: teamResponse.team.users,
-                            roles: teamResponse.team.roles,
-                            rolePermissions: teamResponse.team.rolePermissions,
+                            id: team._id,
+                            members: team.users,
+                            roles: team.roles,
+                            rolePermissions: team.rolePermissions,
                         })
                     );
                     // dispatch team fetched action
