@@ -71,13 +71,23 @@ router.post('/invite', Authenticate, async (req, res) => {
 
     const user = await User.findOne({ email });
 
+    if (!user) {
+        return res.json({
+            success: false,
+            message: `User with email "${email}" does not exist`,
+        });
+    }
+
     if (!user.teamInvites.includes(req.user.team._id)) {
         user.teamInvites.push(req.user.team._id);
     }
 
     user.save();
 
-    res.send(`${email} invited to team ${req.user.team._id}`);
+    return res.json({
+        success: true,
+        message: `User with email "${email}" invited to team successfully!`,
+    });
 });
 
 /**

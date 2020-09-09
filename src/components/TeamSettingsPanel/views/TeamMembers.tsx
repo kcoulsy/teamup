@@ -1,5 +1,14 @@
 import React from 'react';
-import { Table, Typography, Space, Select, Form, Input, Button } from 'antd';
+import {
+    Table,
+    Typography,
+    Space,
+    Select,
+    Form,
+    Input,
+    Button,
+    notification,
+} from 'antd';
 import { api } from './../../../services/api';
 
 const { Title, Link } = Typography;
@@ -76,7 +85,7 @@ const columns = [
 ];
 
 const TeamMembers: React.FunctionComponent = (props) => {
-    // api;
+    const [inviteForm] = Form.useForm();
     return (
         <div>
             <Title level={4} style={{ marginBottom: '20px' }}>
@@ -87,6 +96,7 @@ const TeamMembers: React.FunctionComponent = (props) => {
                 Invite Member
             </Title>
             <Form
+                form={inviteForm}
                 layout="inline"
                 name="invite"
                 initialValues={{ remember: true }}
@@ -94,8 +104,15 @@ const TeamMembers: React.FunctionComponent = (props) => {
                     const res = await api('/team/invite', 'POST', {
                         email: values.email,
                     });
-                    console.log(res);
-                    console.log(values);
+
+                    if (res.success) {
+                        notification.success({
+                            message: res.message,
+                        });
+                    } else {
+                        notification.error({ message: res.message });
+                    }
+                    inviteForm.resetFields();
                 }}>
                 <Form.Item label="Email" name="email">
                     <Input />
