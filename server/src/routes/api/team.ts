@@ -19,9 +19,13 @@ router.get('/', Authenticate, async (req, res) => {
  * Fails if already in a team
  */
 router.post('/create', Authenticate, async (req, res) => {
-    if (req.user.team !== null) {
-        return res.send('User already has a team!');
-    }
+    // console.log('##### USER TEAM ', req.user);
+    // if (req.user.team) {
+    //     return res.send({
+    //         message: 'User already has a team!',
+    //         user: req.user,
+    //     });
+    // }
 
     const team = new Team({
         users: [
