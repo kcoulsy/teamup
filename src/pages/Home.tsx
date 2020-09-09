@@ -3,7 +3,7 @@ import { Card, Form, Button, notification } from 'antd';
 import { createTeam } from '../actions/team';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { PATH_TEAM_PROFILE } from './../constants/pageRoutes';
+import { PATH_TEAM_PROFILE, PATH_TEAM_CREATE } from './../constants/pageRoutes';
 
 const layout = {
     labelCol: { span: 8 },
@@ -25,11 +25,11 @@ const Home: React.FunctionComponent<{ createTeam: Function }> = ({
                     name="basic"
                     initialValues={{ remember: true }}
                     onFinish={async () => {
-                        const done = await createTeam();
-                        if (done) {
-                            notification.success({ message: 'Team Created' });
-                            history.push(PATH_TEAM_PROFILE);
-                        }
+                        history.push(PATH_TEAM_CREATE);
+                        // const done = await createTeam();
+                        // if (done) {
+                        //     notification.success({ message: 'Team Created' });
+                        // }
                     }}>
                     Other fields will be added here
                     <Form.Item {...tailLayout}>
