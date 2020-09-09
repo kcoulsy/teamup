@@ -41,10 +41,16 @@ export const createTeam = () => {
 
 export const removeTeam = () => {
     return async (dispatch: Dispatch<AppActions>) => {
-        return new Promise((resolve, reject) => {
-            // const res = await api('/team/remove', 'POST');
-            dispatch(storeTeam({}));
-            resolve(true);
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await api('/team/leave', 'POST');
+                if (!res.user.team) {
+                    dispatch(storeTeam({}));
+                    resolve(true);
+                }
+            } catch (error) {
+                reject(false);
+            }
         });
     };
 };

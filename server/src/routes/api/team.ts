@@ -51,6 +51,16 @@ router.post('/create', Authenticate, async (req, res) => {
     res.send({ team });
 });
 
+router.post('/leave', Authenticate, async (req, res) => {
+    await req.user.populate('team').execPopulate();
+    if (req.user.team) {
+        req.user.team = null;
+        req.user.save();
+        res.send({
+            user: req.user,
+        });
+    }
+});
 /**
  * Invites a user (by email) to the team
  */
