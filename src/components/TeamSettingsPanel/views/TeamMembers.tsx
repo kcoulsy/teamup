@@ -10,6 +10,8 @@ import {
     notification,
 } from 'antd';
 import { api } from './../../../services/api';
+import { RootState } from '../../../store/configure';
+import { connect } from 'react-redux';
 
 const { Title, Link } = Typography;
 const { Option } = Select;
@@ -20,78 +22,72 @@ interface TeamMemberTableRowData {
     role: string;
 }
 
-const roles = [
-    'Project Manager',
-    'Quality Assurance',
-    'Business Analyst',
-    'Developer',
-];
-
-const dataSource: TeamMemberTableRowData[] = [
-    {
-        key: '1',
-        name: 'Mike',
-        role: roles[0],
-    },
-    {
-        key: '2',
-        name: 'John',
-        role: roles[1],
-    },
-    {
-        key: '3',
-        name: 'Sarah',
-        role: roles[2],
-    },
-    {
-        key: '4',
-        name: 'Joe',
-        role: roles[3],
-    },
-];
-
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-    },
-    {
-        title: 'Role',
-        dataIndex: 'role',
-        key: 'role',
-        render: (_: any, record: TeamMemberTableRowData) => (
-            <Select defaultValue={record.role}>
-                {roles.map((role) => {
-                    return (
-                        <Option key={role} value={role}>
-                            {role}
-                        </Option>
-                    );
-                })}
-            </Select>
-        ),
-    },
-    {
-        title: 'Actions',
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (_: any, record: TeamMemberTableRowData) => (
-            <Space size="middle">
-                <Link>Remove</Link>
-            </Space>
-        ),
-    },
-];
-
-const TeamMembers: React.FunctionComponent = (props) => {
+const TeamMembers: React.FunctionComponent<{
+    teamMembers: any[];
+    roles: string[];
+}> = ({ teamMembers, roles }) => {
     const [inviteForm] = Form.useForm();
+    const members: TeamMemberTableRowData[] = teamMembers.map((teamMember) => {
+        return {
+            key: teamMember.user._id,
+            name: teamMember.user.email,
+            role: teamMember.role,
+        };
+    });
     return (
         <div>
             <Title level={4} style={{ marginBottom: '20px' }}>
                 Team Members
             </Title>
-            <Table dataSource={dataSource} columns={columns} size="middle" />;
+            <Table
+                dataSource={members}
+                columns={[
+                    {
+                        title: 'Name',
+                        dataIndex: 'name',
+                        key: 'name',
+                    },
+                    {
+                        title: 'Role',
+                        dataIndex: 'role',
+                        key: 'role',
+                        render: (_: any, record: TeamMemberTableRowData) => (
+                            <Select
+                                defaultValue={record.role}
+                                onChange={(value) => {
+                                    console.log(record, value);
+                                }}>
+                                {roles.map((role) => {
+                                    return (
+                                        <Option key={role} value={role}>
+                                            {role}
+                                        </Option>
+                                    );
+                                })}
+                            </Select>
+                        ),
+                    },
+                    {
+                        title: 'Actions',
+                        dataIndex: 'actions',
+                        key: 'actions',
+                        render: (_: any, record: TeamMemberTableRowData) => (
+                            <Space size="middle">
+                                <Link
+                                    onClick={() => {
+                                        notification.success({
+                                            message: `${record.name} successfully removed from the team!`,
+                                        });
+                                    }}>
+                                    Remove
+                                </Link>
+                            </Space>
+                        ),
+                    },
+                ]}
+                size="middle"
+            />
+            ;
             <Title level={4} style={{ marginBottom: '20px' }}>
                 Invite Member
             </Title>
@@ -127,4 +123,9 @@ const TeamMembers: React.FunctionComponent = (props) => {
     );
 };
 
-export default TeamMembers;
+const mapStateToProps = (state: RootState) => ({
+    teamMembers: state.team.members,
+    roles: state.team.roles,
+});
+
+export default connect(mapStateToProps)(TeamMembers);

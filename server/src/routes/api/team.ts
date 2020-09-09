@@ -10,6 +10,16 @@ const router = express.Router();
  */
 router.get('/', Authenticate, async (req, res) => {
     await req.user.populate('team').execPopulate();
+    await req.user.team
+        .populate({
+            path: 'users',
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: '_id, username, email',
+            },
+        })
+        .execPopulate();
 
     res.json({ team: req.user.team });
 });
@@ -124,6 +134,28 @@ router.post('/decline', async (req, res) => {
     req.user.teamInvites.filter((invite) => invite !== teamId);
     await req.user.save();
     res.send('Declined team invite');
+});
+
+router.post('/user/remove', Authenticate, async (req, res) => {
+    await req.user.populate('team').execPopulate();
+    res.send('Removed user from the team');
+});
+
+router.post('/user/update', Authenticate, async (req, res) => {
+    const { userId, newRole } = req.body;
+    await req.user.populate('team').execPopulate();
+    if (!req.user.team.roles.includes(newRole)) {
+        return res.status(400).send({ error: 'Role is not valid' });
+    }
+    req.user.team.users = req.user.team.users.map((userDoc) => {
+        console.log('testing', userDoc.user, userId);
+        if (userDoc.user.equals(userId)) {
+            userDoc.role = newRole;
+        }
+        return userDoc;
+    });
+    await req.user.team.save();
+    res.json({ message: 'Users role updated', team: req.user.team });
 });
 
 /**
