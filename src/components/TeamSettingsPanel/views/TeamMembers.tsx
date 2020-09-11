@@ -12,6 +12,7 @@ import {
 import { api } from './../../../services/api';
 import { RootState } from '../../../store/configure';
 import { connect } from 'react-redux';
+import { updateTeamMemberRole } from '../../../actions/team';
 
 const { Title, Link } = Typography;
 const { Option } = Select;
@@ -19,19 +20,20 @@ const { Option } = Select;
 interface TeamMemberTableRowData {
     key: string;
     name: string;
-    role: string;
+    roleIndex: number;
 }
 
 const TeamMembers: React.FunctionComponent<{
     teamMembers: any[];
     roles: string[];
-}> = ({ teamMembers, roles }) => {
+    updateTeamMemberRole: Function;
+}> = ({ teamMembers, roles, updateTeamMemberRole }) => {
     const [inviteForm] = Form.useForm();
     const members: TeamMemberTableRowData[] = teamMembers.map((teamMember) => {
         return {
             key: teamMember.user._id,
             name: teamMember.user.email,
-            role: teamMember.role,
+            roleIndex: teamMember.roleIndex,
         };
     });
     return (
@@ -53,13 +55,22 @@ const TeamMembers: React.FunctionComponent<{
                         key: 'role',
                         render: (_: any, record: TeamMemberTableRowData) => (
                             <Select
-                                defaultValue={record.role}
-                                onChange={(value) => {
-                                    console.log(record, value);
+                                defaultValue={roles[record.roleIndex]}
+                                onChange={async (value) => {
+                                    let newIndex = parseInt(value, 10);
+                                    const updated = await updateTeamMemberRole(
+                                        record.key,
+                                        newIndex
+                                    );
+                                    if (updated) {
+                                        notification.success({
+                                            message: `User ${record.name} updated to role ${roles[newIndex]}`,
+                                        });
+                                    }
                                 }}>
-                                {roles.map((role) => {
+                                {roles.map((role, index) => {
                                     return (
-                                        <Option key={role} value={role}>
+                                        <Option key={role} value={index}>
                                             {role}
                                         </Option>
                                     );
@@ -128,4 +139,8 @@ const mapStateToProps = (state: RootState) => ({
     roles: state.team.roles,
 });
 
-export default connect(mapStateToProps)(TeamMembers);
+const mapDispatchToProps = {
+    updateTeamMemberRole,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TeamMembers);

@@ -53,6 +53,7 @@ export interface TeamMember {
     _id: string;
     user: string;
     role: string;
+    roleIndex: number;
 }
 
 export interface TeamMyFetchAction {

@@ -3,7 +3,8 @@ import { IUser } from './user.model';
 
 interface TeamUser {
     user: IUser;
-    role: string;
+    role?: string; //TODO remove this key
+    roleIndex: number;
 }
 
 interface TeamPermissions {
@@ -32,12 +33,14 @@ const teamSchema: Schema = new Schema(
                     ref: 'User',
                 },
                 role: String,
+                roleIndex: Number,
             },
         ],
         roles: [{ type: String }],
         rolePermissions: [
             {
                 role: String,
+                roleIndex: Number,
                 permissions: [String],
             },
         ],

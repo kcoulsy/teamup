@@ -145,3 +145,34 @@ export const updateTeamRoles = (roles: string[]) => {
         });
     };
 };
+
+export const updateTeamMemberRole = (userId: string, roleIndex: number) => {
+    return async (dispatch: Dispatch<AppActions>) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await api('/team/user/update', 'POST', {
+                    userId,
+                    roleIndex,
+                });
+
+                if (res.success) {
+                    dispatch(
+                        storeTeam({
+                            id: res.team._id,
+                            name: res.team.name,
+                            description: res.team.description,
+                            members: res.team.users,
+                            roles: res.team.roles,
+                            rolePermissions: res.team.rolePermissions,
+                        })
+                    );
+                    resolve(true);
+                } else {
+                    reject(false);
+                }
+            } catch (error) {
+                reject(false);
+            }
+        });
+    };
+};

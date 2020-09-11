@@ -44,13 +44,13 @@ router.post('/create', Authenticate, async (req, res) => {
         users: [
             {
                 user: req.user._id,
-                role: 'Project Manager',
+                roleIndex: 0,
             },
         ],
         roles: ['Project Manager'],
         rolePermissions: [
             {
-                role: 'Project Manager',
+                roleIndex: 0,
                 permissions: ['team.project.create'],
             },
         ],
@@ -77,7 +77,7 @@ router.put('/update', Authenticate, async (req, res) => {
     }
 
     if (description) {
-        req.user.team.description;
+        req.user.team.description = description;
     }
 
     await req.user.team.save();
@@ -147,11 +147,11 @@ router.post('/accept', async (req, res) => {
 
         team.users.push({
             user: req.user._id,
-            role: team.roles[team.roles.length - 1],
+            roleIndex: team.roles.length - 1, // Invited users get the lowest role
         });
         await team.save();
 
-        res.send({ message: 'user added to team', team, user: req.user });
+        res.send({ message: 'User added to team', team, user: req.user });
     } else {
         res.status(404).send('Team not found with id' + teamId);
     }
@@ -165,7 +165,7 @@ router.post('/decline', async (req, res) => {
 
     req.user.teamInvites.filter((invite) => invite !== teamId);
     await req.user.save();
-    res.send('Declined team invite');
+    res.send({ message: 'Declined team invite' });
 });
 
 /**
@@ -186,19 +186,23 @@ router.post('/user/remove', Authenticate, async (req, res) => {
  * Updates a users role in the team.
  */
 router.post('/user/update', Authenticate, async (req, res) => {
-    const { userId, newRole } = req.body;
+    const { userId, roleIndex } = req.body;
     await req.user.populate('team').execPopulate();
-    if (!req.user.team.roles.includes(newRole)) {
-        return res.status(400).send({ error: 'Role is not valid' });
+    if (req.user.team.roles.length - 1 < roleIndex) {
+        return res.status(400).send({ error: 'Role index is not valid' });
     }
     req.user.team.users = req.user.team.users.map((userDoc) => {
         if (userDoc.user.equals(userId)) {
-            userDoc.role = newRole;
+            userDoc.roleIndex = roleIndex;
         }
         return userDoc;
     });
     await req.user.team.save();
-    res.json({ message: 'Users role updated', team: req.user.team });
+    res.json({
+        message: 'Users role updated',
+        team: req.user.team,
+        success: true,
+    });
 });
 
 /**
