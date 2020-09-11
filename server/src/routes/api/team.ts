@@ -36,7 +36,11 @@ router.post('/create', Authenticate, async (req, res) => {
         });
     }
 
+    const { name, description } = req.body;
+
     const team = new Team({
+        name,
+        description,
         users: [
             {
                 user: req.user._id,
@@ -60,6 +64,34 @@ router.post('/create', Authenticate, async (req, res) => {
     res.send({ team });
 });
 
+/**
+ * Allows the user to update the team name and description
+ */
+router.put('/update', Authenticate, async (req, res) => {
+    await req.user.populate('team').execPopulate();
+
+    const { name, description } = req.body;
+
+    if (name) {
+        req.user.team.name = name;
+    }
+
+    if (description) {
+        req.user.team.description;
+    }
+
+    await req.user.team.save();
+
+    res.json({
+        success: true,
+        message: 'Successfully updated team',
+        team: req.user.team,
+    });
+});
+
+/**
+ * Allows the user to leave the team BUT does not remove the team.
+ */
 router.post('/leave', Authenticate, async (req, res) => {
     await req.user.populate('team').execPopulate();
     if (req.user.team) {
@@ -70,6 +102,7 @@ router.post('/leave', Authenticate, async (req, res) => {
         });
     }
 });
+
 /**
  * Invites a user (by email) to the team
  */
@@ -135,11 +168,23 @@ router.post('/decline', async (req, res) => {
     res.send('Declined team invite');
 });
 
+/**
+ * Removes a user from the team.
+ */
 router.post('/user/remove', Authenticate, async (req, res) => {
+    const { userId } = req.body;
     await req.user.populate('team').execPopulate();
-    res.send('Removed user from the team');
+
+    req.user.team.users = req.user.team.users.filter((user) => {
+        return !user.user.equals(userId);
+    });
+    await req.user.team.save();
+    res.send({ message: 'User removed from team!', team: req.user.team });
 });
 
+/**
+ * Updates a users role in the team.
+ */
 router.post('/user/update', Authenticate, async (req, res) => {
     const { userId, newRole } = req.body;
     await req.user.populate('team').execPopulate();
@@ -190,15 +235,15 @@ router.post('/roles', Authenticate, async (req, res) => {
 });
 
 /**
- * Update Permissions, currently using role name. Should use some uid
+ * Update Permissions, currently using role name. Uses indexes for now.
  */
 router.post('/permissions', Authenticate, async (req, res) => {
-    const { roleName, permissions } = req.body;
+    const { roleIndex, permissions } = req.body;
 
     await req.user.populate('team').execPopulate();
 
-    req.user.team.rolePermissions.map((rolePerm) => {
-        if (rolePerm.role === roleName) {
+    req.user.team.rolePermissions.map((rolePerm, index) => {
+        if (index === roleIndex) {
             rolePerm.permissions = permissions;
         }
     });

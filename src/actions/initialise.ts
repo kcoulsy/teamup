@@ -29,6 +29,8 @@ export const initialise = () => {
                     dispatch(
                         storeTeam({
                             id: team._id,
+                            name: team.name,
+                            description: team.description,
                             members: team.users,
                             roles: team.roles,
                             rolePermissions: team.rolePermissions,

@@ -12,6 +12,8 @@ interface TeamPermissions {
 }
 
 export interface ITeam extends Document {
+    name: string;
+    description: string;
     users: TeamUser[];
     roles: string[];
     rolePermissions: TeamPermissions[];
@@ -21,6 +23,8 @@ export interface ITeamModel extends Model<ITeam> {}
 
 const teamSchema: Schema = new Schema(
     {
+        name: String,
+        description: String,
         users: [
             {
                 user: {

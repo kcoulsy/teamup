@@ -1,16 +1,20 @@
 import React from 'react';
 import { Form, Input, Button, Typography, notification, Modal } from 'antd';
-import { removeTeam } from './../../../actions/team';
+import { updateTeam, removeTeam } from './../../../actions/team';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../../../constants/pageRoutes';
+import { RootState } from '../../../store/configure';
 
 const { Title } = Typography;
 const { confirm } = Modal;
 
-const GeneralSettings: React.FunctionComponent<{ removeTeam: Function }> = ({
-    removeTeam,
-}) => {
+const GeneralSettings: React.FunctionComponent<{
+    teamName: string;
+    teamDesc: string;
+    updateTeam: Function;
+    removeTeam: Function;
+}> = ({ teamName, teamDesc, updateTeam, removeTeam }) => {
     const history = useHistory();
     return (
         <div>
@@ -35,7 +39,22 @@ const GeneralSettings: React.FunctionComponent<{ removeTeam: Function }> = ({
                     },
                 }}
                 name="teamGeneral"
-                initialValues={{ remember: true }}>
+                initialValues={{ teamName, teamDesc }}
+                onFinish={async ({ teamName, teamDesc }) => {
+                    const success = await updateTeam({
+                        name: teamName,
+                        description: teamDesc,
+                    });
+                    if (success) {
+                        notification.success({
+                            message: 'Team updated successfully!',
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Something went wrong updating team!',
+                        });
+                    }
+                }}>
                 <Form.Item label="Team Name" name="teamName">
                     <Input />
                 </Form.Item>
@@ -84,7 +103,14 @@ const GeneralSettings: React.FunctionComponent<{ removeTeam: Function }> = ({
     );
 };
 
+const mapStateToProps = (state: RootState) => ({
+    teamName: state.team.name,
+    teamDesc: state.team.description,
+});
+
 const mapDispatchToProps = {
     removeTeam,
+    updateTeam,
 };
-export default connect(undefined, mapDispatchToProps)(GeneralSettings);
+
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralSettings);

@@ -23,6 +23,8 @@ export default (state = initialState, action?: AppActions) => {
             console.log(action.payload);
             return Object.assign({}, state, {
                 id: action.payload.id,
+                name: action.payload.name,
+                description: action.payload.description,
                 members: action.payload.members,
                 roles: action.payload.roles,
                 rolePermissions: action.payload.rolePermissions,

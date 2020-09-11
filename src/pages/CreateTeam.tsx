@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Form, Button, notification } from 'antd';
+import { Card, Form, Button, notification, Input } from 'antd';
 import { createTeam } from '../actions/team';
 import { connect } from 'react-redux';
 import { useHistory, Redirect } from 'react-router-dom';
@@ -32,14 +32,23 @@ const CreateTeamPage: React.FunctionComponent<{
                     {...layout}
                     name="basic"
                     initialValues={{ remember: true }}
-                    onFinish={async () => {
-                        const done = await createTeam();
+                    onFinish={async ({ teamName, teamDesc }) => {
+                        const done = await createTeam({
+                            name: teamName,
+                            description: teamDesc,
+                        });
                         if (done) {
                             notification.success({ message: 'Team Created' });
                             history.push(PATH_TEAM_PROFILE);
                         }
                     }}>
-                    Other fields will be added here
+                    <Form.Item label="Team Name" name="teamName">
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item label="Team Description" name="teamDesc">
+                        <Input.TextArea />
+                    </Form.Item>
                     <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Create Team

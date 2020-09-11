@@ -59,6 +59,8 @@ export interface TeamMyFetchAction {
     type: typeof TEAM_MY_FETCH;
     payload: {
         id: string | null;
+        name: string | null;
+        description: string | null;
         members: TeamMember[];
         roles: string[];
         rolePermissions: any[];
