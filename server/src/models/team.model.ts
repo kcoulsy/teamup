@@ -3,7 +3,7 @@ import { IUser } from './user.model';
 
 interface TeamUser {
     user: IUser;
-    role?: string; //TODO remove this key
+    role?: string; // TODO remove this key
     roleIndex: number;
 }
 
