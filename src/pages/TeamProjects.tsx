@@ -8,9 +8,9 @@ const TeamProjects: React.FunctionComponent = () => {
             <PageHeader
                 className="site-page-header"
                 title="Team Projects"
-                style={{margin: 0, padding: 0, paddingBottom: '10px'}}
+                style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
             />
-            <ProjectBrowser />
+            <ProjectBrowser projects={[]} />
         </div>
     );
 };
