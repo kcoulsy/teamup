@@ -6,13 +6,21 @@ const router = express.Router();
 
 router.get('/', Authenticate, async (req, res) => {
     // TODO pass in param for team specific tasks
-    const userId = req.user._id;
-    const projects = await Project.find({ user: userId });
+    const projects = await Project.find({ user: req.user._id });
     res.send({ message: 'Getting all projects', projects });
+});
+
+router.get('/:id', Authenticate, async (req, res) => {
+    const query: any = { user: req.user._id, _id: req.params.id }; //TODO fix this any
+
+    // TODO pass in param for team specific tasks
+    const projects = await Project.find(query);
+    res.send({ message: 'Getting specific project', projects });
 });
 
 router.post('/', Authenticate, async (req, res) => {
     const { title, description } = req.body;
+
     // TODO check if in a team, AND has perms
     const project = new Project({ title, description, user: req.user._id });
     await project.save();
