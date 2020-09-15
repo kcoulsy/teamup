@@ -11,7 +11,7 @@ router.get('/', Authenticate, async (req, res) => {
 });
 
 router.get('/:id', Authenticate, async (req, res) => {
-    const query: any = { user: req.user._id, _id: req.params.id }; //TODO fix this any
+    const query: any = { user: req.user._id, _id: req.params.id }; // TODO fix this any
 
     // TODO pass in param for team specific tasks
     const projects = await Project.find(query);

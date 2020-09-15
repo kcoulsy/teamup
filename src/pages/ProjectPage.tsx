@@ -61,6 +61,7 @@ const ProjectPage: React.FunctionComponent = () => {
             <PageHeader
                 className="site-page-header"
                 title={project?.title}
+                subTitle={project?.description}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 extra={[
                     <Button
