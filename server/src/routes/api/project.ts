@@ -14,8 +14,9 @@ router.get('/:id', Authenticate, async (req, res) => {
     const query: any = { user: req.user._id, _id: req.params.id }; // TODO fix this any
 
     // TODO pass in param for team specific tasks
-    const projects = await Project.find(query);
-    res.send({ message: 'Getting specific project', projects });
+    const project = await Project.findOne(query);
+    await project.populate('tasks').execPopulate();
+    res.send({ message: 'Getting specific project', project });
 });
 
 router.post('/', Authenticate, async (req, res) => {
