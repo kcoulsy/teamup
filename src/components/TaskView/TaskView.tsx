@@ -13,6 +13,7 @@ import {
     Tag,
     Timeline,
 } from 'antd';
+import { Task } from './../../types/task';
 
 const { Paragraph, Text, Link } = Typography;
 const data = [
@@ -52,7 +53,11 @@ const data = [
     },
 ];
 
-const TaskView: React.FunctionComponent = () => {
+interface TaskViewProps {
+    task: Task;
+}
+const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
+    console.log('task view', task);
     return (
         <>
             <Card size="small" style={{ marginBottom: '16px' }}>
@@ -61,34 +66,28 @@ const TaskView: React.FunctionComponent = () => {
                         <Text strong style={{ paddingRight: 5 }}>
                             Assignee:
                         </Text>
-                        <Link>John Smith</Link>
+                        <Link>
+                            {task.assignee ? task.assignee : 'Unassigned'}
+                        </Link>
                     </Col>
                     <Col span={8}>
                         <Text strong style={{ paddingRight: 5 }}>
                             Status:
                         </Text>
-                        <Tag color="gold">In Progress</Tag>
+                        <Tag color={task.status.color}>{task.status.label}</Tag>
                     </Col>
                     <Col span={8}>
                         <Text strong style={{ paddingRight: 5 }}>
                             Estimated Time Remaining:
                         </Text>
-                        <Text>17 Hours</Text>
+                        <Text>{task.timeRemaining}</Text>
                     </Col>
                 </Row>
             </Card>
             <Card size="small" style={{ marginBottom: '16px' }}>
                 <Paragraph
                     ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}>
-                    Ant Design, a design language for background applications,
-                    is refined by Ant UED Team. Ant Design, a design language
-                    for background applications, is refined by Ant UED Team. Ant
-                    Design, a design language for background applications, is
-                    refined by Ant UED Team. Ant Design, a design language for
-                    background applications, is refined by Ant UED Team. Ant
-                    Design, a design language for background applications, is
-                    refined by Ant UED Team. Ant Design, a design language for
-                    background applications, is refined by Ant UED Team.
+                    {task.description}
                 </Paragraph>
             </Card>
             <Row gutter={[16, 16]}>

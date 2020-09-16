@@ -5,8 +5,9 @@ import TaskView from '../components/TaskView/TaskView';
 import { EditOutlined } from '@ant-design/icons';
 // import AddTask from '../components/AddTask/AddTask';
 import { useParams, useHistory } from 'react-router-dom';
-import { api } from './../services/api';
 import { PATH_HOME } from './../constants/pageRoutes';
+import { fetchTask } from './../actions/task';
+import { Task } from './../types/task';
 
 const TaskPage: React.FunctionComponent = () => {
     let { taskid } = useParams();
@@ -15,13 +16,15 @@ const TaskPage: React.FunctionComponent = () => {
     const handleAddTask = () => {
         setModalOpen(!modalOpen);
     };
-    const [task, setTask] = useState<any>();
+    const [task, setTask] = useState<Task | undefined>();
     useEffect(() => {
-        async function fetchTask() {
-            const res = await api(`/task/${taskid}`, 'GET');
-            setTask(res.task);
-        }
-        fetchTask();
+        fetchTask(taskid)
+            .then((task) => {
+                setTask(task);
+            })
+            .catch(() => {
+                setTask(undefined);
+            });
     }, []);
     if (!task) {
         return (
@@ -61,7 +64,7 @@ const TaskPage: React.FunctionComponent = () => {
                 TODO rename this component probs
                 {/* <AddTask teamView={false} /> */}
             </Drawer>
-            <TaskView />
+            <TaskView task={task} />
         </div>
     );
 };
