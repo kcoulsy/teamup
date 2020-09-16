@@ -9,12 +9,12 @@ export default (status: string): TaskStatusColor => {
             };
         case TaskStatus.IN_PROGRESS:
             return {
-                color: 'yellow',
+                color: 'orange',
                 label: taskStatusLabel[TaskStatus.IN_PROGRESS],
             };
         case TaskStatus.PENDING_REVIEW:
             return {
-                color: 'orange',
+                color: 'purple',
                 label: taskStatusLabel[TaskStatus.PENDING_REVIEW],
             };
         case TaskStatus.TESTING:
