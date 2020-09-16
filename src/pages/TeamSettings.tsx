@@ -7,8 +7,8 @@ const TeamSettings: React.FunctionComponent = () => {
         <div>
             <PageHeader
                 className="site-page-header"
-                title="Account Settings"
-                style={{margin: 0, padding: 0, paddingBottom: '10px'}}
+                title="Team Settings"
+                style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
             />
             <TeamSettingsPanel />
         </div>
