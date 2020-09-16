@@ -65,6 +65,42 @@ router.post('/', Authenticate, async (req, res) => {
 /**
  * PUT update a task
  */
+router.put('/:id', Authenticate, async (req, res) => {
+    const { title, description, assignee, status, estimatedHours } = req.body;
+
+    if (status && !Object.values(TaskStatus).includes(status)) {
+        return res.status(400).send({
+            error: `Status must be one of the following: ${Object.values(
+                TaskStatus
+            ).join(' ')}`,
+        });
+    }
+
+    try {
+        const task = await Task.findOne({ _id: req.params.id });
+        if (title) {
+            task.title = title;
+        }
+        if (description) {
+            task.description = description;
+        }
+        if (assignee) {
+            //TODO validate is a valid assignee
+            task.assignee = assignee;
+        }
+        if (estimatedHours) {
+            task.estimatedHours = estimatedHours;
+        }
+        if (status) {
+            task.status = status;
+        }
+        await task.save();
+
+        res.send({ task });
+    } catch (err) {
+        res.send({ task: null });
+    }
+});
 
 /**
  * DELETE a task

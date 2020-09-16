@@ -13,12 +13,14 @@ interface TaskFormProps {
     initialValues?: Task;
     teamView: boolean;
     onFormFinish: (task: any) => void; // TODO fix any
+    type: 'Add' | 'Edit';
 }
 
 const TaskForm: React.FunctionComponent<TaskFormProps> = ({
     initialValues,
     teamView,
     onFormFinish,
+    type,
 }) => {
     let preFilledValues = {};
     if (initialValues) {
@@ -73,7 +75,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        Add Task
+                        {`${type} Task`}
                     </Button>
                 </Form.Item>
             </Form>

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Button, Drawer, Result } from 'antd';
+import { PageHeader, Button, Drawer, Result, notification } from 'antd';
 import TaskView from '../components/TaskView/TaskView';
 
 import { EditOutlined } from '@ant-design/icons';
 // import AddTask from '../components/AddTask/AddTask';
 import { useParams, useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../constants/pageRoutes';
-import { fetchTask } from './../actions/task';
+import { fetchTask, updateTask } from './../actions/task';
 import { Task } from './../types/task';
 import TaskForm from './../components/TaskForm/TaskForm';
 
 const TaskPage: React.FunctionComponent = () => {
-    let { taskid } = useParams();
+    let { projectid, taskid } = useParams();
     const history = useHistory();
     const [modalOpen, setModalOpen] = useState(false);
     const handleEditTask = () => {
@@ -51,6 +51,7 @@ const TaskPage: React.FunctionComponent = () => {
                 className="site-page-header"
                 title={task?.title}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
+                onBack={() => history.push(`/project/${projectid}`)}
                 extra={[
                     <Button key="3" onClick={handleEditTask}>
                         Edit Task <EditOutlined />
@@ -63,10 +64,24 @@ const TaskPage: React.FunctionComponent = () => {
                 onClose={handleEditTask}
                 width="450">
                 <TaskForm
-                    onFormFinish={(values) => {
+                    onFormFinish={async (values) => {
                         setModalOpen(false);
-                        console.log('edited', values);
+                        updateTask(taskid, values)
+                            .then((task) => {
+                                notification.success({
+                                    message: 'Task updated successfully!',
+                                });
+                                setTask(task);
+                            })
+                            .catch((e) => {
+                                notification.error({
+                                    message: 'Something went wrong updating!',
+                                });
+                                setTask(undefined);
+                            })
+                            .finally(() => setModalOpen(false));
                     }}
+                    type="Edit"
                     initialValues={task}
                     teamView={false}
                 />

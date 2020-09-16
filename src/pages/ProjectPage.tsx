@@ -95,6 +95,7 @@ const ProjectPage: React.FunctionComponent = () => {
                 title={project?.title}
                 subTitle={project?.description}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
+                onBack={() => history.push(PATH_MY_PROJECTS)}
                 extra={[
                     <Button
                         key="1"
@@ -182,6 +183,7 @@ const ProjectPage: React.FunctionComponent = () => {
                             setAddTaskDrawerOpen(false);
                         }
                     }}
+                    type="Add"
                 />
             </Drawer>
             <ProjectView tasks={tasks} />
