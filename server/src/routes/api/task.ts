@@ -105,4 +105,23 @@ router.put('/:id', Authenticate, async (req, res) => {
 /**
  * DELETE a task
  */
+router.delete('/:id', Authenticate, async (req, res) => {
+    try {
+        const task = await Task.findOne({ _id: req.params.id });
+        if (!task.createdBy.equals(req.user._id)) {
+            return res.status(401).send({ error: 'Not your task!' });
+        }
+
+        task.deleteOne((err) => {
+            if (err) {
+                return res.send(400).send({ error: 'Something went wrong' });
+            }
+            res.send({ message: 'Task deleted!' });
+        });
+    } catch (err) {
+        console.log(err);
+        return res.send(400).send({ error: 'Something went wrong' });
+    }
+});
+
 export default router;

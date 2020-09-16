@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Button, Drawer, Result, notification } from 'antd';
+import { PageHeader, Button, Drawer, Result, notification, Modal } from 'antd';
 import TaskView from '../components/TaskView/TaskView';
 
 import { ArrowRightOutlined, EditOutlined } from '@ant-design/icons';
@@ -9,6 +9,9 @@ import { PATH_HOME } from './../constants/pageRoutes';
 import { fetchTask, updateTask } from './../actions/task';
 import { Task, TaskStatus, taskStatusLabel } from './../types/task';
 import TaskForm from './../components/TaskForm/TaskForm';
+import { api } from './../services/api';
+
+const { confirm } = Modal;
 
 const TaskPage: React.FunctionComponent = () => {
     let { projectid, taskid } = useParams();
@@ -113,6 +116,31 @@ const TaskPage: React.FunctionComponent = () => {
                     initialValues={task}
                     teamView={false}
                 />
+
+                <Button
+                    danger
+                    onClick={() => {
+                        confirm({
+                            title: 'Delete Task',
+                            content:
+                                'Are you sure you want to delete this task?',
+                            onOk: async () => {
+                                const res = await api(
+                                    `/task/${taskid}`,
+                                    'DELETE'
+                                );
+                                if (res) {
+                                    setModalOpen(false);
+                                    notification.success({
+                                        message: 'Task deleted!',
+                                    });
+                                    history.push(`/project/${projectid}`);
+                                }
+                            },
+                        });
+                    }}>
+                    Delete Task
+                </Button>
             </Drawer>
             <TaskView task={task} />
         </div>
