@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Select, InputNumber, AutoComplete, Button } from 'antd';
-import { Project } from './../../types/project';
 import { TaskStatus, taskStatusLabel } from '../../types/task';
+import { Task } from './../../types/task';
 
 const options = [
     { value: 'John Smith' },
@@ -9,23 +9,35 @@ const options = [
     { value: 'Bruce Michael' },
 ];
 
-interface AddTaskProps {
+interface TaskFormProps {
+    initialValues?: Task;
     teamView: boolean;
-    project?: Project;
-    onAddTask: (task: any) => void; // TODO fix any
+    onFormFinish: (task: any) => void; // TODO fix any
 }
 
-const AddTask: React.FunctionComponent<AddTaskProps> = ({
+const TaskForm: React.FunctionComponent<TaskFormProps> = ({
+    initialValues,
     teamView,
-    onAddTask,
+    onFormFinish,
 }) => {
+    let preFilledValues = {};
+    if (initialValues) {
+        const { title, description, status, timeRemaining } = initialValues;
+        preFilledValues = {
+            title,
+            description,
+            status: status.label,
+            estimatedHours: timeRemaining, // TODO change time remaining to estimatedHours for consistency
+        };
+    }
     return (
         <>
             <Form
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 16 }}
                 layout="horizontal"
-                onFinish={(values) => onAddTask(values)}>
+                initialValues={preFilledValues ? preFilledValues : undefined}
+                onFinish={(values) => onFormFinish(values)}>
                 <Form.Item label="Title" name="title">
                     <Input />
                 </Form.Item>
@@ -69,4 +81,4 @@ const AddTask: React.FunctionComponent<AddTaskProps> = ({
     );
 };
 
-export default AddTask;
+export default TaskForm;

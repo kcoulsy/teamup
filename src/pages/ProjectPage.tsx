@@ -9,7 +9,6 @@ import {
     Modal,
 } from 'antd';
 import ProjectView from '../components/ProjectView/ProjectView';
-import AddTask from '../components/AddTask/AddTask';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { api } from './../services/api';
 import { Project } from './../types/project';
@@ -17,6 +16,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { PATH_MY_PROJECTS } from './../constants/pageRoutes';
 import { TaskRow } from '../types/task';
 import mapProjectTasksToTaskRow from '../helpers/mapProjectTasksToTaskRow';
+import TaskForm from './../components/TaskForm/TaskForm';
 
 const { confirm } = Modal;
 
@@ -174,15 +174,14 @@ const ProjectPage: React.FunctionComponent = () => {
                     setAddTaskDrawerOpen(!addTaskDrawerOpen);
                 }}
                 width="450">
-                <AddTask
+                <TaskForm
                     teamView={false}
-                    onAddTask={async (task) => {
+                    onFormFinish={async (task) => {
                         const taskAdded = addTask({ ...task });
                         if (taskAdded) {
                             setAddTaskDrawerOpen(false);
                         }
                     }}
-                    project={project}
                 />
             </Drawer>
             <ProjectView tasks={tasks} />

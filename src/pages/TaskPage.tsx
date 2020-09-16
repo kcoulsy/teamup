@@ -8,12 +8,13 @@ import { useParams, useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../constants/pageRoutes';
 import { fetchTask } from './../actions/task';
 import { Task } from './../types/task';
+import TaskForm from './../components/TaskForm/TaskForm';
 
 const TaskPage: React.FunctionComponent = () => {
     let { taskid } = useParams();
     const history = useHistory();
     const [modalOpen, setModalOpen] = useState(false);
-    const handleAddTask = () => {
+    const handleEditTask = () => {
         setModalOpen(!modalOpen);
     };
     const [task, setTask] = useState<Task | undefined>();
@@ -51,7 +52,7 @@ const TaskPage: React.FunctionComponent = () => {
                 title={task?.title}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 extra={[
-                    <Button key="3" onClick={handleAddTask}>
+                    <Button key="3" onClick={handleEditTask}>
                         Edit Task <EditOutlined />
                     </Button>,
                 ]}
@@ -59,10 +60,16 @@ const TaskPage: React.FunctionComponent = () => {
             <Drawer
                 title="Edit Project Task"
                 visible={modalOpen}
-                onClose={handleAddTask}
+                onClose={handleEditTask}
                 width="450">
-                TODO rename this component probs
-                {/* <AddTask teamView={false} /> */}
+                <TaskForm
+                    onFormFinish={(values) => {
+                        setModalOpen(false);
+                        console.log('edited', values);
+                    }}
+                    initialValues={task}
+                    teamView={false}
+                />
             </Drawer>
             <TaskView task={task} />
         </div>
