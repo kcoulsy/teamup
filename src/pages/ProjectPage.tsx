@@ -77,7 +77,11 @@ const ProjectPage: React.FunctionComponent = () => {
         project?.tasks.map((projectTask) => {
             return {
                 key: projectTask._id,
-                title: projectTask.title,
+                title: {
+                    label: projectTask.title,
+                    projectId: projectid,
+                    taskId: projectTask._id,
+                },
                 description: projectTask.description,
                 status: getStatusColourObj(projectTask.status),
                 assignee: projectTask.assignee

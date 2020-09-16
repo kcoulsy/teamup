@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 
 export interface ITask {
     key: string;
-    title: string;
+    title: {
+        label: string;
+        projectId: string;
+        taskId: string;
+    };
     assignee: string;
     status: IStatus;
     timeRemaining: string;
@@ -19,9 +23,15 @@ const columns = [
     {
         title: 'Title',
         dataIndex: 'title',
-        render: (text: string) => (
-            <Link to="/project/123/task/123">{text}</Link>
-        ),
+        render: ({
+            label,
+            projectId,
+            taskId,
+        }: {
+            label: string;
+            projectId: string;
+            taskId: string;
+        }) => <Link to={`/project/${projectId}/task/${taskId}`}>{label}</Link>,
     },
     {
         title: 'Assignee',
@@ -37,38 +47,6 @@ const columns = [
     {
         title: 'Time Remaining',
         dataIndex: 'timeRemaining',
-    },
-];
-const data: ITask[] = [
-    {
-        key: '1',
-        title: 'Make the app',
-        assignee: 'John',
-        status: {
-            color: 'green',
-            label: 'Complete',
-        },
-        timeRemaining: 'Done',
-    },
-    {
-        key: '2',
-        title: 'Test the App',
-        assignee: 'Sarah',
-        status: {
-            color: 'gold',
-            label: 'In Progress',
-        },
-        timeRemaining: '7 Hours',
-    },
-    {
-        key: '3',
-        title: 'Write code tests',
-        assignee: 'Unassigned',
-        status: {
-            color: 'red',
-            label: 'Not Started',
-        },
-        timeRemaining: '2 Weeks',
     },
 ];
 
