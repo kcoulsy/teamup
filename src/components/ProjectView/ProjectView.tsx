@@ -1,23 +1,7 @@
 import React from 'react';
 import { Card, Table, Tag } from 'antd';
 import { Link } from 'react-router-dom';
-
-export interface ITask {
-    key: string;
-    title: {
-        label: string;
-        projectId: string;
-        taskId: string;
-    };
-    assignee: string;
-    status: IStatus;
-    timeRemaining: string;
-}
-
-interface IStatus {
-    label: string;
-    color: string;
-}
+import { TaskRow, TaskStatusColor } from '../../types/task';
 
 const columns = [
     {
@@ -40,7 +24,7 @@ const columns = [
     {
         title: 'Status',
         dataIndex: 'status',
-        render: (status: IStatus) => (
+        render: (status: TaskStatusColor) => (
             <Tag color={status.color}>{status.label}</Tag>
         ),
     },
@@ -50,7 +34,7 @@ const columns = [
     },
 ];
 
-const ProjectView: React.FunctionComponent<{ tasks: ITask[] }> = ({
+const ProjectView: React.FunctionComponent<{ tasks: TaskRow[] }> = ({
     tasks,
 }) => {
     return (

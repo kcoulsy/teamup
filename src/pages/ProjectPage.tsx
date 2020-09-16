@@ -15,7 +15,8 @@ import { api } from './../services/api';
 import { Project } from './../types/project';
 import { useParams, useHistory } from 'react-router-dom';
 import { PATH_MY_PROJECTS } from './../constants/pageRoutes';
-import { ITask } from './../components/ProjectView/ProjectView';
+import { TaskRow } from '../types/task';
+import mapProjectTasksToTaskRow from '../helpers/mapProjectTasksToTaskRow';
 
 const { confirm } = Modal;
 
@@ -37,59 +38,7 @@ const ProjectPage: React.FunctionComponent = () => {
         fetchProject();
     }, []);
 
-    //TODO make this a helper method, use types!
-    function getStatusColourObj(status: string) {
-        switch (status) {
-            case 'NOT_STARTED':
-                return {
-                    color: 'red',
-                    label: 'Not Started',
-                };
-            case 'IN_PROGRESS':
-                return {
-                    color: 'yellow',
-                    label: 'In Progress',
-                };
-            case 'PENDING_REVIEW':
-                return {
-                    color: 'orange',
-                    label: 'Pending Review',
-                };
-            case 'TESTING':
-                return {
-                    color: 'blue',
-                    label: 'Testing',
-                };
-            case 'DONE':
-                return {
-                    color: 'green',
-                    label: 'Done',
-                };
-            default:
-                return {
-                    color: 'red',
-                    label: 'N/A',
-                };
-        }
-    }
-    //TODO make this a helper function
-    let tasks: ITask[] =
-        project?.tasks.map((projectTask) => {
-            return {
-                key: projectTask._id,
-                title: {
-                    label: projectTask.title,
-                    projectId: projectid,
-                    taskId: projectTask._id,
-                },
-                description: projectTask.description,
-                status: getStatusColourObj(projectTask.status),
-                assignee: projectTask.assignee
-                    ? projectTask.assignee
-                    : 'Unassigned',
-                timeRemaining: projectTask.estimatedHours,
-            };
-        }) || [];
+    let tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
 
     async function addTask({
         title,

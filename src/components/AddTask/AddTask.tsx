@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Select, InputNumber, AutoComplete, Button } from 'antd';
 import { Project } from './../../types/project';
+import { TaskStatus, taskStatusLabel } from '../../types/task';
 
 const options = [
     { value: 'John Smith' },
@@ -49,18 +50,13 @@ const AddTask: React.FunctionComponent<AddTaskProps> = ({
                 </Form.Item>
                 <Form.Item label="Select" name="status">
                     <Select>
-                        <Select.Option value="NOT_STARTED">
-                            {/* TODO move to constants */}
-                            Not Started
-                        </Select.Option>
-                        <Select.Option value="IN_PROGRESS">
-                            In Progress
-                        </Select.Option>
-                        <Select.Option value="PENDING_REVIEW">
-                            Pending Review
-                        </Select.Option>
-                        <Select.Option value="TESTING">Testing</Select.Option>
-                        <Select.Option value="DONE">Done</Select.Option>
+                        {Object.values(TaskStatus).map((status) => {
+                            return (
+                                <Select.Option key={status} value={status}>
+                                    {taskStatusLabel[status]}
+                                </Select.Option>
+                            );
+                        })}
                     </Select>
                 </Form.Item>
                 <Form.Item>

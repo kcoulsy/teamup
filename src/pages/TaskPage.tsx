@@ -45,7 +45,7 @@ const TaskPage: React.FunctionComponent = () => {
         <div>
             <PageHeader
                 className="site-page-header"
-                title="Task View"
+                title={task?.title}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 extra={[
                     <Button key="3" onClick={handleAddTask}>
