@@ -1,63 +1,49 @@
 import React from 'react';
-import {
-    Card,
-    Typography,
-    Row,
-    Col,
-    Comment,
-    Tooltip,
-    List,
-    Form,
-    Input,
-    Button,
-    Tag,
-    Timeline,
-} from 'antd';
+import { Card, Typography, Row, Col, Tag } from 'antd';
 import { Task } from './../../types/task';
 
 const { Paragraph, Text, Link } = Typography;
-const data = [
-    {
-        author: 'Han Solo',
-        avatar:
-            'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        content: (
-            <p>
-                We supply a series of design principles, practical patterns and
-                high quality design resources (Sketch and Axure), to help people
-                create their product prototypes beautifully and efficiently.
-            </p>
-        ),
-        datetime: (
-            <Tooltip title={'15/08/2020 18:45'}>
-                <span>2 Days Ago</span>
-            </Tooltip>
-        ),
-    },
-    {
-        author: 'Han Solo',
-        avatar:
-            'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        content: (
-            <p>
-                We supply a series of design principles, practical patterns and
-                high quality design resources (Sketch and Axure), to help people
-                create their product prototypes beautifully and efficiently.
-            </p>
-        ),
-        datetime: (
-            <Tooltip title={'15/08/2020 18:45'}>
-                <span>2 Days Ago</span>
-            </Tooltip>
-        ),
-    },
-];
+// const data = [
+//     {
+//         author: 'Han Solo',
+//         avatar:
+//             'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//         content: (
+//             <p>
+//                 We supply a series of design principles, practical patterns and
+//                 high quality design resources (Sketch and Axure), to help people
+//                 create their product prototypes beautifully and efficiently.
+//             </p>
+//         ),
+//         datetime: (
+//             <Tooltip title={'15/08/2020 18:45'}>
+//                 <span>2 Days Ago</span>
+//             </Tooltip>
+//         ),
+//     },
+//     {
+//         author: 'Han Solo',
+//         avatar:
+//             'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//         content: (
+//             <p>
+//                 We supply a series of design principles, practical patterns and
+//                 high quality design resources (Sketch and Axure), to help people
+//                 create their product prototypes beautifully and efficiently.
+//             </p>
+//         ),
+//         datetime: (
+//             <Tooltip title={'15/08/2020 18:45'}>
+//                 <span>2 Days Ago</span>
+//             </Tooltip>
+//         ),
+//     },
+// ];
 
 interface TaskViewProps {
     task: Task;
 }
 const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
-    console.log('task view', task);
     return (
         <>
             <Card size="small" style={{ marginBottom: '16px' }}>
@@ -90,7 +76,7 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                     {task.description}
                 </Paragraph>
             </Card>
-            <Row gutter={[16, 16]}>
+            {/* <Row gutter={[16, 16]}>
                 <Col span={8}>
                     <Card title="Work Log" size="small">
                         <Timeline>
@@ -142,7 +128,7 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                         </Form.Item>
                     </Card>
                 </Col>
-            </Row>
+            </Row> */}
         </>
     );
 };
