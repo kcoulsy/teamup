@@ -9,8 +9,12 @@ const router = express.Router();
  * GET single task
  */
 router.get('/:id', Authenticate, async (req, res) => {
-    const task = await Task.findOne({ _id: req.params.id });
-    res.send({ task });
+    try {
+        const task = await Task.findOne({ _id: req.params.id });
+        res.send({ task });
+    } catch (err) {
+        res.send({ task: null });
+    }
 });
 
 /**
