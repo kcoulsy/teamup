@@ -31,8 +31,8 @@ export const updateTask = (
         title?: string;
         description?: string;
         status?: TaskStatus;
-        assignee: string;
-        estimatedHours: number;
+        assignee?: string;
+        estimatedHours?: number;
     }
 ): Promise<Task | undefined> => {
     return new Promise(async (resolve, reject) => {
