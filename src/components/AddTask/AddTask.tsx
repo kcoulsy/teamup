@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-    Form,
-    Input,
-    Select,
-    DatePicker,
-    InputNumber,
-    AutoComplete,
-    Button,
-} from 'antd';
+import { Form, Input, Select, InputNumber, AutoComplete, Button } from 'antd';
+import { Project } from './../../types/project';
 
 const options = [
     { value: 'John Smith' },
@@ -15,53 +8,65 @@ const options = [
     { value: 'Bruce Michael' },
 ];
 
-const AddTask: React.FunctionComponent = () => {
+interface AddTaskProps {
+    teamView: boolean;
+    project?: Project;
+    onAddTask: (task: any) => void; // TODO fix any
+}
+
+const AddTask: React.FunctionComponent<AddTaskProps> = ({
+    teamView,
+    onAddTask,
+}) => {
     return (
         <>
             <Form
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 16 }}
-                layout="horizontal">
-                <Form.Item label="Title">
+                layout="horizontal"
+                onFinish={(values) => onAddTask(values)}>
+                <Form.Item label="Title" name="title">
                     <Input />
                 </Form.Item>
-                <Form.Item label="Description">
+                <Form.Item label="Description" name="description">
                     <Input.TextArea />
                 </Form.Item>
-                <Form.Item label="Assignee">
-                    <AutoComplete
-                        placeholder="Type a name here"
-                        filterOption={(inputValue, option) =>
-                            option?.value
-                                .toUpperCase()
-                                .indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                        options={options}
-                    />
-                </Form.Item>
-                <Form.Item label="Hours">
+                {teamView ? (
+                    <Form.Item label="Assignee" name="assignee">
+                        <AutoComplete
+                            placeholder="Type a name here"
+                            filterOption={(inputValue, option) =>
+                                option?.value
+                                    .toUpperCase()
+                                    .indexOf(inputValue.toUpperCase()) !== -1
+                            }
+                            options={options}
+                        />
+                    </Form.Item>
+                ) : null}
+                <Form.Item label="Hours" name="estimatedHours">
                     <InputNumber />
                 </Form.Item>
-                <Form.Item label="Start Date">
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item label="Select">
-                    <Select defaultValue="not_started">
-                        <Select.Option value="not_started">
+                <Form.Item label="Select" name="status">
+                    <Select>
+                        <Select.Option value="NOT_STARTED">
+                            {/* TODO move to constants */}
                             Not Started
                         </Select.Option>
-                        <Select.Option value="in_progress">
+                        <Select.Option value="IN_PROGRESS">
                             In Progress
                         </Select.Option>
-                        <Select.Option value="pending_review">
+                        <Select.Option value="PENDING_REVIEW">
                             Pending Review
                         </Select.Option>
-                        <Select.Option value="testing">Testing</Select.Option>
-                        <Select.Option value="done">Done</Select.Option>
+                        <Select.Option value="TESTING">Testing</Select.Option>
+                        <Select.Option value="DONE">Done</Select.Option>
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary">Add Task</Button>
+                    <Button type="primary" htmlType="submit">
+                        Add Task
+                    </Button>
                 </Form.Item>
             </Form>
         </>

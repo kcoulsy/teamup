@@ -15,6 +15,7 @@ import { api } from './../services/api';
 import { Project } from './../types/project';
 import { useParams, useHistory } from 'react-router-dom';
 import { PATH_MY_PROJECTS } from './../constants/pageRoutes';
+import { ITask } from './../components/ProjectView/ProjectView';
 
 const { confirm } = Modal;
 
@@ -25,16 +26,94 @@ const ProjectPage: React.FunctionComponent = () => {
     const [editProjectDrawerOpen, setEditProjectDrawerOpen] = useState(false);
     const [addTaskDrawerOpen, setAddTaskDrawerOpen] = useState(false);
 
-    useEffect(() => {
-        async function fetchProject() {
-            const res = await api(`/project/${projectid}`, 'GET');
+    async function fetchProject() {
+        const res = await api(`/project/${projectid}`, 'GET');
 
-            if (res) {
-                setProject(res.projects[0]);
-            }
+        if (res) {
+            setProject(res.project);
         }
+    }
+    useEffect(() => {
         fetchProject();
     }, []);
+
+    //TODO make this a helper method, use types!
+    function getStatusColourObj(status: string) {
+        switch (status) {
+            case 'NOT_STARTED':
+                return {
+                    color: 'red',
+                    label: 'Not Started',
+                };
+            case 'IN_PROGRESS':
+                return {
+                    color: 'yellow',
+                    label: 'In Progress',
+                };
+            case 'PENDING_REVIEW':
+                return {
+                    color: 'orange',
+                    label: 'Pending Review',
+                };
+            case 'TESTING':
+                return {
+                    color: 'blue',
+                    label: 'Testing',
+                };
+            case 'DONE':
+                return {
+                    color: 'green',
+                    label: 'Done',
+                };
+            default:
+                return {
+                    color: 'red',
+                    label: 'N/A',
+                };
+        }
+    }
+    //TODO make this a helper function
+    let tasks: ITask[] =
+        project?.tasks.map((projectTask) => {
+            return {
+                key: projectTask._id,
+                title: projectTask.title,
+                description: projectTask.description,
+                status: getStatusColourObj(projectTask.status),
+                assignee: projectTask.assignee
+                    ? projectTask.assignee
+                    : 'Unassigned',
+                timeRemaining: projectTask.estimatedHours,
+            };
+        }) || [];
+
+    async function addTask({
+        title,
+        description,
+        estimatedHours,
+        status,
+    }: {
+        title: string;
+        description: string;
+        estimatedHours: number;
+        status: string; //TODO type this
+    }) {
+        const res = await api('/task', 'POST', {
+            project: project?._id,
+            title,
+            description,
+            estimatedHours,
+            status,
+        });
+
+        if (res) {
+            //TODO no need to refetch.. just update state
+            fetchProject();
+            return true;
+        }
+
+        return false;
+    }
 
     const handleDelete = () => {
         confirm({
@@ -137,11 +216,23 @@ const ProjectPage: React.FunctionComponent = () => {
             <Drawer
                 title="Add Task To Project"
                 visible={addTaskDrawerOpen}
-                onClose={() => setAddTaskDrawerOpen(!addTaskDrawerOpen)}
+                onClose={() => {
+                    fetchProject();
+                    setAddTaskDrawerOpen(!addTaskDrawerOpen);
+                }}
                 width="450">
-                <AddTask />
+                <AddTask
+                    teamView={false}
+                    onAddTask={async (task) => {
+                        const taskAdded = addTask({ ...task });
+                        if (taskAdded) {
+                            setAddTaskDrawerOpen(false);
+                        }
+                    }}
+                    project={project}
+                />
             </Drawer>
-            <ProjectView />
+            <ProjectView tasks={tasks} />
         </div>
     );
 };

@@ -2,13 +2,14 @@ import React from 'react';
 import { Card, Table, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 
-interface ITask {
+export interface ITask {
     key: string;
     title: string;
     assignee: string;
     status: IStatus;
     timeRemaining: string;
 }
+
 interface IStatus {
     label: string;
     color: string;
@@ -71,11 +72,13 @@ const data: ITask[] = [
     },
 ];
 
-const ProjectView: React.FunctionComponent = () => {
+const ProjectView: React.FunctionComponent<{ tasks: ITask[] }> = ({
+    tasks,
+}) => {
     return (
         <div>
             <Card title="Tasks" size="small">
-                <Table size="middle" columns={columns} dataSource={data} />
+                <Table size="middle" columns={columns} dataSource={tasks} />
             </Card>
         </div>
     );
