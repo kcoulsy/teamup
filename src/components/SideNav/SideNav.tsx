@@ -27,6 +27,7 @@ import {
 } from '../../constants/pageRoutes';
 import hasTeam from '../../helpers/hasTeam';
 import hasTeamRole from '../../helpers/hasTeamRole';
+import { PERM_VIEW_TEAM_SETTINGS } from './../../constants/permissions';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -234,10 +235,9 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
 export const mapStateToProps = (state: RootState) => {
     return {
         isLoggedIn: isLoggedIn(state.auth.token),
-        showTeamProjects:
-            hasTeam(state) && hasTeamRole(state, 'team.project.create'),
+        showTeamProjects: hasTeam(state),
         showTeamSettings:
-            hasTeam(state) && hasTeamRole(state, 'team.project.create'),
+            hasTeam(state) && hasTeamRole(state, PERM_VIEW_TEAM_SETTINGS),
     };
 };
 

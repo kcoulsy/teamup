@@ -2,6 +2,7 @@ import express from 'express';
 import Team from '../../models/team.model';
 import User from '../../models/user.model';
 import Authenticate from '../../middleware/authenticate';
+import PERMISSIONS from '../../constants/permissions';
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.post('/create', Authenticate, async (req, res) => {
         rolePermissions: [
             {
                 roleIndex: 0,
-                permissions: ['team.project.create'],
+                permissions: [...Object.values(PERMISSIONS)],
             },
         ],
     });
@@ -246,11 +247,12 @@ router.post('/permissions', Authenticate, async (req, res) => {
 
     await req.user.populate('team').execPopulate();
 
-    req.user.team.rolePermissions.map((rolePerm, index) => {
-        if (index === roleIndex) {
-            rolePerm.permissions = permissions;
-        }
-    });
+    req.user.team.rolePermissions[roleIndex] = permissions;
+    // .map((rolePerm, index) => {
+    //     if (index === roleIndex) {
+    //         rolePerm.permissions = permissions;
+    //     }
+    // });
 
     await req.user.team.save();
     res.send('updated permissions');
