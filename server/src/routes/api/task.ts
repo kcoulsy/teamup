@@ -85,7 +85,7 @@ router.put('/:id', Authenticate, async (req, res) => {
             task.description = description;
         }
         if (assignee) {
-            //TODO validate is a valid assignee
+            // TODO validate is a valid assignee
             task.assignee = assignee;
         }
         if (estimatedHours) {
@@ -119,7 +119,6 @@ router.delete('/:id', Authenticate, async (req, res) => {
             res.send({ message: 'Task deleted!' });
         });
     } catch (err) {
-        console.log(err);
         return res.send(400).send({ error: 'Something went wrong' });
     }
 });

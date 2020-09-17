@@ -47,6 +47,7 @@ router.put('/', Authenticate, async (req, res) => {
     }
 
     await project.save();
+    await project.populate('tasks').execPopulate();
 
     res.send({ message: 'Updating a team', project });
 });
