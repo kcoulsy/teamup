@@ -28,7 +28,7 @@ router.get('/verify', (req, res) => {
         .then((user: IUser) => {
             if (!user) return Promise.reject();
 
-            res.status(200).json({ valid: true });
+            res.status(200).json({ valid: true, user });
         })
         // we still want a 200 if this fails
         .catch((err: string) => res.status(200).json({ valid: false }));

@@ -18,6 +18,9 @@ interface IUserSchema extends Document {
     username: string;
     email: string;
     password: string;
+    fullName: string;
+    occupation: string;
+    aboutMe: string;
     team: ITeam;
     teamInvites: ITeam[];
 }
@@ -68,6 +71,9 @@ const userSchema: Schema = new Schema(
                 },
             },
         ],
+        fullName: String,
+        occupation: String,
+        aboutMe: String,
         team: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Team',
@@ -84,9 +90,17 @@ const userSchema: Schema = new Schema(
  */
 userSchema.methods.toJSON = function () {
     const user = this;
-    const { _id, username, email, team } = user.toObject();
+    const {
+        _id,
+        username,
+        email,
+        team,
+        fullName,
+        occupation,
+        aboutMe,
+    } = user.toObject();
 
-    return { _id, username, email, team };
+    return { _id, username, email, team, fullName, occupation, aboutMe };
 };
 
 /**
