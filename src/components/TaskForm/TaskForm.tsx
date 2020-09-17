@@ -22,6 +22,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
     onFormFinish,
     type,
 }) => {
+    const [form] = Form.useForm();
     let preFilledValues = {};
     if (initialValues) {
         const { title, description, status, timeRemaining } = initialValues;
@@ -35,11 +36,15 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
     return (
         <>
             <Form
+                form={form}
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 16 }}
                 layout="horizontal"
                 initialValues={preFilledValues ? preFilledValues : undefined}
-                onFinish={(values) => onFormFinish(values)}>
+                onFinish={(values) => {
+                    onFormFinish(values);
+                    form.resetFields();
+                }}>
                 <Form.Item label="Title" name="title">
                     <Input />
                 </Form.Item>
