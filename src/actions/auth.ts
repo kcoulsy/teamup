@@ -10,18 +10,20 @@ import {
 } from '../types/actions';
 import { api } from './../services/api';
 import { Dispatch } from '@reduxjs/toolkit';
+import { userFetch } from './user';
 
 export const startLogin = (username: string, password: string) => {
     return async (dispatch: Dispatch<AppActions>) => {
         dispatch(loginAttempt());
 
         try {
-            const { token } = await api('auth/login', 'POST', {
+            const { user, token } = await api('auth/login', 'POST', {
                 username,
                 password,
             });
 
             if (token) {
+                dispatch(userFetch(user));
                 dispatch(loginSuccess(token));
             } else {
                 dispatch(loginFail());
@@ -58,6 +60,7 @@ export const startLogout = () => {
         // TODO: call api here and remove any tokens from the user.
         localStorage.removeItem('userToken');
         dispatch(logout());
+        dispatch(userFetch({ _id: '', username: '', email: '' }));
     };
 };
 

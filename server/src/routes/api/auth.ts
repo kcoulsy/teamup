@@ -16,7 +16,9 @@ router.post('/login', (req, res) => {
 
     User.findByCredentials(username, password)
         .then((user: IUser) => {
-            user.createAuthToken().then((token: string) => res.json({ token }));
+            user.createAuthToken().then((token: string) =>
+                res.json({ token, user })
+            );
         })
         .catch((err: string) => res.status(400).json('Error: ' + err));
 });

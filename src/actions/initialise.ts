@@ -5,6 +5,7 @@ import { loginAttempt, loginSuccess, loginFail } from './auth';
 import { APP_INITIALISING } from './../types/actions';
 import { api } from './../services/api';
 import { storeTeam } from './team';
+import { userFetch } from './user';
 
 export const initialise = () => {
     return async (
@@ -24,6 +25,9 @@ export const initialise = () => {
 
             if (response.valid) {
                 dispatch(loginSuccess(token));
+                if (response.user) {
+                    dispatch(userFetch(response.user));
+                }
                 const { team } = await api('team/', 'GET');
                 if (team && Object.keys(team).length) {
                     dispatch(

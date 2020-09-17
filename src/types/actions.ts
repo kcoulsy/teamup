@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export const APP_INITIALISING = 'APP_INITIALISING';
 export const APP_INITIALISED = 'APP_INITIALISED';
 export const AUTH_LOGIN_ATTEMPT = 'AUTH_LOGIN_ATTEMPT';
@@ -8,6 +10,7 @@ export const AUTH_REGISTER_ATTEMPT = 'AUTH_REGISTER_ATTEMPT';
 export const AUTH_REGISTER_SUCCESS = 'AUTH_REGISTER_SUCCESS';
 export const AUTH_REGISTER_FAIL = 'AUTH_REGISTER_FAIL';
 export const TEAM_MY_FETCH = 'TEAM_MY_FETCH';
+export const USER_FETCH = 'USER_FETCH';
 
 export interface AppInitialisingAction {
     type: typeof APP_INITIALISING;
@@ -68,6 +71,11 @@ export interface TeamMyFetchAction {
     };
 }
 
+export interface UserFetchAction {
+    type: typeof USER_FETCH;
+    payload: User;
+}
+
 export type AuthActionTypes =
     | AuthLoginAttemptAction
     | AuthLoginSuccessAction
@@ -78,5 +86,10 @@ export type AuthActionTypes =
     | AuthRegisterFailAction;
 
 export type TeamActions = TeamMyFetchAction;
+export type UserActions = UserFetchAction;
 
-export type AppActions = AuthActionTypes | AppActionTypes | TeamActions;
+export type AppActions =
+    | AuthActionTypes
+    | AppActionTypes
+    | TeamActions
+    | UserFetchAction;

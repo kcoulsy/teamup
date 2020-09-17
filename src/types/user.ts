@@ -1,7 +1,9 @@
-//TODO optional keys?
-
 export interface User {
+    _id: string;
     username?: string;
-    name?: string;
-    _id?: string;
+    email: string;
+    fullName?: string;
+    occupation?: string;
+    aboutMe?: string;
+    team?: string;
 }
