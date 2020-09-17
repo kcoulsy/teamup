@@ -13,6 +13,7 @@ import { api } from './../../../services/api';
 import { RootState } from '../../../store/configure';
 import { connect } from 'react-redux';
 import { updateTeamMemberRole } from '../../../actions/team';
+import { User } from './../../../types/user';
 
 const { Title, Link } = Typography;
 const { Option } = Select;
@@ -23,11 +24,19 @@ interface TeamMemberTableRowData {
     roleIndex: number;
 }
 
-const TeamMembers: React.FunctionComponent<{
+interface TeamMemberProps {
     teamMembers: any[];
     roles: string[];
     updateTeamMemberRole: Function;
-}> = ({ teamMembers, roles, updateTeamMemberRole }) => {
+    loggedInUser: User;
+}
+
+const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
+    teamMembers,
+    roles,
+    updateTeamMemberRole,
+    loggedInUser,
+}) => {
     const [inviteForm] = Form.useForm();
     const members: TeamMemberTableRowData[] = teamMembers.map((teamMember) => {
         return {
@@ -53,47 +62,59 @@ const TeamMembers: React.FunctionComponent<{
                         title: 'Role',
                         dataIndex: 'role',
                         key: 'role',
-                        render: (_: any, record: TeamMemberTableRowData) => (
-                            <Select
-                                defaultValue={roles[record.roleIndex]}
-                                onChange={async (value) => {
-                                    let newIndex = parseInt(value, 10);
-                                    const updated = await updateTeamMemberRole(
-                                        record.key,
-                                        newIndex
-                                    );
-                                    if (updated) {
-                                        notification.success({
-                                            message: `User ${record.name} updated to role ${roles[newIndex]}`,
-                                        });
-                                    }
-                                }}>
-                                {roles.map((role, index) => {
-                                    return (
-                                        <Option key={role} value={index}>
-                                            {role}
-                                        </Option>
-                                    );
-                                })}
-                            </Select>
-                        ),
+                        render: (_: any, record: TeamMemberTableRowData) => {
+                            if (loggedInUser._id !== record.key) {
+                                return (
+                                    <Select
+                                        defaultValue={roles[record.roleIndex]}
+                                        onChange={async (value) => {
+                                            let newIndex = parseInt(value, 10);
+                                            const updated = await updateTeamMemberRole(
+                                                record.key,
+                                                newIndex
+                                            );
+                                            if (updated) {
+                                                notification.success({
+                                                    message: `User ${record.name} updated to role ${roles[newIndex]}`,
+                                                });
+                                            }
+                                        }}>
+                                        {roles.map((role, index) => {
+                                            return (
+                                                <Option
+                                                    key={role}
+                                                    value={index}>
+                                                    {role}
+                                                </Option>
+                                            );
+                                        })}
+                                    </Select>
+                                );
+                            }
+                            return roles[record.roleIndex];
+                        },
                     },
                     {
                         title: 'Actions',
                         dataIndex: 'actions',
                         key: 'actions',
-                        render: (_: any, record: TeamMemberTableRowData) => (
-                            <Space size="middle">
-                                <Link
-                                    onClick={() => {
-                                        notification.success({
-                                            message: `${record.name} successfully removed from the team!`,
-                                        });
-                                    }}>
-                                    Remove
-                                </Link>
-                            </Space>
-                        ),
+                        render: (_: any, record: TeamMemberTableRowData) => {
+                            if (loggedInUser._id !== record.key) {
+                                return (
+                                    <Space size="middle">
+                                        <Link
+                                            onClick={() => {
+                                                notification.success({
+                                                    message: `${record.name} successfully removed from the team!`,
+                                                });
+                                            }}>
+                                            Remove
+                                        </Link>
+                                    </Space>
+                                );
+                            }
+                            return null;
+                        },
                     },
                 ]}
                 size="middle"
@@ -137,6 +158,7 @@ const TeamMembers: React.FunctionComponent<{
 const mapStateToProps = (state: RootState) => ({
     teamMembers: state.team.members,
     roles: state.team.roles,
+    loggedInUser: state.user,
 });
 
 const mapDispatchToProps = {
