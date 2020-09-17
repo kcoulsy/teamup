@@ -222,12 +222,12 @@ router.post('/roles', Authenticate, async (req, res) => {
     const newRolePerms = roles.map((roleName, index) => {
         if (typeof req.user.team.rolePermissions[index] !== 'undefined') {
             const roleObj = req.user.team.rolePermissions[index];
-            roleObj.role = roleName;
+            roleObj.roleIndex = index;
             return roleObj;
         }
 
         return {
-            role: roleName,
+            roleIndex: index,
             permissions: [],
         };
     });
@@ -247,15 +247,42 @@ router.post('/permissions', Authenticate, async (req, res) => {
 
     await req.user.populate('team').execPopulate();
 
-    req.user.team.rolePermissions[roleIndex] = permissions;
-    // .map((rolePerm, index) => {
-    //     if (index === roleIndex) {
-    //         rolePerm.permissions = permissions;
-    //     }
-    // });
+    if (roleIndex < 0 || roleIndex > req.user.team.roles.length - 1) {
+        return res
+            .status(400)
+            .send({ error: 'Role does not exist with that index' });
+    }
+
+    req.user.team.roles.forEach((role, index) => {
+        if (!req.user.team.rolePermissions[index]) {
+            req.user.team.rolePermissions[index] = {
+                permissions: [],
+                roleIndex: index,
+            };
+        }
+
+        if (index === roleIndex) {
+            req.user.team.rolePermissions[index].permissions = permissions;
+        }
+    });
+    // TODO don't really want to keep populating like this...
+    await req.user.team
+        .populate({
+            path: 'users',
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: '_id, username, email',
+            },
+        })
+        .execPopulate();
 
     await req.user.team.save();
-    res.send('updated permissions');
+    res.send({
+        team: req.user.team,
+        message: 'Updated permissions',
+        success: true,
+    });
 });
 
 export default router;

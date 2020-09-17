@@ -176,3 +176,42 @@ export const updateTeamMemberRole = (userId: string, roleIndex: number) => {
         });
     };
 };
+
+export const updateTeamPermissions = (
+    roleIndex: number,
+    permissions: string[]
+) => {
+    return (dispatch: Dispatch<AppActions>, getState: () => RootState) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await api('/team/permissions', 'POST', {
+                    roleIndex,
+                    permissions,
+                });
+                console.log(
+                    'UPDATE TEAM PERMS',
+                    roleIndex,
+                    permissions,
+                    res.team
+                );
+                if (res.success) {
+                    dispatch(
+                        storeTeam({
+                            id: res.team._id,
+                            name: res.team.name,
+                            description: res.team.description,
+                            members: res.team.users,
+                            roles: res.team.roles,
+                            rolePermissions: res.team.rolePermissions,
+                        })
+                    );
+                    resolve(true);
+                } else {
+                    reject(false);
+                }
+            } catch (err) {
+                reject(false);
+            }
+        });
+    };
+};

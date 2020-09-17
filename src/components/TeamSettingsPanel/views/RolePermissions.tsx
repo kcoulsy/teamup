@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Transfer, Typography, Select } from 'antd';
+import { Transfer, Typography, Select, notification } from 'antd';
 import PERMISSIONS, { permissionLabels } from '../../../constants/permissions';
 import { connect } from 'react-redux';
 import { RootState } from '../../../store/configure';
+import { api } from './../../../services/api';
+import { updateTeamPermissions } from './../../../actions/team';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -10,16 +12,22 @@ const { Option } = Select;
 interface RolePermissionsProps {
     roles: any[]; // TODO change within state
     rolePermissions: any[];
+    updateTeamPermissions: Function;
 }
 const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
     roles,
     rolePermissions,
+    updateTeamPermissions,
 }) => {
-    const [targetKeys, setTargetKeys] = useState([
-        ...Object.values(PERMISSIONS),
-    ]);
     const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
-
+    let initialPermissions = [];
+    if (
+        rolePermissions[selectedRoleIndex] &&
+        rolePermissions[selectedRoleIndex].permissions
+    ) {
+        initialPermissions = rolePermissions[selectedRoleIndex].permissions;
+    }
+    const [targetKeys, setTargetKeys] = useState<string[]>(initialPermissions);
     const data = Object.entries(permissionLabels).map(([key, label]) => {
         return {
             key,
@@ -35,7 +43,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
             <Select
                 defaultValue={roles[selectedRoleIndex]}
                 style={{ marginBottom: '20px' }}
-                onChange={(value) => {
+                onChange={async (value) => {
                     const index = roles.indexOf(value);
 
                     setSelectedRoleIndex(index);
@@ -62,7 +70,18 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
                 }}
                 operations={['Add Role', 'Remove Role']}
                 targetKeys={targetKeys}
-                onChange={(targetKeys) => setTargetKeys(targetKeys)}
+                onChange={async (targetKeys) => {
+                    const updated = updateTeamPermissions(
+                        selectedRoleIndex,
+                        targetKeys
+                    );
+                    if (updated) {
+                        setTargetKeys(targetKeys);
+                        notification.success({
+                            message: `Updated permissions for role ${roles[selectedRoleIndex]}`,
+                        });
+                    }
+                }}
                 render={(item) => `${item.label}`}
             />
         </div>
@@ -74,4 +93,7 @@ const mapStateToProps = (state: RootState) => ({
     rolePermissions: state.team.rolePermissions,
 });
 
-export default connect(mapStateToProps)(RolePermissions);
+const mapDispatchToProps = {
+    updateTeamPermissions,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(RolePermissions);

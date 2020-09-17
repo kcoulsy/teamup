@@ -3,13 +3,12 @@ import { IUser } from './user.model';
 
 interface TeamUser {
     user: IUser;
-    role?: string; // TODO remove this key
     roleIndex: number;
 }
 
 interface TeamPermissions {
-    role: string;
     permissions: string[];
+    roleIndex: number;
 }
 
 export interface ITeam extends Document {

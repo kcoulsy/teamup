@@ -20,7 +20,6 @@ const initialState: {
 export default (state = initialState, action?: AppActions) => {
     switch (action?.type) {
         case TEAM_MY_FETCH:
-            console.log(action.payload);
             return Object.assign({}, state, {
                 id: action.payload.id,
                 name: action.payload.name,
