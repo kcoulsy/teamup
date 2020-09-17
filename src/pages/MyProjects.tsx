@@ -7,11 +7,14 @@ import { Project } from './../types/project';
 
 const MyProjects: React.FunctionComponent = () => {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [completionData, setCompletionData] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
     useEffect(() => {
         async function fetchProjects() {
             const res = await api('/project/', 'GET');
             setProjects(res.projects);
+            console.log(res);
+            setCompletionData(res.estimatedCompletions);
         }
         fetchProjects();
     }, []);
@@ -67,7 +70,10 @@ const MyProjects: React.FunctionComponent = () => {
                     </Form.Item>
                 </Form>
             </Drawer>
-            <ProjectBrowser projects={projects} />
+            <ProjectBrowser
+                projects={projects}
+                completionData={completionData}
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHeader } from 'antd';
-import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
+// import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 
 const TeamProjects: React.FunctionComponent = () => {
     return (
@@ -10,7 +10,7 @@ const TeamProjects: React.FunctionComponent = () => {
                 title="Team Projects"
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
             />
-            <ProjectBrowser projects={[]} />
+            {/* <ProjectBrowser projects={[]} /> */}
         </div>
     );
 };

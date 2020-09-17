@@ -8,12 +8,16 @@ interface ProjectCardProps {
     _id: string;
     title: string;
     description?: string;
+    hoursLeft: number;
+    completion: number;
 }
 
 const ProjectCard: React.FunctionComponent<ProjectCardProps> = ({
     _id,
     title,
     description = '',
+    hoursLeft,
+    completion,
 }) => {
     const history = useHistory();
     const handleClick = () => {
@@ -27,18 +31,16 @@ const ProjectCard: React.FunctionComponent<ProjectCardProps> = ({
             size="small"
             hoverable
             onClick={handleClick}>
-            <Space direction="vertical">
+            <Space direction="vertical" style={{ width: '100%' }}>
                 <Text type="secondary" style={{ marginBottom: '20px' }}>
                     {description.length > 100
                         ? description?.slice(0, 100) + '...'
                         : description}
                 </Text>
                 <Text style={{ marginBottom: '20px' }}>
-                    Estimated Completion Time: 2 Weeks
+                    {`${hoursLeft} hours left`}
                 </Text>
-                <Progress
-                    percent={parseInt((Math.random() * 100).toFixed(), 10)}
-                />
+                <Progress percent={completion} />
             </Space>
         </Card>
     );

@@ -6,8 +6,27 @@ const router = express.Router();
 
 router.get('/', Authenticate, async (req, res) => {
     // TODO pass in param for team specific tasks
-    const projects = await Project.find({ user: req.user._id });
-    res.send({ message: 'Getting all projects', projects });
+    const projects = await Project.find({ user: req.user._id }).populate(
+        'tasks'
+    );
+    const estimatedCompletions: any = {};
+
+    projects.forEach(async (project) => {
+        estimatedCompletions[project._id] = { totalTime: 0, complete: 0 };
+        project.tasks.forEach((task) => {
+            estimatedCompletions[project._id].totalTime += task.estimatedHours;
+            if (task.status === 'DONE') {
+                estimatedCompletions[project._id].complete +=
+                    task.estimatedHours;
+            }
+        });
+    });
+
+    res.send({
+        message: 'Getting all projects',
+        projects,
+        estimatedCompletions,
+    });
 });
 
 router.get('/:id', Authenticate, async (req, res) => {
