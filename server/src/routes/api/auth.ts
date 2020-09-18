@@ -23,17 +23,18 @@ router.post('/login', (req, res) => {
         .catch((err: string) => res.status(400).json('Error: ' + err));
 });
 
-router.get('/verify', (req, res) => {
+router.get('/verify', async (req, res) => {
     const token = req.header(RES_AUTH_HEADER);
 
-    User.findByToken(token)
-        .then((user: IUser) => {
-            if (!user) return Promise.reject();
+    const user: IUser = await User.findByToken(token);
 
-            res.status(200).json({ valid: true, user });
-        })
-        // we still want a 200 if this fails
-        .catch((err: string) => res.status(200).json({ valid: false }));
+    if (!user) {
+        return res.status(200).json({ valid: false });
+    }
+
+    await user.populate('teamInvites').execPopulate();
+
+    res.status(200).json({ valid: true, user });
 });
 
 router.post('/register', async (req, res) => {

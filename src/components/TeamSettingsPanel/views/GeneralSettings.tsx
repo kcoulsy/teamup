@@ -10,8 +10,8 @@ const { Title } = Typography;
 const { confirm } = Modal;
 
 const GeneralSettings: React.FunctionComponent<{
-    teamName: string;
-    teamDesc: string;
+    teamName: string | null;
+    teamDesc: string | null;
     updateTeam: Function;
     removeTeam: Function;
 }> = ({ teamName, teamDesc, updateTeam, removeTeam }) => {

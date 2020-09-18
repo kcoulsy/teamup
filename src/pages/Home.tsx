@@ -1,50 +1,91 @@
 import React from 'react';
-import { Card, Form, Button, notification } from 'antd';
-import { createTeam } from '../actions/team';
+import { Alert, Modal, notification } from 'antd';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { PATH_TEAM_PROFILE, PATH_TEAM_CREATE } from './../constants/pageRoutes';
+import { RootState } from '../store/configure';
+import { Team } from '../types/team';
+import { acceptTeamInvite } from '../actions/team';
+import { declineTeamInvite } from './../actions/team';
 
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-};
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-};
+const { confirm } = Modal;
 
-const Home: React.FunctionComponent<{ createTeam: Function }> = ({
-    createTeam,
+interface HomeProps {
+    teamInvites: Team[];
+    acceptTeamInvite: Function;
+    declineTeamInvite: Function;
+}
+const Home: React.FunctionComponent<HomeProps> = ({
+    teamInvites,
+    acceptTeamInvite,
+    declineTeamInvite,
 }) => {
-    const history = useHistory();
     return (
         <div>
-            <Card title="Create Team">
-                <Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{ remember: true }}
-                    onFinish={async () => {
-                        history.push(PATH_TEAM_CREATE);
-                        // const done = await createTeam();
-                        // if (done) {
-                        //     notification.success({ message: 'Team Created' });
-                        // }
-                    }}>
-                    Other fields will be added here
-                    <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Create Team
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Card>
+            {teamInvites.map((team) => {
+                return (
+                    <Alert
+                        key={team._id}
+                        message={`You have been invited to join the team "${team.name}"`}
+                        closeText="Respond"
+                        style={{ marginBottom: '20px' }}
+                        onClose={() => {
+                            confirm({
+                                title: 'Join Team',
+                                content:
+                                    'Are you sure you want to join this team? You can only join one.',
+                                okText: 'Accept',
+                                cancelText: 'Decline',
+                                onOk: async () => {
+                                    const accepted = await acceptTeamInvite(
+                                        team._id
+                                    );
+                                    if (accepted) {
+                                        notification.success({
+                                            message:
+                                                'You have joined the team successfully!',
+                                        });
+                                    } else {
+                                        notification.error({
+                                            message:
+                                                'Something went wrong when joining team',
+                                        });
+                                    }
+                                },
+                                onCancel: async () => {
+                                    try {
+                                        const declined = await declineTeamInvite(
+                                            team._id
+                                        );
+                                        if (declined) {
+                                            notification.success({
+                                                message: `You have declined an invitation from the team "${team.name}".`,
+                                            });
+                                        } else {
+                                            notification.error({
+                                                message:
+                                                    'Something went wrong when joining team',
+                                            });
+                                        }
+                                    } catch (err) {
+                                        console.log('ERROR', err);
+                                    }
+                                },
+                            });
+                        }}
+                    />
+                );
+            })}
         </div>
     );
 };
 
+const mapStateToProps = (state: RootState) => ({
+    teamInvites: state.user.teamInvites || [],
+});
+
 const mapDispatchToProps = {
-    createTeam: createTeam,
+    acceptTeamInvite,
+    declineTeamInvite,
 };
 
-export default connect(undefined, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

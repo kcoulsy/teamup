@@ -32,7 +32,7 @@ export const initialise = () => {
                 if (team && Object.keys(team).length) {
                     dispatch(
                         storeTeam({
-                            id: team._id,
+                            _id: team._id,
                             name: team.name,
                             description: team.description,
                             members: team.users,

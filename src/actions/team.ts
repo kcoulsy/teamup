@@ -3,16 +3,17 @@ import { TeamMyFetchAction } from './../types/actions';
 import { Dispatch } from '@reduxjs/toolkit';
 import { api } from './../services/api';
 import { RootState } from '../store/configure';
+import { userFetch } from './user';
 
 export function storeTeam({
-    id = null,
+    _id = null,
     name = null,
     description = null,
     members = [],
     roles = [],
     rolePermissions = [],
 }: {
-    id?: string | null;
+    _id?: string | null;
     name?: string | null;
     description?: string | null;
     members?: any[];
@@ -22,7 +23,7 @@ export function storeTeam({
     return {
         type: TEAM_MY_FETCH,
         payload: {
-            id,
+            _id,
             name,
             description,
             members,
@@ -48,7 +49,7 @@ export const createTeam = ({
             if (res.team) {
                 dispatch(
                     storeTeam({
-                        id: res.team._id,
+                        _id: res.team._id,
                         name: res.team.name,
                         description: res.team.description,
                         members: res.team.users,
@@ -80,7 +81,7 @@ export const updateTeam = ({
                 if (res.success) {
                     dispatch(
                         storeTeam({
-                            id: res.team._id,
+                            _id: res.team._id,
                             name: res.team.name,
                             description: res.team.description,
                             members: res.team.users,
@@ -127,7 +128,7 @@ export const updateTeamRoles = (roles: string[]) => {
                 if (res.success) {
                     dispatch(
                         storeTeam({
-                            id: team.id,
+                            _id: team._id,
                             name: team.name,
                             description: team.description,
                             members: team.members,
@@ -158,7 +159,7 @@ export const updateTeamMemberRole = (userId: string, roleIndex: number) => {
                 if (res.success) {
                     dispatch(
                         storeTeam({
-                            id: res.team._id,
+                            _id: res.team._id,
                             name: res.team.name,
                             description: res.team.description,
                             members: res.team.users,
@@ -188,16 +189,11 @@ export const updateTeamPermissions = (
                     roleIndex,
                     permissions,
                 });
-                console.log(
-                    'UPDATE TEAM PERMS',
-                    roleIndex,
-                    permissions,
-                    res.team
-                );
+
                 if (res.success) {
                     dispatch(
                         storeTeam({
-                            id: res.team._id,
+                            _id: res.team._id,
                             name: res.team.name,
                             description: res.team.description,
                             members: res.team.users,
@@ -211,6 +207,60 @@ export const updateTeamPermissions = (
                 }
             } catch (err) {
                 reject(false);
+            }
+        });
+    };
+};
+
+export const acceptTeamInvite = (_id: string | null) => {
+    return (dispatch: Dispatch<AppActions>): Promise<boolean> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const { success, team, user } = await api(
+                    '/team/accept',
+                    'POST',
+                    {
+                        teamId: _id,
+                    }
+                );
+                if (success) {
+                    dispatch(userFetch(user));
+                    dispatch(
+                        storeTeam({
+                            _id: team._id,
+                            name: team.name,
+                            description: team.description,
+                            members: team.users,
+                            roles: team.roles,
+                            rolePermissions: team.rolePermissions,
+                        })
+                    );
+                    resolve(true);
+                } else {
+                    reject(false);
+                }
+            } catch (err) {
+                reject(false);
+            }
+        });
+    };
+};
+
+export const declineTeamInvite = (_id: string | null) => {
+    return (dispatch: Dispatch<AppActions>): Promise<boolean> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const { success, user } = await api('/team/decline', 'POST', {
+                    teamId: _id,
+                });
+                if (success) {
+                    dispatch(userFetch(user));
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            } catch (err) {
+                resolve(false);
             }
         });
     };

@@ -1,15 +1,8 @@
 import { AppActions, TEAM_MY_FETCH } from '../types/actions';
-import { TeamMember } from './../types/actions';
+import { Team } from '../types/team';
 
-const initialState: {
-    id: string | null;
-    name: string;
-    description: string;
-    members: TeamMember[];
-    roles: any[];
-    rolePermissions: any[];
-} = {
-    id: null,
+const initialState: Team = {
+    _id: null,
     name: '',
     description: '',
     members: [],
@@ -21,7 +14,7 @@ export default (state = initialState, action?: AppActions) => {
     switch (action?.type) {
         case TEAM_MY_FETCH:
             return Object.assign({}, state, {
-                id: action.payload.id,
+                _id: action.payload._id,
                 name: action.payload.name,
                 description: action.payload.description,
                 members: action.payload.members,

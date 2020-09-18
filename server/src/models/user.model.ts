@@ -98,9 +98,19 @@ userSchema.methods.toJSON = function () {
         fullName,
         occupation,
         aboutMe,
+        teamInvites,
     } = user.toObject();
 
-    return { _id, username, email, team, fullName, occupation, aboutMe };
+    return {
+        _id,
+        username,
+        email,
+        team,
+        fullName,
+        occupation,
+        aboutMe,
+        teamInvites,
+    };
 };
 
 /**

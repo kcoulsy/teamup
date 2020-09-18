@@ -136,7 +136,7 @@ router.post('/invite', Authenticate, async (req, res) => {
 /**
  * Accepts an invitation to a team
  */
-router.post('/accept', async (req, res) => {
+router.post('/accept', Authenticate, async (req, res) => {
     const { teamId } = req.body;
     // check that there is an acutal invite (in the user);
     const team = await Team.findById(teamId);
@@ -152,7 +152,12 @@ router.post('/accept', async (req, res) => {
         });
         await team.save();
 
-        res.send({ message: 'User added to team', team, user: req.user });
+        res.send({
+            success: true,
+            message: 'User added to team',
+            team,
+            user: req.user,
+        });
     } else {
         res.status(404).send('Team not found with id' + teamId);
     }
@@ -161,12 +166,18 @@ router.post('/accept', async (req, res) => {
 /**
  * Declines an invite to a team
  */
-router.post('/decline', async (req, res) => {
+router.post('/decline', Authenticate, async (req, res) => {
     const { teamId } = req.body;
 
-    req.user.teamInvites.filter((invite) => invite !== teamId);
+    req.user.teamInvites = req.user.teamInvites.filter(
+        (invite) => !invite.equals(teamId)
+    );
     await req.user.save();
-    res.send({ message: 'Declined team invite' });
+    res.send({
+        message: 'Declined team invite',
+        user: req.user,
+        success: true,
+    });
 });
 
 /**
@@ -180,7 +191,10 @@ router.post('/user/remove', Authenticate, async (req, res) => {
         return !user.user.equals(userId);
     });
     await req.user.team.save();
-    res.send({ message: 'User removed from team!', team: req.user.team });
+    res.send({
+        message: 'User removed from team!',
+        team: req.user.team,
+    });
 });
 
 /**

@@ -6,6 +6,7 @@ const initialState: User = {
     _id: '',
     email: '',
     username: '',
+    teamInvites: [],
 };
 
 export default (state = initialState, action: AppActions) => {
