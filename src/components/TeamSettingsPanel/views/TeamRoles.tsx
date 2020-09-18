@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Typography, notification } from 'antd';
+import {
+    Form,
+    Input,
+    Button,
+    Typography,
+    notification,
+    PageHeader,
+} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { RootState } from '../../../store/configure';
 import { connect } from 'react-redux';
 import { updateTeamRoles } from '../../../actions/team';
+import hasTeamRole from '../../../helpers/hasTeamRole';
+import { PERM_UPDATE_TEAM_ROLES } from '../../../constants/permissions';
 
 const { Title } = Typography;
 
@@ -14,10 +23,17 @@ const formItemLayoutWithOutLabel = {
     },
 };
 
-const TeamRoles: React.FunctionComponent<{
+interface TeamRolesProps {
     roles: string[];
     updateTeamRoles: Function;
-}> = ({ roles, updateTeamRoles }) => {
+    canUpdateTeamRoles: boolean;
+}
+
+const TeamRoles: React.FunctionComponent<TeamRolesProps> = ({
+    roles,
+    updateTeamRoles,
+    canUpdateTeamRoles,
+}) => {
     const [teamRoles, setTeamRoles] = useState(roles);
     const updateTeamRoleByIndex = (index: number, roleName: string) => {
         const newRoles = [...teamRoles];
@@ -58,10 +74,15 @@ const TeamRoles: React.FunctionComponent<{
     };
     return (
         <div>
-            <Title level={4} style={{ marginBottom: '20px' }}>
-                Team Roles
-            </Title>
-
+            <PageHeader
+                title="Team Roles"
+                subTitle={
+                    !canUpdateTeamRoles
+                        ? 'You do not have permissions to modify role permissions but can see them.'
+                        : undefined
+                }
+                style={{ padding: 0 }}
+            />
             <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel}>
                 {teamRoles.map((role, index) => {
                     return (
@@ -73,6 +94,7 @@ const TeamRoles: React.FunctionComponent<{
                                     placeholder="Role Name"
                                     style={{ width: '60%' }}
                                     value={role}
+                                    disabled={!canUpdateTeamRoles}
                                     onChange={(ev) =>
                                         updateTeamRoleByIndex(
                                             index,
@@ -81,7 +103,7 @@ const TeamRoles: React.FunctionComponent<{
                                     }
                                 />
                             </Form.Item>
-                            {index !== 0 ? (
+                            {index !== 0 && canUpdateTeamRoles ? (
                                 <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: '0 8px' }}
@@ -93,20 +115,23 @@ const TeamRoles: React.FunctionComponent<{
                         </Form.Item>
                     );
                 })}
-                <Form.Item>
-                    <Button
-                        type="dashed"
-                        onClick={() => {
-                            addTeamRole();
-                        }}
-                        style={{ width: '60%' }}>
-                        <PlusOutlined /> Add Role
-                    </Button>
-                </Form.Item>
+                {canUpdateTeamRoles ? (
+                    <Form.Item>
+                        <Button
+                            type="dashed"
+                            onClick={() => {
+                                addTeamRole();
+                            }}
+                            style={{ width: '60%' }}>
+                            <PlusOutlined /> Add Role
+                        </Button>
+                    </Form.Item>
+                ) : null}
                 <Form.Item>
                     <Button
                         type="primary"
                         htmlType="submit"
+                        disabled={!canUpdateTeamRoles}
                         onClick={updateRoles}>
                         Save
                     </Button>
@@ -118,6 +143,7 @@ const TeamRoles: React.FunctionComponent<{
 
 const mapStateToProps = (state: RootState) => ({
     roles: state.team.roles,
+    canUpdateTeamRoles: hasTeamRole(state, PERM_UPDATE_TEAM_ROLES),
 });
 
 const mapDispatchToProps = {

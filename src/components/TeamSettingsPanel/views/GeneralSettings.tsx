@@ -1,26 +1,41 @@
 import React from 'react';
-import { Form, Input, Button, Typography, notification, Modal } from 'antd';
+import { Form, Input, Button, notification, Modal, PageHeader } from 'antd';
 import { updateTeam, removeTeam } from './../../../actions/team';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../../../constants/pageRoutes';
 import { RootState } from '../../../store/configure';
+import hasTeamRole from '../../../helpers/hasTeamRole';
+import { PERM_UPDATE_TEAM_DETAILS } from '../../../constants/permissions';
 
-const { Title } = Typography;
 const { confirm } = Modal;
 
-const GeneralSettings: React.FunctionComponent<{
+interface GeneralSettingsProps {
     teamName: string | null;
     teamDesc: string | null;
     updateTeam: Function;
     removeTeam: Function;
-}> = ({ teamName, teamDesc, updateTeam, removeTeam }) => {
+    canUpdateTeamSettings: boolean;
+}
+const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
+    teamName,
+    teamDesc,
+    updateTeam,
+    removeTeam,
+    canUpdateTeamSettings,
+}) => {
     const history = useHistory();
     return (
         <div>
-            <Title level={4} style={{ marginBottom: '20px' }}>
-                General Settings
-            </Title>
+            <PageHeader
+                title="General Settings"
+                subTitle={
+                    !canUpdateTeamSettings
+                        ? 'You do not have permissions to update team settings.'
+                        : undefined
+                }
+                style={{ padding: 0 }}
+            />
             <Form
                 labelCol={{
                     sm: {
@@ -56,11 +71,11 @@ const GeneralSettings: React.FunctionComponent<{
                     }
                 }}>
                 <Form.Item label="Team Name" name="teamName">
-                    <Input />
+                    <Input disabled={!canUpdateTeamSettings} />
                 </Form.Item>
 
                 <Form.Item label="Team Description" name="teamDesc">
-                    <Input.TextArea />
+                    <Input.TextArea disabled={!canUpdateTeamSettings} />
                 </Form.Item>
 
                 <Form.Item
@@ -74,7 +89,10 @@ const GeneralSettings: React.FunctionComponent<{
                             span: 16,
                         },
                     }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        disabled={!canUpdateTeamSettings}>
                         Submit
                     </Button>
                 </Form.Item>
@@ -106,6 +124,7 @@ const GeneralSettings: React.FunctionComponent<{
 const mapStateToProps = (state: RootState) => ({
     teamName: state.team.name,
     teamDesc: state.team.description,
+    canUpdateTeamSettings: hasTeamRole(state, PERM_UPDATE_TEAM_DETAILS),
 });
 
 const mapDispatchToProps = {

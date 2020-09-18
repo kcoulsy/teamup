@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { Transfer, Typography, Select, notification } from 'antd';
-import PERMISSIONS, { permissionLabels } from '../../../constants/permissions';
+import { Transfer, Select, notification, PageHeader } from 'antd';
+import { permissionLabels } from '../../../constants/permissions';
 import { connect } from 'react-redux';
 import { RootState } from '../../../store/configure';
-import { api } from './../../../services/api';
 import { updateTeamPermissions } from './../../../actions/team';
+import hasTeamRole from '../../../helpers/hasTeamRole';
+import { PERM_UPDATE_TEAM_PERMS } from './../../../constants/permissions';
 
-const { Title } = Typography;
 const { Option } = Select;
 
 interface RolePermissionsProps {
+    canUpdatePermissions: boolean;
     roles: any[]; // TODO change within state
     rolePermissions: any[];
     updateTeamPermissions: Function;
 }
 const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
+    canUpdatePermissions,
     roles,
     rolePermissions,
     updateTeamPermissions,
@@ -37,9 +39,15 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
 
     return (
         <div>
-            <Title level={4} style={{ marginBottom: '20px' }}>
-                Role Permissions
-            </Title>
+            <PageHeader
+                title="Role Permissions"
+                subTitle={
+                    !canUpdatePermissions
+                        ? 'You do not have permissions to modify role permissions but can see them.'
+                        : undefined
+                }
+                style={{ padding: 0 }}
+            />
             <Select
                 defaultValue={roles[selectedRoleIndex]}
                 style={{ marginBottom: '20px' }}
@@ -62,6 +70,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
                 })}
             </Select>
             <Transfer
+                disabled={!canUpdatePermissions}
                 dataSource={data}
                 showSearch
                 listStyle={{
@@ -89,6 +98,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
+    canUpdatePermissions: hasTeamRole(state, PERM_UPDATE_TEAM_PERMS),
     roles: state.team.roles,
     rolePermissions: state.team.rolePermissions,
 });

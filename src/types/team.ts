@@ -1,6 +1,7 @@
+import { User } from './user';
 export interface TeamMember {
     _id: string;
-    user: string;
+    user: User;
     role: string;
     roleIndex: number;
 }

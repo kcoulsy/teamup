@@ -1,12 +1,17 @@
 import { RootState } from '../store/configure';
+import hasTeam from './hasTeam';
 
 export default (state: RootState, permissionToCheck: string) => {
-    const teamUser = state.team.members.find((user) => true); //TODO: we don't know the _id yet, so just fetch the first one.
+    if (!hasTeam(state)) return false;
+
+    const teamUser = state.team.members.find(
+        ({ user }) => user._id === state.user._id
+    );
     const roleIndex = teamUser?.roleIndex;
-    console.log('i have index', roleIndex, permissionToCheck);
+
     const rolePerm = state.team.rolePermissions.find(
         (rolePerm) => rolePerm.roleIndex === roleIndex
     );
-    console.log('role perms', rolePerm);
+
     return rolePerm?.permissions.includes(permissionToCheck);
 };
