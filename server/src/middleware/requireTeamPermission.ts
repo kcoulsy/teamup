@@ -15,12 +15,10 @@ const RequireTeamPermission = (permission: string) => (
             await req.user.populate('team').execPopulate();
 
             const team = req.user.team;
-            const userRole = team.users.find((user) =>
+            const userRoleIndex = team.users.find((user) =>
                 req.user._id.equals(user.user)
-            ).role;
-            const rolePerms = req.user.team.rolePermissions.find(
-                (rolePerm) => rolePerm.role === userRole
-            );
+            ).roleIndex;
+            const rolePerms = req.user.team.rolePermissions[userRoleIndex];
 
             if (rolePerms.permissions.includes(permission)) {
                 next();
