@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import Card from '../Card/Card';
-import Loader from '../Loader/Loader';
 
 import { startLogin } from '../../actions/auth';
 import { RootState } from '../../store/configure';
+import { Card, Form, Input, Button } from 'antd';
+import { PATH_REGISTER } from './../../constants/pageRoutes';
 
 interface LoginFormProps {
     startLogin: Function;
@@ -14,95 +13,61 @@ interface LoginFormProps {
     loginAttemptFailed: boolean;
 }
 
-interface LoginFormErrorStateObj {
-    usernameEmpty?: boolean;
-    passwordEmpty?: boolean;
-    invalidLogin?: boolean;
-}
-
 export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
     startLogin,
     attemptingLogin,
     loginAttemptFailed,
 }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
-    const defaultErrorObj = {
-        usernameEmpty: false,
-        passwordEmpty: false,
-        invalidLogin: false,
-    };
-
-    const [error, setError] = useState<LoginFormErrorStateObj>(defaultErrorObj);
-
-    const submitForm = (ev: React.MouseEvent<HTMLButtonElement>) => {
-        ev.preventDefault();
-        if (!username.length || !password.length) {
-            setError({
-                usernameEmpty: !username.length,
-                passwordEmpty: !password.length,
-            });
-        } else {
-            setError(defaultErrorObj);
-            startLogin(username, password);
-        }
-    };
-
-    const formError = loginAttemptFailed || Object.values(error).includes(true);
-
+    const history = useHistory();
     return (
-        <Card title="Login" centered>
-            <Loader isLoading={attemptingLogin} loadingText="Logging in">
-                <form className={`ui form${formError ? ' error' : ''}`}>
-                    <div
-                        className={`field${
-                            error.usernameEmpty ? ' error' : ''
-                        }`}>
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Username"
-                            onChange={(ev) => setUsername(ev.target.value)}
-                        />
-                    </div>
-                    <div
-                        className={`field${
-                            error.passwordEmpty ? ' error' : ''
-                        }`}>
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            onChange={(ev) => setPassword(ev.target.value)}
-                        />
-                    </div>
-                    <button
-                        className="ui button"
-                        type="submit"
-                        onClick={submitForm}>
+        <Card title="Login" style={{ width: 400 }} size="small">
+            <Form
+                onFinish={({ username, password }) =>
+                    startLogin(username, password)
+                }>
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your username!',
+                        },
+                    ]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your password!',
+                        },
+                    ]}>
+                    <Input.Password />
+                </Form.Item>
+                {loginAttemptFailed ? (
+                    <Form.Item>
+                        Unable to login with those credentials
+                    </Form.Item>
+                ) : null}
+                <Form.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={attemptingLogin}>
                         Login
-                    </button>
-                    Not registered? <Link to="/register">Register</Link>
-                    {formError ? (
-                        <div className="ui error message">
-                            <ul className="list">
-                                {error.usernameEmpty ? (
-                                    <li>Please enter a username</li>
-                                ) : null}
-                                {error.passwordEmpty ? (
-                                    <li>Please enter a password</li>
-                                ) : null}
-                                {loginAttemptFailed ? (
-                                    <li>Login Invalid</li>
-                                ) : null}
-                            </ul>
-                        </div>
-                    ) : null}
-                </form>
-            </Loader>
+                    </Button>
+                    <Button
+                        type="link"
+                        htmlType="button"
+                        onClick={() => history.push(PATH_REGISTER)}>
+                        Not registered? Click here
+                    </Button>
+                </Form.Item>
+            </Form>
         </Card>
     );
 };
@@ -113,6 +78,7 @@ export const mapStateToProps = (state: RootState) => {
         loginAttemptFailed: state.auth.loginAttemptFailed,
     };
 };
+
 const mapDispatchToProps = { startLogin };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

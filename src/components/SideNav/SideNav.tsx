@@ -99,15 +99,6 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                         TeamUp
                     </Menu.Item>
                     <Menu.Item
-                        key={MenuItemKey.HOME}
-                        icon={<HomeOutlined />}
-                        onClick={() => {
-                            setSelectedKeys([MenuItemKey.HOME]);
-                            history.push(PATH_HOME);
-                        }}>
-                        Dashboard
-                    </Menu.Item>
-                    <Menu.Item
                         key={MenuItemKey.LOGIN}
                         icon={<LoginOutlined />}
                         onClick={() => {

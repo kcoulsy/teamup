@@ -91,7 +91,9 @@ router.post('/register', async (req, res) => {
         const newUser = await user.save();
 
         if (newUser) {
-            res.json(user);
+            const token = await newUser.createAuthToken();
+
+            res.json({ token, user: newUser, success: true });
         }
     } catch (err) {
         res.status(400).json({

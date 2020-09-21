@@ -1,12 +1,16 @@
 import React from 'react';
 
 import LoginForm from '../components/LoginForm/LoginForm';
+import { Row, Col } from 'antd';
 
 const Login: React.FunctionComponent = (props) => {
     return (
         <div>
-            <h3>Login Page</h3>
-            <LoginForm {...props} />
+            <Row justify="center">
+                <Col>
+                    <LoginForm {...props} />
+                </Col>
+            </Row>
         </div>
     );
 };

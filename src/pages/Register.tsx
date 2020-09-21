@@ -1,13 +1,15 @@
 import React from 'react';
 
 import RegisterForm from '../components/RegisterForm/RegisterForm';
+import { Row, Col } from 'antd';
 
 const Register: React.FunctionComponent = () => {
     return (
-        <div>
-            <h3>Register Page</h3>
-            <RegisterForm />
-        </div>
+        <Row justify="center">
+            <Col>
+                <RegisterForm />
+            </Col>
+        </Row>
     );
 };
 

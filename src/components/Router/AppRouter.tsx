@@ -40,9 +40,9 @@ const AppRouter: React.FunctionComponent = ({ children }) => {
             {children}
             <AppLayout>
                 <Switch>
-                    <Route exact path={PATH_HOME}>
+                    <PrivateRoute exact path={PATH_HOME}>
                         <Home />
-                    </Route>
+                    </PrivateRoute>
                     <PublicRoute path={PATH_REGISTER}>
                         <Register />
                     </PublicRoute>
