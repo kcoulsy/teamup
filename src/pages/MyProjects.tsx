@@ -13,7 +13,6 @@ const MyProjects: React.FunctionComponent = () => {
         async function fetchProjects() {
             const res = await api('/project/', 'GET');
             setProjects(res.projects);
-            console.log(res);
             setCompletionData(res.estimatedCompletions);
         }
         fetchProjects();
