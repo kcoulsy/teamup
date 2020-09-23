@@ -1,11 +1,12 @@
 import express from 'express';
 import Project from '../../models/project.model';
 import Authenticate from './../../middleware/authenticate';
+import RequireTeamPermission from './../../middleware/requireTeamPermission';
+import { PERM_ADD_TASK } from './../../constants/permissions';
 
 const router = express.Router();
 
 router.get('/', Authenticate, async (req, res) => {
-    // TODO pass in param for team specific tasks
     const projects = await Project.find({ user: req.user._id }).populate(
         'tasks'
     );
@@ -29,6 +30,35 @@ router.get('/', Authenticate, async (req, res) => {
     });
 });
 
+router.get('/team', Authenticate, async (req, res) => {
+    if (!req.user.team) {
+        return res.status(404).send({ error: 'No team found' });
+    }
+
+    const projects = await Project.find({
+        user: req.user._id,
+        team: req.user.team._id,
+    }).populate('tasks');
+    const estimatedCompletions: any = {};
+
+    projects.forEach(async (project) => {
+        estimatedCompletions[project._id] = { totalTime: 0, complete: 0 };
+        project.tasks.forEach((task) => {
+            estimatedCompletions[project._id].totalTime += task.estimatedHours;
+            if (task.status === 'DONE') {
+                estimatedCompletions[project._id].complete +=
+                    task.estimatedHours;
+            }
+        });
+    });
+
+    res.send({
+        message: 'Getting all projects for team',
+        projects,
+        estimatedCompletions,
+    });
+});
+
 router.get('/:id', Authenticate, async (req, res) => {
     const query: any = { user: req.user._id, _id: req.params.id }; // TODO fix this any
 
@@ -41,8 +71,20 @@ router.get('/:id', Authenticate, async (req, res) => {
 router.post('/', Authenticate, async (req, res) => {
     const { title, description } = req.body;
 
-    // TODO check if in a team, AND has perms
     const project = new Project({ title, description, user: req.user._id });
+    await project.save();
+    res.send({ message: 'Creating a project', project });
+});
+
+router.post('/team', RequireTeamPermission(PERM_ADD_TASK), async (req, res) => {
+    const { title, description } = req.body;
+
+    const project = new Project({
+        title,
+        description,
+        user: req.user._id,
+        team: req.user.team._id,
+    });
     await project.save();
     res.send({ message: 'Creating a project', project });
 });

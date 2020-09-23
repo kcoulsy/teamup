@@ -12,15 +12,8 @@ const RequireTeamPermission = (permission: string) => (
             return;
         }
         try {
-            await req.user.populate('team').execPopulate();
-
-            const team = req.user.team;
-            const userRoleIndex = team.users.find((user) =>
-                req.user._id.equals(user.user)
-            ).roleIndex;
-            const rolePerms = req.user.team.rolePermissions[userRoleIndex];
-
-            if (rolePerms.permissions.includes(permission)) {
+            const hasPermission = await req.user.hasTeamPermission(permission);
+            if (hasPermission) {
                 next();
             } else {
                 res.status(401).send(
@@ -28,7 +21,7 @@ const RequireTeamPermission = (permission: string) => (
                 );
             }
         } catch (err) {
-            // console.log(err);
+            res.status(500).send('Something went wrong!');
         }
     });
 };

@@ -27,6 +27,7 @@ interface IUserSchema extends Document {
 
 interface IUserBase extends IUserSchema {
     createAuthToken(): Promise<string>;
+    hasTeamPermission(permission: string): Promise<boolean>;
 }
 
 export interface IUser extends IUserBase {
@@ -134,6 +135,25 @@ userSchema.methods.createAuthToken = function () {
     return user.save().then(() => token);
 };
 
+userSchema.methods.hasTeamPermission = function hasTeamPermission(
+    permission: string
+): Promise<boolean> {
+    return new Promise(async (resolve) => {
+        const user: IUser = this;
+        await user.populate('team').execPopulate();
+
+        const userRoleIndex = user.team.users.find((teamUser) => {
+            return user._id.equals(teamUser.user);
+        }).roleIndex;
+        const rolePerms = user.team.rolePermissions[userRoleIndex];
+
+        if (rolePerms?.permissions.includes(permission)) {
+            resolve(true);
+        } else {
+            resolve(false);
+        }
+    });
+};
 /**
  * Static method for finding a user by token (to verify the token is valid)
  *
