@@ -17,10 +17,26 @@ import { PATH_MY_PROJECTS } from './../constants/pageRoutes';
 import { TaskRow } from '../types/task';
 import mapProjectTasksToTaskRow from '../helpers/mapProjectTasksToTaskRow';
 import TaskForm from './../components/TaskForm/TaskForm';
+import { RootState } from '../store/configure';
+import hasTeamRole from '../helpers/hasTeamRole';
+import { connect } from 'react-redux';
+import {
+    PERM_ADD_TASK,
+    PERM_EDIT_TEAM_PROJECT,
+} from './../constants/permissions';
+import { Store } from 'antd/lib/form/interface';
 
 const { confirm } = Modal;
 
-const ProjectPage: React.FunctionComponent = () => {
+interface ProjectPageProps {
+    canAddTeamTask: boolean;
+    canEditTeamProject: boolean;
+}
+
+const ProjectPage = ({
+    canAddTeamTask,
+    canEditTeamProject,
+}: ProjectPageProps) => {
     let { projectid } = useParams();
     const history = useHistory();
     const [project, setProject] = useState<Project>();
@@ -40,7 +56,7 @@ const ProjectPage: React.FunctionComponent = () => {
 
     let tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
 
-    async function addTask({
+    const addTask = async ({
         title,
         description,
         estimatedHours,
@@ -50,8 +66,9 @@ const ProjectPage: React.FunctionComponent = () => {
         description: string;
         estimatedHours: number;
         status: string; //TODO type this
-    }) {
-        const res = await api('/task', 'POST', {
+    }) => {
+        const url = !project?.team ? '/task' : '/task/team';
+        const res = await api(url, 'POST', {
             project: project?._id,
             title,
             description,
@@ -62,11 +79,28 @@ const ProjectPage: React.FunctionComponent = () => {
         if (res) {
             //TODO no need to refetch.. just update state
             fetchProject();
-            return true;
+            setAddTaskDrawerOpen(false);
         }
+    };
 
-        return false;
-    }
+    const handleEditProjectFormFinish = async ({
+        title,
+        description,
+    }: Store) => {
+        const url = !project?.team ? '/project' : '/project/team';
+        const res = await api(url, 'PUT', {
+            projectId: project?._id,
+            title,
+            description,
+        });
+        if (res.project) {
+            setProject(res.project);
+            setEditProjectDrawerOpen(false);
+            notification.success({
+                message: 'Project edited successfully!',
+            });
+        }
+    };
 
     const handleDelete = () => {
         confirm({
@@ -74,7 +108,8 @@ const ProjectPage: React.FunctionComponent = () => {
             content:
                 'This project and all tasks will be lost, are you sure you want to delete it?',
             onOk: async () => {
-                const res = await api('/project/', 'DELETE', {
+                const url = !project?.team ? '/project' : '/project/team';
+                const res = await api(url, 'DELETE', {
                     projectId: projectid,
                 });
 
@@ -88,6 +123,31 @@ const ProjectPage: React.FunctionComponent = () => {
         });
     };
 
+    const headerButtons = [];
+    if (!project?.team || canEditTeamProject) {
+        headerButtons.push(
+            <Button
+                key="1"
+                type="default"
+                onClick={() =>
+                    setEditProjectDrawerOpen(!editProjectDrawerOpen)
+                }>
+                Edit Project
+                <EditOutlined />
+            </Button>
+        );
+    }
+    if (!project?.team || canAddTeamTask) {
+        headerButtons.push(
+            <Button
+                key="2"
+                type="primary"
+                onClick={() => setAddTaskDrawerOpen(!addTaskDrawerOpen)}>
+                Add Task <PlusOutlined />
+            </Button>
+        );
+    }
+
     return (
         <div>
             <PageHeader
@@ -96,25 +156,7 @@ const ProjectPage: React.FunctionComponent = () => {
                 subTitle={project?.description}
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 onBack={() => history.push(PATH_MY_PROJECTS)}
-                extra={[
-                    <Button
-                        key="1"
-                        type="default"
-                        onClick={() =>
-                            setEditProjectDrawerOpen(!editProjectDrawerOpen)
-                        }>
-                        Edit Project
-                        <EditOutlined />
-                    </Button>,
-                    <Button
-                        key="2"
-                        type="primary"
-                        onClick={() =>
-                            setAddTaskDrawerOpen(!addTaskDrawerOpen)
-                        }>
-                        Add Task <PlusOutlined />
-                    </Button>,
-                ]}
+                extra={headerButtons}
             />
             <Drawer
                 title="Edit Project"
@@ -122,7 +164,7 @@ const ProjectPage: React.FunctionComponent = () => {
                 onClose={() => setEditProjectDrawerOpen(!editProjectDrawerOpen)}
                 width="450">
                 <Form
-                    name="createProject"
+                    name="editProject"
                     labelCol={{
                         span: 5,
                     }}
@@ -133,20 +175,7 @@ const ProjectPage: React.FunctionComponent = () => {
                         title: project?.title,
                         description: project?.description,
                     }}
-                    onFinish={async ({ title, description }) => {
-                        const res = await api('/project', 'PUT', {
-                            projectId: project?._id,
-                            title,
-                            description,
-                        });
-                        if (res.project) {
-                            setProject(res.project);
-                            setEditProjectDrawerOpen(false);
-                            notification.success({
-                                message: 'Project edited successfully!',
-                            });
-                        }
-                    }}>
+                    onFinish={handleEditProjectFormFinish}>
                     <Form.Item label="Title" name="title">
                         <Input />
                     </Form.Item>
@@ -175,20 +204,16 @@ const ProjectPage: React.FunctionComponent = () => {
                     setAddTaskDrawerOpen(!addTaskDrawerOpen);
                 }}
                 width="450">
-                <TaskForm
-                    teamView={false}
-                    onFormFinish={async (task) => {
-                        const taskAdded = addTask({ ...task });
-                        if (taskAdded) {
-                            setAddTaskDrawerOpen(false);
-                        }
-                    }}
-                    type="Add"
-                />
+                <TaskForm teamView={false} onFormFinish={addTask} type="Add" />
             </Drawer>
             <ProjectView tasks={tasks} />
         </div>
     );
 };
 
-export default ProjectPage;
+const mapStateToProps = (state: RootState) => ({
+    canAddTeamTask: hasTeamRole(state, PERM_ADD_TASK),
+    canEditTeamProject: hasTeamRole(state, PERM_EDIT_TEAM_PROJECT),
+});
+
+export default connect(mapStateToProps)(ProjectPage);

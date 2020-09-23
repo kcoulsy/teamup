@@ -5,15 +5,15 @@ import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
 import { Project } from './../types/project';
 import { RootState } from '../store/configure';
-import { PERM_ADD_TASK } from './../constants/permissions';
+import { PERM_CREATE_TEAM_PROJECT } from './../constants/permissions';
 import hasTeamRole from '../helpers/hasTeamRole';
 import { connect } from 'react-redux';
 
 interface TeamProjectsProps {
-    canAddTask: boolean;
+    canCreateProject: boolean;
 }
 
-const TeamProjects = ({ canAddTask }: TeamProjectsProps) => {
+const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
@@ -26,7 +26,7 @@ const TeamProjects = ({ canAddTask }: TeamProjectsProps) => {
         fetchProjects();
     }, []);
     const headerButtons = [];
-    if (canAddTask) {
+    if (canCreateProject) {
         headerButtons.push(
             <Button key="3" onClick={() => setModalOpen(!modalOpen)}>
                 Create Project <EditOutlined />
@@ -90,7 +90,7 @@ const TeamProjects = ({ canAddTask }: TeamProjectsProps) => {
 };
 
 const mapStateToProps = (state: RootState) => ({
-    canAddTask: hasTeamRole(state, PERM_ADD_TASK),
+    canCreateProject: hasTeamRole(state, PERM_CREATE_TEAM_PROJECT),
 });
 
 export default connect(mapStateToProps)(TeamProjects);

@@ -5,4 +5,5 @@ export interface Project {
     tasks: any[];
     createdAt: string;
     updatedAt: string;
+    team?: string;
 }
