@@ -52,15 +52,18 @@ const TeamRoles: React.FunctionComponent<TeamRolesProps> = ({
             if (updated) {
                 notification.success({
                     message: 'Roles successfully updated!',
+                    placement: 'bottomRight',
                 });
             } else {
                 notification.error({
                     message: 'Something went wrong updating roles!',
+                    placement: 'bottomRight',
                 });
             }
         } else {
             notification.error({
                 message: 'You cannot have roles which are empty!',
+                placement: 'bottomRight',
             });
         }
     };

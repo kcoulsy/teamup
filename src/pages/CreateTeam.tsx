@@ -38,7 +38,10 @@ const CreateTeamPage: React.FunctionComponent<{
                             description: teamDesc,
                         });
                         if (done) {
-                            notification.success({ message: 'Team Created' });
+                            notification.success({
+                                message: 'Team Created',
+                                placement: 'bottomRight',
+                            });
                             history.push(PATH_TEAM_PROFILE);
                         }
                     }}>

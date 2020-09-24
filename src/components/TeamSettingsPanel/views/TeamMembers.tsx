@@ -106,6 +106,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                                             if (updated) {
                                                 notification.success({
                                                     message: `User ${record.name} updated to role ${roles[newIndex]}`,
+                                                    placement: 'bottomRight',
                                                 });
                                             }
                                         }}>
@@ -140,6 +141,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                                                 //TODO Remove the user from the team.
                                                 notification.success({
                                                     message: `${record.name} successfully removed from the team!`,
+                                                    placement: 'bottomRight',
                                                 });
                                             }}>
                                             Remove
@@ -170,9 +172,13 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                         if (res.success) {
                             notification.success({
                                 message: res.message,
+                                placement: 'bottomRight',
                             });
                         } else {
-                            notification.error({ message: res.message });
+                            notification.error({
+                                message: res.message,
+                                placement: 'bottomRight',
+                            });
                         }
                         inviteForm.resetFields();
                     }}>

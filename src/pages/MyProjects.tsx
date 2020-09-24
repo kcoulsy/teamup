@@ -52,6 +52,7 @@ const MyProjects: React.FunctionComponent = () => {
                             setModalOpen(false);
                             notification.success({
                                 message: 'Project created successfully!',
+                                placement: 'bottomRight',
                             });
                         }
                     }}>

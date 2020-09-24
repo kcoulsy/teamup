@@ -71,12 +71,14 @@ const TaskPage = ({
             .then((task) => {
                 notification.success({
                     message: 'Task updated successfully!',
+                    placement: 'bottomRight',
                 });
                 setTask(task);
             })
             .catch((e) => {
                 notification.error({
                     message: 'Something went wrong updating!',
+                    placement: 'bottomRight',
                 });
                 setTask(undefined);
             })
@@ -155,6 +157,7 @@ const TaskPage = ({
                                         setModalOpen(false);
                                         notification.success({
                                             message: 'Task deleted!',
+                                            placement: 'bottomRight',
                                         });
                                         history.push(`/project/${projectid}`);
                                     }

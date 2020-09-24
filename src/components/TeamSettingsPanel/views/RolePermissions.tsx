@@ -37,6 +37,28 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
         };
     });
 
+    const handleSelectChange = async (value: any) => {
+        const index = roles.indexOf(value);
+
+        setSelectedRoleIndex(index);
+        if (rolePermissions[index]) {
+            setTargetKeys(rolePermissions[index].permissions);
+        } else {
+            setTargetKeys([]);
+        }
+    };
+
+    const handleTransferChange = async (targetKeys: string[]) => {
+        const updated = updateTeamPermissions(selectedRoleIndex, targetKeys);
+        if (updated) {
+            setTargetKeys(targetKeys);
+            notification.success({
+                message: `Updated permissions for role ${roles[selectedRoleIndex]}`,
+                placement: 'bottomRight',
+            });
+        }
+    };
+
     return (
         <div>
             <PageHeader
@@ -51,16 +73,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
             <Select
                 defaultValue={roles[selectedRoleIndex]}
                 style={{ marginBottom: '20px' }}
-                onChange={async (value) => {
-                    const index = roles.indexOf(value);
-
-                    setSelectedRoleIndex(index);
-                    if (rolePermissions[index]) {
-                        setTargetKeys(rolePermissions[index].permissions);
-                    } else {
-                        setTargetKeys([]);
-                    }
-                }}>
+                onChange={handleSelectChange}>
                 {roles.map((role) => {
                     return (
                         <Option key={role} value={role}>
@@ -79,18 +92,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
                 }}
                 operations={['Add Role', 'Remove Role']}
                 targetKeys={targetKeys}
-                onChange={async (targetKeys) => {
-                    const updated = updateTeamPermissions(
-                        selectedRoleIndex,
-                        targetKeys
-                    );
-                    if (updated) {
-                        setTargetKeys(targetKeys);
-                        notification.success({
-                            message: `Updated permissions for role ${roles[selectedRoleIndex]}`,
-                        });
-                    }
-                }}
+                onChange={handleTransferChange}
                 render={(item) => `${item.label}`}
             />
         </div>

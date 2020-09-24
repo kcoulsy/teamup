@@ -64,6 +64,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                             setModalOpen(false);
                             notification.success({
                                 message: 'Project created successfully!',
+                                placement: 'bottomRight',
                             });
                         }
                     }}>

@@ -102,10 +102,12 @@ const ProjectPage = ({
             setEditProjectDrawerOpen(false);
             notification.success({
                 message: 'Project edited successfully!',
+                placement: 'bottomRight',
             });
         } else {
             notification.error({
                 message: 'You do not have permission to update this project.',
+                placement: 'bottomRight',
             });
         }
     };
@@ -126,11 +128,13 @@ const ProjectPage = ({
                     );
                     notification.success({
                         message: 'Project has been successfully deleted!',
+                        placement: 'bottomRight',
                     });
                 } else {
                     notification.error({
                         message:
                             'You do not have permission to remove this project.',
+                        placement: 'bottomRight',
                     });
                 }
             },

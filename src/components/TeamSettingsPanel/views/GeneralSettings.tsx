@@ -7,6 +7,7 @@ import { PATH_HOME } from './../../../constants/pageRoutes';
 import { RootState } from '../../../store/configure';
 import hasTeamRole from '../../../helpers/hasTeamRole';
 import { PERM_UPDATE_TEAM_DETAILS } from '../../../constants/permissions';
+import { Store } from 'antd/lib/form/interface';
 
 const { confirm } = Modal;
 
@@ -25,6 +26,23 @@ const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
     canUpdateTeamSettings,
 }) => {
     const history = useHistory();
+    const handleUpdate = async ({ teamName, teamDesc }: Store) => {
+        const success = await updateTeam({
+            name: teamName,
+            description: teamDesc,
+        });
+        if (success) {
+            notification.success({
+                message: 'Team updated successfully!',
+                placement: 'bottomRight',
+            });
+        } else {
+            notification.error({
+                message: 'Something went wrong updating team!',
+                placement: 'bottomRight',
+            });
+        }
+    };
     return (
         <div>
             <PageHeader
@@ -55,21 +73,7 @@ const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
                 }}
                 name="teamGeneral"
                 initialValues={{ teamName, teamDesc }}
-                onFinish={async ({ teamName, teamDesc }) => {
-                    const success = await updateTeam({
-                        name: teamName,
-                        description: teamDesc,
-                    });
-                    if (success) {
-                        notification.success({
-                            message: 'Team updated successfully!',
-                        });
-                    } else {
-                        notification.error({
-                            message: 'Something went wrong updating team!',
-                        });
-                    }
-                }}>
+                onFinish={handleUpdate}>
                 <Form.Item label="Team Name" name="teamName">
                     <Input disabled={!canUpdateTeamSettings} />
                 </Form.Item>
