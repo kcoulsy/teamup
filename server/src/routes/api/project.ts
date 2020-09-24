@@ -11,14 +11,17 @@ const router = express.Router();
 
 router.get('/', Authenticate, async (req, res) => {
     const isTeam = req.query.team;
-    const query: any = { user: req.user._id };
+    const query: any = {};
     if (isTeam && !req.user.team) {
         return res.status(404).send({ error: 'No team found' });
     }
 
     if (isTeam) {
         query.team = req.user.team._id;
+    } else {
+        query.user = req.user._id;
     }
+
     const projects = await Project.find(query).populate('tasks');
     const estimatedCompletions: any = {};
 
@@ -41,9 +44,8 @@ router.get('/', Authenticate, async (req, res) => {
 });
 
 router.get('/:id', Authenticate, async (req, res) => {
-    const query: any = { user: req.user._id, _id: req.params.id }; // TODO fix this any
+    const project = await Project.findOne({ _id: req.params.id });
 
-    const project = await Project.findOne(query);
     if (project.team && !req.user.team._id.equals(project.team._id)) {
         return res.status(401).send({
             error: `This task is not part of your team`,
@@ -92,8 +94,9 @@ router.put('/', Authenticate, async (req, res) => {
                     error: `You do not have the permission ${PERM_EDIT_TEAM_PROJECT}`,
                 });
             }
+        } else {
+            return res.status(401).send({ error: 'This is not your project' });
         }
-        return res.status(401).send({ error: 'This is not your project' });
     }
 
     if (title) {
@@ -125,8 +128,9 @@ router.delete('/', Authenticate, async (req, res) => {
                     error: `You do not have the permission ${PERM_REMOVE_TEAM_PROJECT}`,
                 });
             }
+        } else {
+            return res.status(401).send({ error: 'This is not your project' });
         }
-        return res.status(401).send({ error: 'This is not your project' });
     }
 
     const removed = await Project.deleteOne({ _id: projectId });

@@ -13,7 +13,10 @@ import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { api } from './../services/api';
 import { Project } from './../types/project';
 import { useParams, useHistory } from 'react-router-dom';
-import { PATH_MY_PROJECTS } from './../constants/pageRoutes';
+import {
+    PATH_MY_PROJECTS,
+    PATH_TEAM_PROJECTS,
+} from './../constants/pageRoutes';
 import { TaskRow } from '../types/task';
 import mapProjectTasksToTaskRow from '../helpers/mapProjectTasksToTaskRow';
 import TaskForm from './../components/TaskForm/TaskForm';
@@ -118,7 +121,9 @@ const ProjectPage = ({
                 });
 
                 if (res.success) {
-                    history.push(PATH_MY_PROJECTS);
+                    history.push(
+                        project?.team ? PATH_TEAM_PROJECTS : PATH_MY_PROJECTS
+                    );
                     notification.success({
                         message: 'Project has been successfully deleted!',
                     });
@@ -146,6 +151,7 @@ const ProjectPage = ({
             </Button>
         );
     }
+
     if (!project?.team || canAddTeamTask) {
         headerButtons.push(
             <Button

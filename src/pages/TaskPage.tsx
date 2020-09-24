@@ -13,7 +13,10 @@ import { api } from './../services/api';
 import { connect } from 'react-redux';
 import { RootState } from '../store/configure';
 import hasTeamRole from '../helpers/hasTeamRole';
-import { PERM_EDIT_OTHER_TASK } from '../constants/permissions';
+import {
+    PERM_EDIT_OTHER_TASK,
+    PERM_DELETE_OTHER_TASK,
+} from '../constants/permissions';
 import { User } from './../types/user';
 
 const { confirm } = Modal;
@@ -21,12 +24,18 @@ const { confirm } = Modal;
 interface TaskPageProps {
     loggedInUser: User;
     canEditOthersTasks: boolean;
+    canDeleteOthersTasks: boolean;
 }
-const TaskPage = ({ loggedInUser, canEditOthersTasks }: TaskPageProps) => {
+const TaskPage = ({
+    loggedInUser,
+    canEditOthersTasks,
+    canDeleteOthersTasks,
+}: TaskPageProps) => {
     let { projectid, taskid } = useParams();
     const history = useHistory();
     const [modalOpen, setModalOpen] = useState(false);
     const [task, setTask] = useState<Task | undefined>();
+    const createdByLoggedInUser = task?.createdBy === loggedInUser._id;
 
     useEffect(() => {
         fetchTask(taskid)
@@ -76,7 +85,7 @@ const TaskPage = ({ loggedInUser, canEditOthersTasks }: TaskPageProps) => {
 
     let headerButtons = [];
 
-    if (task.createdBy === loggedInUser._id || canEditOthersTasks) {
+    if (createdByLoggedInUser || canEditOthersTasks) {
         headerButtons.push(
             <Button key="editTask" onClick={() => setModalOpen(true)}>
                 Edit Task <EditOutlined />
@@ -129,31 +138,32 @@ const TaskPage = ({ loggedInUser, canEditOthersTasks }: TaskPageProps) => {
                     initialValues={task}
                     teamView={!!task.project.team}
                 />
-
-                <Button
-                    danger
-                    onClick={() => {
-                        confirm({
-                            title: 'Delete Task',
-                            content:
-                                'Are you sure you want to delete this task?',
-                            onOk: async () => {
-                                const res = await api(
-                                    `/task/${taskid}`,
-                                    'DELETE'
-                                );
-                                if (res) {
-                                    setModalOpen(false);
-                                    notification.success({
-                                        message: 'Task deleted!',
-                                    });
-                                    history.push(`/project/${projectid}`);
-                                }
-                            },
-                        });
-                    }}>
-                    Delete Task
-                </Button>
+                {(createdByLoggedInUser || canDeleteOthersTasks) && (
+                    <Button
+                        danger
+                        onClick={() => {
+                            confirm({
+                                title: 'Delete Task',
+                                content:
+                                    'Are you sure you want to delete this task?',
+                                onOk: async () => {
+                                    const res = await api(
+                                        `/task/${taskid}`,
+                                        'DELETE'
+                                    );
+                                    if (res) {
+                                        setModalOpen(false);
+                                        notification.success({
+                                            message: 'Task deleted!',
+                                        });
+                                        history.push(`/project/${projectid}`);
+                                    }
+                                },
+                            });
+                        }}>
+                        Delete Task
+                    </Button>
+                )}
             </Drawer>
             <TaskView task={task} />
         </div>
@@ -163,6 +173,7 @@ const TaskPage = ({ loggedInUser, canEditOthersTasks }: TaskPageProps) => {
 const mapStateToProps = (state: RootState) => ({
     loggedInUser: state.user,
     canEditOthersTasks: hasTeamRole(state, PERM_EDIT_OTHER_TASK),
+    canDeleteOthersTasks: hasTeamRole(state, PERM_DELETE_OTHER_TASK),
 });
 
 export default connect(mapStateToProps)(TaskPage);
