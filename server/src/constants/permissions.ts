@@ -13,7 +13,6 @@ export const PERM_REMOVE_TEAM_PROJECT = 'PERM_REMOVE_TEAM_PROJECT';
 export const PERM_ADD_TASK = 'PERM_ADD_TASK';
 export const PERM_EDIT_OTHER_TASK = 'PERM_EDIT_OTHER_TASK';
 export const PERM_DELETE_OTHER_TASK = 'PERM_DELETE_OTHER_TASK';
-export const PERM_ASSIGN_MEMBER = 'PERM_ASSIGN_MEMBER';
 
 // So it can be imported as a single object
 export default {
@@ -30,5 +29,4 @@ export default {
     PERM_ADD_TASK,
     PERM_EDIT_OTHER_TASK,
     PERM_DELETE_OTHER_TASK,
-    PERM_ASSIGN_MEMBER,
 };

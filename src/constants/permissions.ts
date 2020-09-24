@@ -11,7 +11,6 @@ export const PERM_REMOVE_TEAM_PROJECT = 'PERM_REMOVE_TEAM_PROJECT';
 export const PERM_ADD_TASK = 'PERM_ADD_TASK';
 export const PERM_EDIT_OTHER_TASK = 'PERM_EDIT_OTHER_TASK';
 export const PERM_DELETE_OTHER_TASK = 'PERM_DELETE_OTHER_TASK';
-export const PERM_ASSIGN_MEMBER = 'PERM_ASSIGN_MEMBER';
 
 export const permissionLabels = {
     [PERM_VIEW_TEAM_SETTINGS]: 'View Team Settings',
@@ -27,7 +26,6 @@ export const permissionLabels = {
     [PERM_ADD_TASK]: 'Add Task',
     [PERM_EDIT_OTHER_TASK]: 'Edit Other Members Tasks',
     [PERM_DELETE_OTHER_TASK]: 'Delete Other Members Tasks',
-    [PERM_ASSIGN_MEMBER]: 'Assign Members to Task',
 };
 
 // So it can be imported as a single object
@@ -45,5 +43,4 @@ export default {
     PERM_ADD_TASK,
     PERM_EDIT_OTHER_TASK,
     PERM_DELETE_OTHER_TASK,
-    PERM_ASSIGN_MEMBER,
 };
