@@ -49,7 +49,9 @@ router.get('/:id', Authenticate, async (req, res) => {
             error: `This task is not part of your team`,
         });
     }
-    await project.populate('tasks').execPopulate();
+    await project
+        .populate({ path: 'tasks', populate: { path: 'assignee' } })
+        .execPopulate();
     res.send({ message: 'Getting specific project', project });
 });
 

@@ -13,6 +13,7 @@ export const fetchTask = (taskId: string): Promise<Task | undefined> => {
                     description: res.task.description,
                     assignee: res.task.assignee,
                     timeRemaining: res.task.estimatedHours,
+                    project: res.task.project,
                     status: getTaskStatusColourObj(res.task.status),
                 };
                 resolve(task);
@@ -45,6 +46,7 @@ export const updateTask = (
                     description: res.task.description,
                     assignee: res.task.assignee,
                     timeRemaining: res.task.estimatedHours,
+                    project: res.task.project,
                     status: getTaskStatusColourObj(res.task.status),
                 };
                 resolve(task);

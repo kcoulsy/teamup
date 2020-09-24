@@ -2,6 +2,10 @@ import React from 'react';
 import { Form, Input, Select, InputNumber, AutoComplete, Button } from 'antd';
 import { TaskStatus, taskStatusLabel } from '../../types/task';
 import { Task } from './../../types/task';
+import { connect } from 'react-redux';
+import { RootState } from '../../store/configure';
+import { Team } from '../../types/team';
+import { Store } from 'antd/lib/form/interface';
 
 const options = [
     { value: 'John Smith' },
@@ -14,6 +18,7 @@ interface TaskFormProps {
     teamView: boolean;
     onFormFinish: (task: any) => void; // TODO fix any
     type: 'Add' | 'Edit';
+    team: Team;
 }
 
 const TaskForm: React.FunctionComponent<TaskFormProps> = ({
@@ -21,18 +26,45 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
     teamView,
     onFormFinish,
     type,
+    team,
 }) => {
     const [form] = Form.useForm();
     let preFilledValues = {};
     if (initialValues) {
-        const { title, description, status, timeRemaining } = initialValues;
+        const {
+            title,
+            description,
+            status,
+            timeRemaining,
+            assignee,
+        } = initialValues;
         preFilledValues = {
+            assignee: assignee?.email,
             title,
             description,
             status: status.label,
             estimatedHours: timeRemaining, // TODO change time remaining to estimatedHours for consistency
         };
     }
+    const users = team.members.map(({ user }) => {
+        return { value: user.username ? user.username : user.email };
+    });
+
+    const handleFinish = (values: Store) => {
+        const teamMember = team.members.find(({ user }) => {
+            return (
+                values.assignee === user.email ||
+                values.assignee === user.username
+            );
+        });
+        if (teamMember) {
+            values.assignee = teamMember.user._id;
+        } else {
+            values.assignee = undefined;
+        }
+        onFormFinish(values);
+        form.resetFields();
+    };
     return (
         <>
             <Form
@@ -41,10 +73,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
                 wrapperCol={{ span: 16 }}
                 layout="horizontal"
                 initialValues={preFilledValues ? preFilledValues : undefined}
-                onFinish={(values) => {
-                    onFormFinish(values);
-                    form.resetFields();
-                }}>
+                onFinish={handleFinish}>
                 <Form.Item label="Title" name="title">
                     <Input />
                 </Form.Item>
@@ -60,7 +89,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
                                     .toUpperCase()
                                     .indexOf(inputValue.toUpperCase()) !== -1
                             }
-                            options={options}
+                            options={users}
                         />
                     </Form.Item>
                 ) : null}
@@ -88,4 +117,8 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
     );
 };
 
-export default TaskForm;
+const mapStateToProps = (state: RootState) => ({
+    team: state.team,
+});
+
+export default connect(mapStateToProps)(TaskForm);

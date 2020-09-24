@@ -114,7 +114,7 @@ const TaskPage: React.FunctionComponent = () => {
                     }}
                     type="Edit"
                     initialValues={task}
-                    teamView={false}
+                    teamView={!!task.project.team}
                 />
 
                 <Button

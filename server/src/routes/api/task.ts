@@ -11,6 +11,8 @@ const router = express.Router();
 router.get('/:id', Authenticate, async (req, res) => {
     try {
         const task = await Task.findOne({ _id: req.params.id });
+        await task.populate('project').execPopulate();
+        await task.populate('assignee').execPopulate();
         res.send({ task });
     } catch (err) {
         res.send({ task: null });
@@ -54,6 +56,10 @@ router.post('/', Authenticate, async (req, res) => {
         tasks: [],
     });
 
+    if (!foundProject.team) {
+        task.assignee = req.user._id;
+    }
+
     await task.save();
 
     foundProject.tasks = [...foundProject.tasks, task];
@@ -95,6 +101,7 @@ router.put('/:id', Authenticate, async (req, res) => {
             task.status = status;
         }
         await task.save();
+        await task.populate('project').execPopulate();
 
         res.send({ task });
     } catch (err) {

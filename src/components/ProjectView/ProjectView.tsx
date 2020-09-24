@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Table, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { TaskRow, TaskStatusColor } from '../../types/task';
+import { User } from './../../types/user';
 
 const columns = [
     {
@@ -20,6 +21,10 @@ const columns = [
     {
         title: 'Assignee',
         dataIndex: 'assignee',
+        render: (assignee: User) => {
+            console.log(assignee);
+            return assignee.email || 'Unassigned';
+        },
     },
     {
         title: 'Status',

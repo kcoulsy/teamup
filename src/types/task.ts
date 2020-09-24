@@ -1,18 +1,21 @@
 import { LiteralUnion } from 'antd/lib/_util/type';
 import { PresetStatusColorType, PresetColorType } from 'antd/lib/_util/colors';
+import { Project } from './project';
+import { User } from './user';
 
 export interface Task {
     title: string;
     description: string;
-    assignee: string;
+    assignee?: User;
     status: TaskStatusColor;
     timeRemaining: string;
+    project: Project;
 }
 
 export interface TaskRow {
     key: string;
     title: TaskRowTitleLink;
-    assignee: string;
+    assignee?: User;
     status: TaskStatusColor;
     timeRemaining: string;
 }

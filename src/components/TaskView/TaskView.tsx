@@ -53,7 +53,7 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                             Assignee:
                         </Text>
                         <Link>
-                            {task.assignee ? task.assignee : 'Unassigned'}
+                            {task.assignee ? task.assignee.email : 'Unassigned'}
                         </Link>
                     </Col>
                     <Col span={8}>
