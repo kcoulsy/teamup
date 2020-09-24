@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Button, Drawer, Form, Input, notification } from 'antd';
+import {
+    PageHeader,
+    Button,
+    Drawer,
+    Form,
+    Input,
+    notification,
+    Spin,
+} from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
@@ -8,6 +16,7 @@ import { RootState } from '../store/configure';
 import { PERM_CREATE_TEAM_PROJECT } from './../constants/permissions';
 import hasTeamRole from '../helpers/hasTeamRole';
 import { connect } from 'react-redux';
+import useApi from './../hooks/useApi';
 
 interface TeamProjectsProps {
     canCreateProject: boolean;
@@ -17,14 +26,15 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
+    const { response, loading, error } = useApi('/project', 'GET');
+
     useEffect(() => {
-        async function fetchProjects() {
-            const res = await api('/project/?team=true', 'GET');
-            setProjects(res.projects);
-            setCompletionData(res.estimatedCompletions);
+        if (response?.projects) {
+            setProjects(response.projects);
+            setCompletionData(response.estimatedCompletions);
         }
-        fetchProjects();
-    }, []);
+    }, [response, loading, error, completionData, modalOpen]);
+
     const headerButtons = [];
     if (canCreateProject) {
         headerButtons.push(
@@ -82,6 +92,16 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                     </Form.Item>
                 </Form>
             </Drawer>
+            {loading && (
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                    <Spin />
+                </div>
+            )}
             <ProjectBrowser
                 projects={projects}
                 completionData={completionData}
