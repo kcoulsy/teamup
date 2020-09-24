@@ -10,6 +10,7 @@ export interface Task {
     status: TaskStatusColor;
     timeRemaining: string;
     project: Project;
+    createdBy: string;
 }
 
 export interface TaskRow {

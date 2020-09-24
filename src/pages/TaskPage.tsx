@@ -10,10 +10,19 @@ import { fetchTask, updateTask } from './../actions/task';
 import { Task, TaskStatus, taskStatusLabel } from './../types/task';
 import TaskForm from './../components/TaskForm/TaskForm';
 import { api } from './../services/api';
+import { connect } from 'react-redux';
+import { RootState } from '../store/configure';
+import hasTeamRole from '../helpers/hasTeamRole';
+import { PERM_EDIT_OTHER_TASK } from '../constants/permissions';
+import { User } from './../types/user';
 
 const { confirm } = Modal;
 
-const TaskPage: React.FunctionComponent = () => {
+interface TaskPageProps {
+    loggedInUser: User;
+    canEditOthersTasks: boolean;
+}
+const TaskPage = ({ loggedInUser, canEditOthersTasks }: TaskPageProps) => {
     let { projectid, taskid } = useParams();
     const history = useHistory();
     const [modalOpen, setModalOpen] = useState(false);
@@ -65,11 +74,15 @@ const TaskPage: React.FunctionComponent = () => {
             .finally(() => setModalOpen(false));
     };
 
-    let headerButtons = [
-        <Button key="editTask" onClick={() => setModalOpen(true)}>
-            Edit Task <EditOutlined />
-        </Button>,
-    ];
+    let headerButtons = [];
+
+    if (task.createdBy === loggedInUser._id || canEditOthersTasks) {
+        headerButtons.push(
+            <Button key="editTask" onClick={() => setModalOpen(true)}>
+                Edit Task <EditOutlined />
+            </Button>
+        );
+    }
 
     const statuses = Object.values(TaskStatus);
     const indexOfCurrentStatus = Object.values(taskStatusLabel).indexOf(
@@ -147,4 +160,9 @@ const TaskPage: React.FunctionComponent = () => {
     );
 };
 
-export default TaskPage;
+const mapStateToProps = (state: RootState) => ({
+    loggedInUser: state.user,
+    canEditOthersTasks: hasTeamRole(state, PERM_EDIT_OTHER_TASK),
+});
+
+export default connect(mapStateToProps)(TaskPage);

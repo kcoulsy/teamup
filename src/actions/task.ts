@@ -15,6 +15,7 @@ export const fetchTask = (taskId: string): Promise<Task | undefined> => {
                     timeRemaining: res.task.estimatedHours,
                     project: res.task.project,
                     status: getTaskStatusColourObj(res.task.status),
+                    createdBy: res.task.createdBy,
                 };
                 resolve(task);
             } else {
@@ -48,6 +49,7 @@ export const updateTask = (
                     timeRemaining: res.task.estimatedHours,
                     project: res.task.project,
                     status: getTaskStatusColourObj(res.task.status),
+                    createdBy: res.task.createdBy,
                 };
                 resolve(task);
             } else {
