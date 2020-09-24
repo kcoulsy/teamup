@@ -67,8 +67,7 @@ const ProjectPage = ({
         estimatedHours: number;
         status: string; //TODO type this
     }) => {
-        const url = !project?.team ? '/task' : '/task/team';
-        const res = await api(url, 'POST', {
+        const res = await api('/task', 'POST', {
             project: project?._id,
             title,
             description,
@@ -87,17 +86,20 @@ const ProjectPage = ({
         title,
         description,
     }: Store) => {
-        const url = !project?.team ? '/project' : '/project/team';
-        const res = await api(url, 'PUT', {
+        const res = await api('/project', 'PUT', {
             projectId: project?._id,
             title,
             description,
         });
-        if (res.project) {
+        if (res.success) {
             setProject(res.project);
             setEditProjectDrawerOpen(false);
             notification.success({
                 message: 'Project edited successfully!',
+            });
+        } else {
+            notification.error({
+                message: 'You do not have permission to update this project.',
             });
         }
     };
@@ -108,15 +110,19 @@ const ProjectPage = ({
             content:
                 'This project and all tasks will be lost, are you sure you want to delete it?',
             onOk: async () => {
-                const url = !project?.team ? '/project' : '/project/team';
-                const res = await api(url, 'DELETE', {
+                const res = await api('/project', 'DELETE', {
                     projectId: projectid,
                 });
 
-                if (res) {
+                if (res.success) {
                     history.push(PATH_MY_PROJECTS);
                     notification.success({
                         message: 'Project has been successfully deleted!',
+                    });
+                } else {
+                    notification.error({
+                        message:
+                            'You do not have permission to remove this project.',
                     });
                 }
             },

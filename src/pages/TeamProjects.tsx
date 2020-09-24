@@ -19,7 +19,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     useEffect(() => {
         async function fetchProjects() {
-            const res = await api('/project/team', 'GET');
+            const res = await api('/project/?team=true', 'GET');
             setProjects(res.projects);
             setCompletionData(res.estimatedCompletions);
         }
@@ -55,7 +55,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                         span: 19,
                     }}
                     onFinish={async ({ title, description }) => {
-                        const res = await api('/project/team', 'POST', {
+                        const res = await api('/project/?team=true', 'POST', {
                             title,
                             description,
                         });
