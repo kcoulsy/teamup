@@ -69,7 +69,19 @@ router.post('/create', Authenticate, async (req, res) => {
  * Allows the user to update the team name and description
  */
 router.put('/update', Authenticate, async (req, res) => {
-    await req.user.populate('team').execPopulate();
+    await req.user
+        .populate({
+            path: 'team',
+            populate: {
+                path: 'users',
+                populate: {
+                    path: 'user',
+                    model: 'User',
+                    select: '_id, username, email',
+                },
+            },
+        })
+        .execPopulate();
 
     const { name, description } = req.body;
 
@@ -110,7 +122,19 @@ router.post('/leave', Authenticate, async (req, res) => {
 router.post('/invite', Authenticate, async (req, res) => {
     const { email } = req.body;
 
-    await req.user.populate('team').execPopulate();
+    await req.user
+        .populate({
+            path: 'team',
+            populate: {
+                path: 'users',
+                populate: {
+                    path: 'user',
+                    model: 'User',
+                    select: '_id, username, email',
+                },
+            },
+        })
+        .execPopulate();
 
     const user = await User.findOne({ email });
 
@@ -185,7 +209,19 @@ router.post('/decline', Authenticate, async (req, res) => {
  */
 router.post('/user/remove', Authenticate, async (req, res) => {
     const { userId } = req.body;
-    await req.user.populate('team').execPopulate();
+    await req.user
+        .populate({
+            path: 'team',
+            populate: {
+                path: 'users',
+                populate: {
+                    path: 'user',
+                    model: 'User',
+                    select: '_id, username, email',
+                },
+            },
+        })
+        .execPopulate();
 
     req.user.team.users = req.user.team.users.filter((user) => {
         return !user.user.equals(userId);
@@ -202,7 +238,19 @@ router.post('/user/remove', Authenticate, async (req, res) => {
  */
 router.post('/user/update', Authenticate, async (req, res) => {
     const { userId, roleIndex } = req.body;
-    await req.user.populate('team').execPopulate();
+    await req.user
+        .populate({
+            path: 'team',
+            populate: {
+                path: 'users',
+                populate: {
+                    path: 'user',
+                    model: 'User',
+                    select: '_id, username, email',
+                },
+            },
+        })
+        .execPopulate();
     if (req.user.team.roles.length - 1 < roleIndex) {
         return res.status(400).send({ error: 'Role index is not valid' });
     }
