@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 import {
     PERM_ADD_TASK,
     PERM_EDIT_TEAM_PROJECT,
+    PERM_REMOVE_TEAM_PROJECT,
 } from './../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
 
@@ -31,11 +32,13 @@ const { confirm } = Modal;
 interface ProjectPageProps {
     canAddTeamTask: boolean;
     canEditTeamProject: boolean;
+    canRemoveTeamProject: boolean;
 }
 
 const ProjectPage = ({
     canAddTeamTask,
     canEditTeamProject,
+    canRemoveTeamProject,
 }: ProjectPageProps) => {
     let { projectid } = useParams();
     const history = useHistory();
@@ -193,12 +196,14 @@ const ProjectPage = ({
                         <Button type="primary" htmlType="submit">
                             Edit Project
                         </Button>
-                        <Button
-                            danger
-                            style={{ marginLeft: '5px' }}
-                            onClick={handleDelete}>
-                            Remove Project
-                        </Button>
+                        {canRemoveTeamProject && (
+                            <Button
+                                danger
+                                style={{ marginLeft: '5px' }}
+                                onClick={handleDelete}>
+                                Remove Project
+                            </Button>
+                        )}
                     </Form.Item>
                 </Form>
             </Drawer>
@@ -220,6 +225,7 @@ const ProjectPage = ({
 const mapStateToProps = (state: RootState) => ({
     canAddTeamTask: hasTeamRole(state, PERM_ADD_TASK),
     canEditTeamProject: hasTeamRole(state, PERM_EDIT_TEAM_PROJECT),
+    canRemoveTeamProject: hasTeamRole(state, PERM_REMOVE_TEAM_PROJECT),
 });
 
 export default connect(mapStateToProps)(ProjectPage);
