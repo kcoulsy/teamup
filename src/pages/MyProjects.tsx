@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Button, Drawer, Form, Input, notification } from 'antd';
+import {
+    PageHeader,
+    Button,
+    Drawer,
+    Form,
+    Input,
+    notification,
+    Spin,
+    Space,
+} from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
 import { Project } from './../types/project';
+import useApi from './../hooks/useApi';
 
 const MyProjects: React.FunctionComponent = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
+    const { response, loading, error } = useApi('/project', 'GET');
+
     useEffect(() => {
-        async function fetchProjects() {
-            const res = await api('/project/', 'GET');
-            setProjects(res.projects);
-            setCompletionData(res.estimatedCompletions);
+        if (response?.projects) {
+            setProjects(response.projects);
+            setCompletionData(response.estimatedCompletions);
         }
-        fetchProjects();
-    }, []);
+    }, [response, loading, error, completionData, modalOpen]);
+
     return (
         <div>
             <PageHeader
@@ -70,6 +81,16 @@ const MyProjects: React.FunctionComponent = () => {
                     </Form.Item>
                 </Form>
             </Drawer>
+            {loading && (
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                    <Spin />
+                </div>
+            )}
             <ProjectBrowser
                 projects={projects}
                 completionData={completionData}

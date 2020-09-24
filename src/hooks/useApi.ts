@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { api, ApiMethod } from './../services/api';
 
 const useApi = (path: string, method: ApiMethod, bodyObject: any = {}) => {
-    const [response, setResponse] = useState(null);
-    const [error, setError] = useState(null);
+    const [response, setResponse] = useState<any>(null);
+    const [error, setError] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

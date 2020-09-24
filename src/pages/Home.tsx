@@ -6,6 +6,7 @@ import { RootState } from '../store/configure';
 import { Team } from '../types/team';
 import { acceptTeamInvite } from '../actions/team';
 import { declineTeamInvite } from './../actions/team';
+import useApi from './../hooks/useApi';
 
 const { confirm } = Modal;
 
