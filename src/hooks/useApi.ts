@@ -5,6 +5,7 @@ const useApi = (path: string, method: ApiMethod, bodyObject: any = {}) => {
     const [response, setResponse] = useState<any>(null);
     const [error, setError] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [calls, setCalls] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -17,9 +18,13 @@ const useApi = (path: string, method: ApiMethod, bodyObject: any = {}) => {
                 setError(err);
             }
         })();
-    }, []);
+    }, [calls]);
 
-    return { response, error, loading };
+    const refetch = () => {
+        setCalls(calls + 1);
+    };
+
+    return { response, error, loading, refetch };
 };
 
 export default useApi;

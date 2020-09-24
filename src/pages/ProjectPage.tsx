@@ -7,6 +7,7 @@ import {
     Input,
     notification,
     Modal,
+    Spin,
 } from 'antd';
 import ProjectView from '../components/ProjectView/ProjectView';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
@@ -29,6 +30,7 @@ import {
     PERM_REMOVE_TEAM_PROJECT,
 } from './../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
+import useApi from './../hooks/useApi';
 
 const { confirm } = Modal;
 
@@ -48,17 +50,26 @@ const ProjectPage = ({
     const [project, setProject] = useState<Project>();
     const [editProjectDrawerOpen, setEditProjectDrawerOpen] = useState(false);
     const [addTaskDrawerOpen, setAddTaskDrawerOpen] = useState(false);
+    const { response, loading, error, refetch } = useApi(
+        `/project/${projectid}`,
+        'GET'
+    );
 
-    async function fetchProject() {
-        const res = await api(`/project/${projectid}`, 'GET');
-
-        if (res) {
-            setProject(res.project);
-        }
-    }
     useEffect(() => {
-        fetchProject();
-    }, []);
+        (async () => {
+            if (response?.project) {
+                setProject(response.project);
+            }
+        })();
+    }, [
+        history,
+        project,
+        editProjectDrawerOpen,
+        addTaskDrawerOpen,
+        response,
+        loading,
+        error,
+    ]);
 
     let tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
 
@@ -82,8 +93,7 @@ const ProjectPage = ({
         });
 
         if (res) {
-            //TODO no need to refetch.. just update state
-            fetchProject();
+            refetch();
             setAddTaskDrawerOpen(false);
         }
     };
@@ -139,6 +149,11 @@ const ProjectPage = ({
                 }
             },
         });
+    };
+
+    const handleAddProjectDrawerClose = () => {
+        refetch();
+        setAddTaskDrawerOpen(!addTaskDrawerOpen);
     };
 
     const headerButtons = [];
@@ -220,14 +235,22 @@ const ProjectPage = ({
             <Drawer
                 title="Add Task To Project"
                 visible={addTaskDrawerOpen}
-                onClose={() => {
-                    fetchProject();
-                    setAddTaskDrawerOpen(!addTaskDrawerOpen);
-                }}
+                onClose={handleAddProjectDrawerClose}
                 width="450">
                 <TaskForm teamView={false} onFormFinish={addTask} type="Add" />
             </Drawer>
-            <ProjectView tasks={tasks} />
+            {loading ? (
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                    <Spin />
+                </div>
+            ) : (
+                <ProjectView tasks={tasks} />
+            )}
         </div>
     );
 };
