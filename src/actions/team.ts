@@ -9,14 +9,14 @@ export function storeTeam({
     _id = null,
     name = null,
     description = null,
-    members = [],
+    users = [],
     roles = [],
     rolePermissions = [],
 }: {
     _id?: string | null;
     name?: string | null;
     description?: string | null;
-    members?: any[];
+    users?: any[];
     roles?: string[];
     rolePermissions?: any[];
 }): TeamMyFetchAction {
@@ -26,7 +26,7 @@ export function storeTeam({
             _id,
             name,
             description,
-            members,
+            users,
             roles,
             rolePermissions,
         },
@@ -47,16 +47,7 @@ export const createTeam = ({
                 description,
             });
             if (res.team) {
-                dispatch(
-                    storeTeam({
-                        _id: res.team._id,
-                        name: res.team.name,
-                        description: res.team.description,
-                        members: res.team.users,
-                        roles: res.team.roles,
-                        rolePermissions: res.team.rolePermissions,
-                    })
-                );
+                dispatch(storeTeam(res.team));
                 resolve(true);
             }
         });
@@ -79,16 +70,7 @@ export const updateTeam = ({
                 });
 
                 if (res.success) {
-                    dispatch(
-                        storeTeam({
-                            _id: res.team._id,
-                            name: res.team.name,
-                            description: res.team.description,
-                            members: res.team.users,
-                            roles: res.team.roles,
-                            rolePermissions: res.team.rolePermissions,
-                        })
-                    );
+                    dispatch(storeTeam(res.team));
                     resolve(true);
                 }
             } catch (error) {
@@ -128,11 +110,7 @@ export const updateTeamRoles = (roles: string[]) => {
                 if (res.success) {
                     dispatch(
                         storeTeam({
-                            _id: team._id,
-                            name: team.name,
-                            description: team.description,
-                            members: team.members,
-                            rolePermissions: team.rolePermissions,
+                            ...team,
                             roles,
                         })
                     );
@@ -157,16 +135,7 @@ export const updateTeamMemberRole = (userId: string, roleIndex: number) => {
                 });
 
                 if (res.success) {
-                    dispatch(
-                        storeTeam({
-                            _id: res.team._id,
-                            name: res.team.name,
-                            description: res.team.description,
-                            members: res.team.users,
-                            roles: res.team.roles,
-                            rolePermissions: res.team.rolePermissions,
-                        })
-                    );
+                    dispatch(storeTeam(res.team));
                     resolve(true);
                 } else {
                     reject(false);
@@ -191,16 +160,7 @@ export const updateTeamPermissions = (
                 });
 
                 if (res.success) {
-                    dispatch(
-                        storeTeam({
-                            _id: res.team._id,
-                            name: res.team.name,
-                            description: res.team.description,
-                            members: res.team.users,
-                            roles: res.team.roles,
-                            rolePermissions: res.team.rolePermissions,
-                        })
-                    );
+                    dispatch(storeTeam(res.team));
                     resolve(true);
                 } else {
                     reject(false);
@@ -225,16 +185,7 @@ export const acceptTeamInvite = (_id: string | null) => {
                 );
                 if (success) {
                     dispatch(userFetch(user));
-                    dispatch(
-                        storeTeam({
-                            _id: team._id,
-                            name: team.name,
-                            description: team.description,
-                            members: team.users,
-                            roles: team.roles,
-                            rolePermissions: team.rolePermissions,
-                        })
-                    );
+                    dispatch(storeTeam(team));
                     resolve(true);
                 } else {
                     reject(false);

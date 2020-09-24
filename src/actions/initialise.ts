@@ -35,12 +35,11 @@ export const initialise = () => {
                             _id: team._id,
                             name: team.name,
                             description: team.description,
-                            members: team.users,
+                            users: team.users,
                             roles: team.roles,
                             rolePermissions: team.rolePermissions,
                         })
                     );
-                    // dispatch team fetched action
                 } else {
                     dispatch(appInitialised());
                 }

@@ -9,7 +9,7 @@ export interface Team {
     _id: string | null;
     name: string | null;
     description: string | null;
-    members: TeamMember[];
+    users: TeamMember[];
     roles: any[];
     rolePermissions: any[];
 }

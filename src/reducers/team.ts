@@ -5,7 +5,7 @@ const initialState: Team = {
     _id: null,
     name: '',
     description: '',
-    members: [],
+    users: [],
     roles: [],
     rolePermissions: [],
 };
@@ -17,7 +17,7 @@ export default (state = initialState, action?: AppActions) => {
                 _id: action.payload._id,
                 name: action.payload.name,
                 description: action.payload.description,
-                members: action.payload.members,
+                users: action.payload.users,
                 roles: action.payload.roles,
                 rolePermissions: action.payload.rolePermissions,
             });

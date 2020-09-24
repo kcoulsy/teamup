@@ -196,7 +196,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
-    teamMembers: state.team.members,
+    teamMembers: state.team.users,
     roles: state.team.roles,
     loggedInUser: state.user,
     canUpdateTeamMembers: hasTeamRole(state, PERM_UPDATE_TEAM_MEMBERS),

@@ -40,12 +40,12 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
             estimatedHours: timeRemaining, // TODO change time remaining to estimatedHours for consistency
         };
     }
-    const users = team.members.map(({ user }) => {
+    const users = team.users.map(({ user }) => {
         return { value: user.username ? user.username : user.email };
     });
 
     const handleFinish = (values: Store) => {
-        const teamMember = team.members.find(({ user }) => {
+        const teamMember = team.users.find(({ user }) => {
             return (
                 values.assignee === user.email ||
                 values.assignee === user.username

@@ -11,16 +11,31 @@ import {
 
 const router = express.Router();
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    User.findByCredentials(username, password)
-        .then((user: IUser) => {
-            user.createAuthToken().then((token: string) =>
-                res.json({ token, user })
-            );
-        })
-        .catch((err: string) => res.status(400).json('Error: ' + err));
+    const user = await User.findByCredentials(username, password);
+
+    if (user) {
+        const token = await user.createAuthToken();
+        await user
+            .populate({
+                path: 'team',
+                populate: {
+                    path: 'users',
+                    populate: {
+                        path: 'user',
+                        model: 'User',
+                        select: '_id, username, email',
+                    },
+                },
+            })
+            .execPopulate();
+
+        return res.send({ token, user });
+    }
+
+    res.status(401).send({ error: 'Invalid Login' });
 });
 
 router.get('/verify', async (req, res) => {

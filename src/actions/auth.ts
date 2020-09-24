@@ -11,6 +11,7 @@ import {
 import { api } from './../services/api';
 import { Dispatch } from '@reduxjs/toolkit';
 import { userFetch } from './user';
+import { storeTeam } from './team';
 
 export const startLogin = (username: string, password: string) => {
     return async (dispatch: Dispatch<AppActions>) => {
@@ -25,6 +26,7 @@ export const startLogin = (username: string, password: string) => {
             if (token) {
                 dispatch(userFetch(user));
                 dispatch(loginSuccess(token));
+                dispatch(storeTeam(user.team));
             } else {
                 dispatch(loginFail());
             }
@@ -60,7 +62,8 @@ export const startLogout = () => {
         // TODO: call api here and remove any tokens from the user.
         localStorage.removeItem('userToken');
         dispatch(logout());
-        dispatch(userFetch({ _id: '', username: '', email: '' }));
+        dispatch(userFetch({ _id: '', username: '', email: '', team: '' }));
+        dispatch(storeTeam({}));
     };
 };
 
