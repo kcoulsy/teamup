@@ -7,12 +7,6 @@ import { RootState } from '../../store/configure';
 import { Team } from '../../types/team';
 import { Store } from 'antd/lib/form/interface';
 
-const options = [
-    { value: 'John Smith' },
-    { value: 'Sarah Green' },
-    { value: 'Bruce Michael' },
-];
-
 interface TaskFormProps {
     initialValues?: Task;
     teamView: boolean;
@@ -61,6 +55,12 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
             values.assignee = teamMember.user._id;
         } else {
             values.assignee = undefined;
+        }
+        // If editing the form, status is prefilled with the label.
+        // If not editted, then we need to convert to the key
+        if (!Object.values(TaskStatus).includes(values.status)) {
+            const index = Object.values(taskStatusLabel).indexOf(values.status);
+            values.status = Object.keys(taskStatusLabel)[index];
         }
         onFormFinish(values);
         form.resetFields();
