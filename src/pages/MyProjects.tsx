@@ -14,6 +14,7 @@ import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
 import { Project } from './../types/project';
 import useApi from './../hooks/useApi';
+import { Store } from 'antd/lib/form/interface';
 
 const MyProjects: React.FunctionComponent = () => {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -28,6 +29,23 @@ const MyProjects: React.FunctionComponent = () => {
         }
     }, [response, loading, error, completionData, modalOpen]);
 
+    const handleCreateProject = async ({ title, description }: Store) => {
+        const res = await api('/project', 'POST', {
+            title,
+            description,
+        });
+        if (res.project) {
+            setProjects([...projects, res.project]);
+            setModalOpen(false);
+            notification.success({
+                message: 'Project created successfully!',
+                placement: 'bottomRight',
+            });
+        }
+    };
+
+    const toggleModal = () => setModalOpen(!modalOpen);
+
     return (
         <div>
             <PageHeader
@@ -35,7 +53,7 @@ const MyProjects: React.FunctionComponent = () => {
                 title="My Projects"
                 style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 extra={[
-                    <Button key="3" onClick={() => setModalOpen(!modalOpen)}>
+                    <Button key="3" onClick={toggleModal}>
                         Create Project <EditOutlined />
                     </Button>,
                 ]}
@@ -43,7 +61,7 @@ const MyProjects: React.FunctionComponent = () => {
             <Drawer
                 title="Create Project"
                 visible={modalOpen}
-                onClose={() => setModalOpen(!modalOpen)}
+                onClose={toggleModal}
                 width="450">
                 <Form
                     name="createProject"
@@ -53,20 +71,7 @@ const MyProjects: React.FunctionComponent = () => {
                     wrapperCol={{
                         span: 19,
                     }}
-                    onFinish={async ({ title, description }) => {
-                        const res = await api('/project', 'POST', {
-                            title,
-                            description,
-                        });
-                        if (res.project) {
-                            setProjects([...projects, res.project]);
-                            setModalOpen(false);
-                            notification.success({
-                                message: 'Project created successfully!',
-                                placement: 'bottomRight',
-                            });
-                        }
-                    }}>
+                    onFinish={handleCreateProject}>
                     <Form.Item label="Title" name="title">
                         <Input />
                     </Form.Item>
