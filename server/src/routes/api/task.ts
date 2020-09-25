@@ -1,6 +1,7 @@
 import express from 'express';
 import Authenticate from './../../middleware/authenticate';
 import Task, { TaskStatus } from '../../models/task.model';
+import User from '../../models/user.model';
 import Project from '../../models/project.model';
 
 const router = express.Router();
@@ -91,7 +92,14 @@ router.put('/:id', Authenticate, async (req, res) => {
             task.description = description;
         }
         if (assignee) {
-            // TODO validate is a valid assignee
+            const user = await User.findOne({ _id: assignee });
+
+            if (!user) {
+                return res
+                    .status(400)
+                    .send({ error: 'That user does not exist' });
+            }
+
             task.assignee = assignee;
         }
         if (estimatedHours) {
