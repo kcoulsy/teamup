@@ -1,7 +1,7 @@
 import { RootState } from '../store/configure';
 import hasTeam from './hasTeam';
 
-export default (state: RootState, permissionToCheck: string) => {
+export default (state: RootState, permissionToCheck: string): boolean => {
     if (!hasTeam(state)) return false;
 
     const teamUser = state.team.users.find(
@@ -9,9 +9,11 @@ export default (state: RootState, permissionToCheck: string) => {
     );
     const roleIndex = teamUser?.roleIndex;
 
+    if (!roleIndex) return false;
+
     const rolePerm = state.team.rolePermissions.find(
         (rolePerm) => rolePerm.roleIndex === roleIndex
     );
 
-    return rolePerm?.permissions.includes(permissionToCheck);
+    return rolePerm?.permissions.includes(permissionToCheck) || false;
 };

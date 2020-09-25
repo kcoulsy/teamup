@@ -6,13 +6,14 @@ import { RootState } from '../../../store/configure';
 import { updateTeamPermissions } from './../../../actions/team';
 import hasTeamRole from '../../../helpers/hasTeamRole';
 import { PERM_UPDATE_TEAM_PERMS } from './../../../constants/permissions';
+import { RolePermission } from '../../../types/team';
 
 const { Option } = Select;
 
 interface RolePermissionsProps {
     canUpdatePermissions: boolean;
-    roles: any[]; // TODO change within state
-    rolePermissions: any[];
+    roles: string[];
+    rolePermissions: RolePermission[];
     updateTeamPermissions: Function;
 }
 const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
@@ -22,7 +23,7 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
     updateTeamPermissions,
 }) => {
     const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
-    let initialPermissions = [];
+    let initialPermissions: string[] = [];
     if (
         rolePermissions[selectedRoleIndex] &&
         rolePermissions[selectedRoleIndex].permissions

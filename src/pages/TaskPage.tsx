@@ -3,7 +3,6 @@ import { PageHeader, Button, Drawer, Result, notification, Modal } from 'antd';
 import TaskView from '../components/TaskView/TaskView';
 
 import { ArrowRightOutlined, EditOutlined } from '@ant-design/icons';
-// import AddTask from '../components/AddTask/AddTask';
 import { useParams, useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../constants/pageRoutes';
 import { fetchTask, updateTask } from './../actions/task';
@@ -99,7 +98,7 @@ const TaskPage = ({
     const indexOfCurrentStatus = Object.values(taskStatusLabel).indexOf(
         task.status.label
     );
-    // TODO add both labels and normal status to task object
+
     const canMoveToNextStatus = indexOfCurrentStatus + 1 <= statuses.length - 1;
 
     if (canMoveToNextStatus) {
