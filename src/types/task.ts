@@ -8,7 +8,7 @@ export interface Task {
     description: string;
     assignee?: User;
     status: TaskStatusColor;
-    timeRemaining: string;
+    estimatedHours: string;
     project: Project;
     createdBy: string;
 }
@@ -18,7 +18,7 @@ export interface TaskRow {
     title: TaskRowTitleLink;
     assignee?: User;
     status: TaskStatusColor;
-    timeRemaining: string;
+    estimatedHours: string;
 }
 
 export interface TaskRowTitleLink {

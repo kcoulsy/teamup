@@ -66,7 +66,7 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                         <Text strong style={{ paddingRight: 5 }}>
                             Estimated Time Remaining:
                         </Text>
-                        <Text>{task.timeRemaining}</Text>
+                        <Text>{task.estimatedHours}</Text>
                     </Col>
                 </Row>
             </Card>

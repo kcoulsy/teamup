@@ -78,12 +78,7 @@ const ProjectPage = ({
         description,
         estimatedHours,
         status,
-    }: {
-        title: string;
-        description: string;
-        estimatedHours: number;
-        status: string; //TODO type this
-    }) => {
+    }: Store) => {
         const res = await api('/task', 'POST', {
             project: project?._id,
             title,

@@ -10,7 +10,7 @@ import { Store } from 'antd/lib/form/interface';
 interface TaskFormProps {
     initialValues?: Task;
     teamView: boolean;
-    onFormFinish: (task: any) => void; // TODO fix any
+    onFormFinish: (task: Store) => void;
     type: 'Add' | 'Edit';
     team: Team;
 }
@@ -29,7 +29,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
             title,
             description,
             status,
-            timeRemaining,
+            estimatedHours,
             assignee,
         } = initialValues;
         preFilledValues = {
@@ -37,7 +37,7 @@ const TaskForm: React.FunctionComponent<TaskFormProps> = ({
             title,
             description,
             status: status.label,
-            estimatedHours: timeRemaining, // TODO change time remaining to estimatedHours for consistency
+            estimatedHours,
         };
     }
     const users = team.users.map(({ user }) => {
