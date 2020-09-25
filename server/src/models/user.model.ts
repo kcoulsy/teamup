@@ -28,6 +28,7 @@ interface IUserSchema extends Document {
 interface IUserBase extends IUserSchema {
     createAuthToken(): Promise<string>;
     hasTeamPermission(permission: string): Promise<boolean>;
+    populateTeam(withUsers?: boolean): Promise<IUser>;
 }
 
 export interface IUser extends IUserBase {
@@ -154,6 +155,38 @@ userSchema.methods.hasTeamPermission = function hasTeamPermission(
         }
     });
 };
+interface Populate {
+    path: string;
+    model?: string;
+    select?: string;
+    populate?: Populate;
+}
+
+userSchema.methods.populateTeam = async function populateTeam(
+    withUsers: boolean = false
+) {
+    return new Promise(async (resolve, reject) => {
+        const user = this;
+
+        const populateQuery: Populate = { path: 'team' };
+
+        if (withUsers) {
+            populateQuery.populate = {
+                path: 'users',
+                populate: {
+                    path: 'user',
+                    model: 'User',
+                    select: '_id, username, email',
+                },
+            };
+        }
+
+        await user.populate(populateQuery).execPopulate();
+
+        resolve(user);
+    });
+};
+
 /**
  * Static method for finding a user by token (to verify the token is valid)
  *

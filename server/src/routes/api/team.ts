@@ -10,18 +10,7 @@ const router = express.Router();
  * Returns the team from the user that made the call.
  */
 router.get('/', Authenticate, async (req, res) => {
-    await req.user.populate('team').execPopulate();
-    await req.user.team
-        .populate({
-            path: 'users',
-            populate: {
-                path: 'user',
-                model: 'User',
-                select: '_id, username, email',
-            },
-        })
-        .execPopulate();
-
+    await req.user.populateTeam(true);
     res.json({ team: req.user.team });
 });
 
@@ -69,19 +58,7 @@ router.post('/create', Authenticate, async (req, res) => {
  * Allows the user to update the team name and description
  */
 router.put('/update', Authenticate, async (req, res) => {
-    await req.user
-        .populate({
-            path: 'team',
-            populate: {
-                path: 'users',
-                populate: {
-                    path: 'user',
-                    model: 'User',
-                    select: '_id, username, email',
-                },
-            },
-        })
-        .execPopulate();
+    await req.user.populateTeam(true);
 
     const { name, description } = req.body;
 
@@ -106,7 +83,7 @@ router.put('/update', Authenticate, async (req, res) => {
  * Allows the user to leave the team BUT does not remove the team.
  */
 router.post('/leave', Authenticate, async (req, res) => {
-    await req.user.populate('team').execPopulate();
+    await req.user.populateTeam();
     if (req.user.team) {
         req.user.team = null;
         req.user.save();
@@ -122,19 +99,7 @@ router.post('/leave', Authenticate, async (req, res) => {
 router.post('/invite', Authenticate, async (req, res) => {
     const { email } = req.body;
 
-    await req.user
-        .populate({
-            path: 'team',
-            populate: {
-                path: 'users',
-                populate: {
-                    path: 'user',
-                    model: 'User',
-                    select: '_id, username, email',
-                },
-            },
-        })
-        .execPopulate();
+    await req.user.populateTeam(true);
 
     const user = await User.findOne({ email });
 
@@ -209,19 +174,7 @@ router.post('/decline', Authenticate, async (req, res) => {
  */
 router.post('/user/remove', Authenticate, async (req, res) => {
     const { userId } = req.body;
-    await req.user
-        .populate({
-            path: 'team',
-            populate: {
-                path: 'users',
-                populate: {
-                    path: 'user',
-                    model: 'User',
-                    select: '_id, username, email',
-                },
-            },
-        })
-        .execPopulate();
+    await req.user.populateTeam(true);
 
     req.user.team.users = req.user.team.users.filter((user) => {
         return !user.user.equals(userId);
@@ -238,19 +191,7 @@ router.post('/user/remove', Authenticate, async (req, res) => {
  */
 router.post('/user/update', Authenticate, async (req, res) => {
     const { userId, roleIndex } = req.body;
-    await req.user
-        .populate({
-            path: 'team',
-            populate: {
-                path: 'users',
-                populate: {
-                    path: 'user',
-                    model: 'User',
-                    select: '_id, username, email',
-                },
-            },
-        })
-        .execPopulate();
+    await req.user.populateTeam(true);
     if (req.user.team.roles.length - 1 < roleIndex) {
         return res.status(400).send({ error: 'Role index is not valid' });
     }
@@ -273,15 +214,16 @@ router.post('/user/update', Authenticate, async (req, res) => {
  */
 router.post('/roles', Authenticate, async (req, res) => {
     const { roles } = req.body;
+
     if (!Array.isArray(roles) || !roles.every((i) => typeof i === 'string')) {
         return res.status(400).send('Roles must be of type strings');
     }
 
-    await req.user.populate('team').execPopulate();
+    await req.user.populateTeam();
 
     req.user.team.roles = roles;
 
-    const newRolePerms = roles.map((roleName, index) => {
+    const newRolePerms = roles.map((_, index) => {
         if (typeof req.user.team.rolePermissions[index] !== 'undefined') {
             const roleObj = req.user.team.rolePermissions[index];
             roleObj.roleIndex = index;
@@ -307,7 +249,7 @@ router.post('/roles', Authenticate, async (req, res) => {
 router.post('/permissions', Authenticate, async (req, res) => {
     const { roleIndex, permissions } = req.body;
 
-    await req.user.populate('team').execPopulate();
+    await req.user.populateTeam(true);
 
     if (roleIndex < 0 || roleIndex > req.user.team.roles.length - 1) {
         return res
@@ -315,7 +257,7 @@ router.post('/permissions', Authenticate, async (req, res) => {
             .send({ error: 'Role does not exist with that index' });
     }
 
-    req.user.team.roles.forEach((role, index) => {
+    req.user.team.roles.forEach((_, index) => {
         if (!req.user.team.rolePermissions[index]) {
             req.user.team.rolePermissions[index] = {
                 permissions: [],
@@ -327,19 +269,9 @@ router.post('/permissions', Authenticate, async (req, res) => {
             req.user.team.rolePermissions[index].permissions = permissions;
         }
     });
-    // TODO don't really want to keep populating like this...
-    await req.user.team
-        .populate({
-            path: 'users',
-            populate: {
-                path: 'user',
-                model: 'User',
-                select: '_id, username, email',
-            },
-        })
-        .execPopulate();
 
     await req.user.team.save();
+
     res.send({
         team: req.user.team,
         message: 'Updated permissions',
