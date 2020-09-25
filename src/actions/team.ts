@@ -80,8 +80,7 @@ export const updateTeam = ({
     };
 };
 
-//TODO this needs to be changed leave team not remove
-export const removeTeam = () => {
+export const leaveTeam = () => {
     return async (dispatch: Dispatch<AppActions>) => {
         return new Promise(async (resolve, reject) => {
             try {

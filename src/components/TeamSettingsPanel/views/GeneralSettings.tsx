@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, notification, Modal, PageHeader } from 'antd';
-import { updateTeam, removeTeam } from './../../../actions/team';
+import { updateTeam, leaveTeam } from './../../../actions/team';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { PATH_HOME } from './../../../constants/pageRoutes';
@@ -15,14 +15,14 @@ interface GeneralSettingsProps {
     teamName: string | null;
     teamDesc: string | null;
     updateTeam: Function;
-    removeTeam: Function;
+    leaveTeam: Function;
     canUpdateTeamSettings: boolean;
 }
 const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
     teamName,
     teamDesc,
     updateTeam,
-    removeTeam,
+    leaveTeam,
     canUpdateTeamSettings,
 }) => {
     const history = useHistory();
@@ -109,7 +109,7 @@ const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
                         content:
                             'Leaving the team will prevent you from accessing the teams projects.',
                         onOk: async () => {
-                            const done = await removeTeam();
+                            const done = await leaveTeam();
                             if (done) {
                                 notification.success({
                                     message: 'Successfully left the team',
@@ -132,7 +132,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = {
-    removeTeam,
+    leaveTeam,
     updateTeam,
 };
 
