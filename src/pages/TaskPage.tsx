@@ -45,7 +45,7 @@ const TaskPage = ({
             .catch(() => {
                 setTask(undefined);
             });
-    }, []);
+    }, [taskid]);
 
     if (!task) {
         return (

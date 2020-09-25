@@ -7,7 +7,6 @@ import {
     Input,
     notification,
     Spin,
-    Space,
 } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';

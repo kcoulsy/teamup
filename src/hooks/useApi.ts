@@ -18,7 +18,7 @@ const useApi = (path: string, method: ApiMethod, bodyObject: any = {}) => {
                 setError(err);
             }
         })();
-    }, [calls]);
+    }, [calls, path, method, bodyObject]);
 
     const refetch = () => {
         setCalls(calls + 1);
