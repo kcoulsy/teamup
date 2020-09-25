@@ -192,10 +192,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                     </Form.Item>
                 </Form>
             ) : (
-                <Text>
-                    {' '}
-                    You do not have permissions to invite team members.
-                </Text>
+                <Text>You do not have permissions to invite team members.</Text>
             )}
         </div>
     );
