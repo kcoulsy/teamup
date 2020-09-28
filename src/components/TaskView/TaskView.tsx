@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, Typography, Row, Col, Tag } from 'antd';
+import { Card, Typography, Row, Col, Tag, Result, Button } from 'antd';
 import { Task } from './../../types/task';
+import { useHistory } from 'react-router-dom';
+import { PATH_HOME } from './../../constants/pageRoutes';
 
 const { Paragraph, Text, Link } = Typography;
 // const data = [
@@ -41,9 +43,30 @@ const { Paragraph, Text, Link } = Typography;
 // ];
 
 interface TaskViewProps {
-    task: Task;
+    task?: Task;
 }
+
 const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
+    const history = useHistory();
+    if (!task) {
+        return (
+            <Result
+                status="warning"
+                title="This task does not exist!."
+                extra={
+                    <Button
+                        type="primary"
+                        key="console"
+                        onClick={() => {
+                            history.push(PATH_HOME);
+                        }}>
+                        Back to dashboard
+                    </Button>
+                }
+            />
+        );
+    }
+
     return (
         <>
             <Card size="small" className="task-view">

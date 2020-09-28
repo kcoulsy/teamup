@@ -17,6 +17,7 @@ import {
     PERM_DELETE_OTHER_TASK,
 } from '../constants/permissions';
 import { User } from './../types/user';
+import PageLayout from '../components/PageLayout/PageLayout';
 
 const { confirm } = Modal;
 
@@ -35,35 +36,20 @@ const TaskPage = ({
     const [modalOpen, setModalOpen] = useState(false);
     const [task, setTask] = useState<Task | undefined>();
     const createdByLoggedInUser = task?.createdBy === loggedInUser._id;
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         fetchTask(taskid)
             .then((task) => {
+                setLoading(false);
                 setTask(task);
             })
             .catch(() => {
+                setLoading(false);
                 setTask(undefined);
             });
     }, [taskid]);
-
-    if (!task) {
-        return (
-            <Result
-                status="warning"
-                title="This task does not exist!."
-                extra={
-                    <Button
-                        type="primary"
-                        key="console"
-                        onClick={() => {
-                            history.push(PATH_HOME);
-                        }}>
-                        Back to dashboard
-                    </Button>
-                }
-            />
-        );
-    }
 
     const handleEditTask = (values: Parameters<typeof updateTask>[1]) => {
         updateTask(taskid, values)
@@ -94,36 +80,40 @@ const TaskPage = ({
         );
     }
 
-    const statuses = Object.values(TaskStatus);
-    const indexOfCurrentStatus = Object.values(taskStatusLabel).indexOf(
-        task.status.label
-    );
+    if (task) {
+        const statuses = Object.values(TaskStatus);
+        const indexOfCurrentStatus = Object.values(taskStatusLabel).indexOf(
+            task.status.label
+        );
 
-    const canMoveToNextStatus = indexOfCurrentStatus + 1 <= statuses.length - 1;
+        const canMoveToNextStatus =
+            indexOfCurrentStatus + 1 <= statuses.length - 1;
 
-    if (canMoveToNextStatus) {
-        const nextStatus = statuses[indexOfCurrentStatus + 1];
-        const nextStatusLabel = `Move to ${taskStatusLabel[nextStatus]}`;
-        headerButtons = [
-            ...headerButtons,
-            <Button
-                type="primary"
-                key="nextStatus"
-                onClick={() => handleEditTask({ status: nextStatus })}>
-                {nextStatusLabel}
-                <ArrowRightOutlined />
-            </Button>,
-        ];
+        if (canMoveToNextStatus) {
+            const nextStatus = statuses[indexOfCurrentStatus + 1];
+            const nextStatusLabel = `Move to ${taskStatusLabel[nextStatus]}`;
+            headerButtons = [
+                ...headerButtons,
+                <Button
+                    type="primary"
+                    key="nextStatus"
+                    onClick={() => handleEditTask({ status: nextStatus })}>
+                    {nextStatusLabel}
+                    <ArrowRightOutlined />
+                </Button>,
+            ];
+        }
     }
 
     return (
         <div>
-            <PageHeader
-                className="page__page-header"
+            <PageLayout
                 title={task?.title}
-                onBack={() => history.push(`/project/${projectid}`)}
-                extra={headerButtons}
-            />
+                prevPagePath={`/project/${projectid}`}
+                headerButtons={headerButtons}
+                loading={loading}>
+                <TaskView task={task} />
+            </PageLayout>
             <Drawer
                 title="Edit Project Task"
                 visible={modalOpen}
@@ -136,7 +126,7 @@ const TaskPage = ({
                     }}
                     type="Edit"
                     initialValues={task}
-                    teamView={!!task.project.team}
+                    teamView={!!task?.project.team}
                 />
                 {(createdByLoggedInUser || canDeleteOthersTasks) && (
                     <Button
@@ -166,7 +156,6 @@ const TaskPage = ({
                     </Button>
                 )}
             </Drawer>
-            <TaskView task={task} />
         </div>
     );
 };
