@@ -192,7 +192,20 @@ const ProjectPage = ({
                         description: project?.description,
                     }}
                     onFinish={handleEditProjectFormFinish}>
-                    <Form.Item label="Title" name="title">
+                    <Form.Item
+                        label="Title"
+                        name="title"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'You must have a project title.',
+                            },
+                            {
+                                min: 3,
+                                message:
+                                    'Your title must be at least 3 characters.',
+                            },
+                        ]}>
                         <Input />
                     </Form.Item>
                     <Form.Item label="Description" name="description">
