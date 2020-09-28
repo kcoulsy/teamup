@@ -1,10 +1,16 @@
+import appConfig from '../constants/config';
 export const API_GET = 'GET';
 export const API_POST = 'POST';
 export const API_PUT = 'PUT';
 export const API_PATCH = 'PATCH';
 export const API_DELETE = 'DELETE';
 
-export type ApiMethod = typeof API_GET | typeof API_POST | typeof API_PUT | typeof API_PATCH | typeof API_DELETE;
+export type ApiMethod =
+    | typeof API_GET
+    | typeof API_POST
+    | typeof API_PUT
+    | typeof API_PATCH
+    | typeof API_DELETE;
 
 interface configBody extends RequestInit {
     method: ApiMethod;
@@ -26,7 +32,7 @@ export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
         config.body = JSON.stringify(bodyObject);
     }
 
-    const response = await fetch(`http://localhost:5000/api/${path}`, config);
+    const response = await fetch(appConfig.apiUrl + path, config);
 
     return response.json();
 };
