@@ -3,8 +3,9 @@ import { RootState } from '../store/configure';
 import { connect } from 'react-redux';
 import hasTeam from '../helpers/hasTeam';
 import { Alert, Button, Row, Col } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { PATH_TEAM_CREATE } from '../constants/pageRoutes';
+import { PATH_TEAM_PROJECTS } from './../constants/pageRoutes';
 
 interface TeamProfileProps {
     hasTeam: boolean;
@@ -36,7 +37,7 @@ const TeamProfile: React.FunctionComponent<TeamProfileProps> = ({
             </div>
         );
     }
-    return <div>TeamProfile Page</div>;
+    return <Redirect to={PATH_TEAM_PROJECTS} />;
 };
 
 const mapStateToProps = (state: RootState) => ({

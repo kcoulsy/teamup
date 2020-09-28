@@ -3,7 +3,10 @@ import { Card, Form, Button, notification, Input } from 'antd';
 import { createTeam } from '../actions/team';
 import { connect } from 'react-redux';
 import { useHistory, Redirect } from 'react-router-dom';
-import { PATH_TEAM_PROFILE } from './../constants/pageRoutes';
+import {
+    PATH_TEAM_PROFILE,
+    PATH_TEAM_PROJECTS,
+} from './../constants/pageRoutes';
 import { RootState } from '../store/configure';
 import hasTeam from '../helpers/hasTeam';
 
@@ -22,7 +25,7 @@ const CreateTeamPage: React.FunctionComponent<{
     const history = useHistory();
 
     if (hasTeamFromState) {
-        return <Redirect to={PATH_TEAM_PROFILE} />;
+        return <Redirect to={PATH_TEAM_PROJECTS} />;
     }
 
     return (
@@ -42,7 +45,7 @@ const CreateTeamPage: React.FunctionComponent<{
                                 message: 'Team Created',
                                 placement: 'bottomRight',
                             });
-                            history.push(PATH_TEAM_PROFILE);
+                            history.push(PATH_TEAM_PROJECTS); //TODO: to profile when it exists
                         }
                     }}>
                     <Form.Item label="Team Name" name="teamName">

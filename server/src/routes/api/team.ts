@@ -51,7 +51,8 @@ router.post('/create', Authenticate, async (req, res) => {
     req.user.team = team._id;
     await req.user.save();
 
-    res.send({ team });
+    await req.user.populateTeam(true);
+    res.send({ team: req.user.team });
 });
 
 /**

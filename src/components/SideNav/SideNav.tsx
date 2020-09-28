@@ -137,14 +137,14 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                         key={MenuItemKey.USER}
                         icon={<UserOutlined />}
                         title="User">
-                        <Menu.Item
+                        {/* <Menu.Item
                             key={MenuItemKey.USER_PROFILE}
                             onClick={() => {
                                 setSelectedKeys([MenuItemKey.USER_PROFILE]);
                                 history.push(PATH_MY_PROFILE);
                             }}>
                             My Profile
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <Menu.Item
                             key={MenuItemKey.USER_PROJECTS}
                             onClick={() => {
@@ -166,14 +166,17 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                         key={MenuItemKey.TEAM}
                         icon={<TeamOutlined />}
                         title="Team">
-                        <Menu.Item
-                            key={MenuItemKey.TEAM_PROFILE}
-                            onClick={() => {
-                                setSelectedKeys([MenuItemKey.TEAM_PROFILE]);
-                                history.push(PATH_TEAM_PROFILE);
-                            }}>
-                            My Team
-                        </Menu.Item>
+                        {!showTeamProjects ? (
+                            <Menu.Item
+                                key={MenuItemKey.TEAM_PROFILE}
+                                onClick={() => {
+                                    setSelectedKeys([MenuItemKey.TEAM_PROFILE]);
+                                    history.push(PATH_TEAM_PROFILE);
+                                }}>
+                                My Team
+                            </Menu.Item>
+                        ) : null}
+
                         {showTeamProjects ? (
                             <Menu.Item
                                 key={MenuItemKey.TEAM_PROJECTS}
