@@ -26,14 +26,25 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
-    const { response, loading, error } = useApi('/project', 'GET');
+    const [loading, setLoading] = useState(false);
+
+    const fetchProjects = async () => {
+        try {
+            setLoading(true);
+            const res = await api('/project?team=true', 'GET');
+            if (res) {
+                setLoading(false);
+                setProjects(res.projects);
+                setCompletionData(res.estimatedCompletions);
+            }
+        } catch (err) {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        if (response?.projects) {
-            setProjects(response.projects);
-            setCompletionData(response.estimatedCompletions);
-        }
-    }, [response, loading, error, completionData, modalOpen]);
+        fetchProjects();
+    }, []);
 
     const headerButtons = [];
     if (canCreateProject) {
