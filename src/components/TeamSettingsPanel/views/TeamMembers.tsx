@@ -13,7 +13,7 @@ import {
 import { api } from './../../../services/api';
 import { RootState } from '../../../store/configure';
 import { connect } from 'react-redux';
-import { updateTeamMemberRole } from '../../../actions/team';
+import { updateTeamMemberRole, removeTeamUser } from '../../../actions/team';
 import { User } from './../../../types/user';
 import hasTeamRole from '../../../helpers/hasTeamRole';
 import { PERM_UPDATE_TEAM_MEMBERS } from '../../../constants/permissions';
@@ -35,6 +35,7 @@ interface TeamMemberProps {
     teamMembers: any[];
     roles: string[];
     updateTeamMemberRole: Function;
+    removeTeamUser: Function;
     loggedInUser: User;
     canInviteTeamMembers: boolean;
     canUpdateTeamMembers: boolean;
@@ -45,6 +46,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
     teamMembers,
     roles,
     updateTeamMemberRole,
+    removeTeamUser,
     loggedInUser,
     canInviteTeamMembers,
     canUpdateTeamMembers,
@@ -137,12 +139,16 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                                 return (
                                     <Space size="middle">
                                         <Link
-                                            onClick={() => {
-                                                //TODO Remove the user from the team.
-                                                notification.success({
-                                                    message: `${record.name} successfully removed from the team!`,
-                                                    placement: 'bottomRight',
-                                                });
+                                            onClick={async () => {
+                                                removeTeamUser(record.key).then(
+                                                    () => {
+                                                        notification.success({
+                                                            message: `${record.name} successfully removed from the team!`,
+                                                            placement:
+                                                                'bottomRight',
+                                                        });
+                                                    }
+                                                );
                                             }}>
                                             Remove
                                         </Link>
@@ -209,6 +215,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
     updateTeamMemberRole,
+    removeTeamUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamMembers);

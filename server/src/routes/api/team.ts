@@ -175,15 +175,22 @@ router.post('/decline', Authenticate, async (req, res) => {
  */
 router.post('/user/remove', Authenticate, async (req, res) => {
     const { userId } = req.body;
+    await req.user.populateTeam();
+
+    req.user.team.users = req.user.team.users.filter((teamUser) => {
+        return !teamUser.user.equals(userId);
+    });
+
+    const userToRemove = await User.findById(userId);
+    userToRemove.team = null;
+    await userToRemove.save();
+    await req.user.team.save();
     await req.user.populateTeam(true);
 
-    req.user.team.users = req.user.team.users.filter((user) => {
-        return !user.user.equals(userId);
-    });
-    await req.user.team.save();
     res.send({
         message: 'User removed from team!',
         team: req.user.team,
+        success: true,
     });
 });
 

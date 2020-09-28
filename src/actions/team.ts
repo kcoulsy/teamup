@@ -215,3 +215,27 @@ export const declineTeamInvite = (_id: string | null) => {
         });
     };
 };
+
+export const removeTeamUser = (userId: string) => {
+    return (dispatch: Dispatch<AppActions>): Promise<boolean> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const { success, team } = await api(
+                    '/team/user/remove',
+                    'POST',
+                    {
+                        userId,
+                    }
+                );
+                if (success) {
+                    dispatch(storeTeam(team));
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            } catch (err) {
+                resolve(false);
+            }
+        });
+    };
+};
