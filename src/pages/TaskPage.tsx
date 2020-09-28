@@ -106,7 +106,7 @@ const TaskPage = ({
     }
 
     return (
-        <div>
+        <>
             <PageLayout
                 title={task?.title}
                 prevPagePath={`/project/${projectid}`}
@@ -156,7 +156,7 @@ const TaskPage = ({
                     </Button>
                 )}
             </Drawer>
-        </div>
+        </>
     );
 };
 

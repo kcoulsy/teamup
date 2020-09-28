@@ -17,6 +17,7 @@ import { PERM_CREATE_TEAM_PROJECT } from './../constants/permissions';
 import hasTeamRole from '../helpers/hasTeamRole';
 import { connect } from 'react-redux';
 import useApi from './../hooks/useApi';
+import PageLayout from '../components/PageLayout/PageLayout';
 
 interface TeamProjectsProps {
     canCreateProject: boolean;
@@ -55,12 +56,16 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
         );
     }
     return (
-        <div>
-            <PageHeader
-                className="page__page-header"
+        <>
+            <PageLayout
                 title="Team Projects"
-                extra={headerButtons}
-            />
+                loading={loading}
+                headerButtons={headerButtons}>
+                <ProjectBrowser
+                    projects={projects}
+                    completionData={completionData}
+                />
+            </PageLayout>
             <Drawer
                 title="Create Project"
                 visible={modalOpen}
@@ -102,21 +107,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                     </Form.Item>
                 </Form>
             </Drawer>
-            {loading && (
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}>
-                    <Spin />
-                </div>
-            )}
-            <ProjectBrowser
-                projects={projects}
-                completionData={completionData}
-            />
-        </div>
+        </>
     );
 };
 

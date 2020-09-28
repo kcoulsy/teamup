@@ -13,6 +13,7 @@ import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
 import { Project } from './../types/project';
 import { Store } from 'antd/lib/form/interface';
+import PageLayout from './../components/PageLayout/PageLayout';
 
 const MyProjects: React.FunctionComponent = () => {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -56,16 +57,21 @@ const MyProjects: React.FunctionComponent = () => {
     const toggleModal = () => setModalOpen(!modalOpen);
 
     return (
-        <div>
-            <PageHeader
-                className="page__page-header"
+        <>
+            <PageLayout
                 title="My Projects"
-                extra={[
+                loading={loading}
+                headerButtons={[
                     <Button key="3" onClick={toggleModal}>
                         Create Project <EditOutlined />
                     </Button>,
-                ]}
-            />
+                ]}>
+                <ProjectBrowser
+                    projects={projects}
+                    completionData={completionData}
+                />
+            </PageLayout>
+
             <Drawer
                 title="Create Project"
                 visible={modalOpen}
@@ -94,21 +100,7 @@ const MyProjects: React.FunctionComponent = () => {
                     </Form.Item>
                 </Form>
             </Drawer>
-            {loading && (
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}>
-                    <Spin />
-                </div>
-            )}
-            <ProjectBrowser
-                projects={projects}
-                completionData={completionData}
-            />
-        </div>
+        </>
     );
 };
 
