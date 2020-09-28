@@ -22,7 +22,6 @@ const columns = [
         title: 'Assignee',
         dataIndex: 'assignee',
         render: (assignee: User) => {
-            console.log(assignee);
             return assignee.email || 'Unassigned';
         },
     },

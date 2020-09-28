@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    PageHeader,
-    Button,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Modal,
-    Spin,
-    Space,
-} from 'antd';
+import { Button, Drawer, Form, Input, notification, Modal, Space } from 'antd';
 import ProjectView from '../components/ProjectView/ProjectView';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { api } from './../services/api';
@@ -32,6 +22,8 @@ import {
 } from './../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
 import PageLayout from './../components/PageLayout/PageLayout';
+import useToggle from './../hooks/useToggle';
+import { User } from './../types/user';
 
 const { confirm } = Modal;
 
@@ -39,19 +31,22 @@ interface ProjectPageProps {
     canAddTeamTask: boolean;
     canEditTeamProject: boolean;
     canRemoveTeamProject: boolean;
+    user: User;
 }
 
 const ProjectPage = ({
     canAddTeamTask,
     canEditTeamProject,
     canRemoveTeamProject,
+    user,
 }: ProjectPageProps) => {
     let { projectid } = useParams();
     const history = useHistory();
     const [project, setProject] = useState<Project>();
-    const [editProjectDrawerOpen, setEditProjectDrawerOpen] = useState(false);
-    const [addTaskDrawerOpen, setAddTaskDrawerOpen] = useState(false);
+    const [editProjectDrawerOpen, toggleEditProjectDrawer] = useToggle();
+    const [addTaskDrawerOpen, toggleAddTaskDrawer] = useToggle();
     const [loading, setLoading] = useState(false);
+    const isOwnProject = project?.user === user._id;
 
     const fetchProject = async () => {
         try {
@@ -88,7 +83,7 @@ const ProjectPage = ({
 
         if (res) {
             fetchProject();
-            setAddTaskDrawerOpen(false);
+            toggleAddTaskDrawer(false);
         }
     };
 
@@ -103,7 +98,7 @@ const ProjectPage = ({
         });
         if (res.success) {
             setProject(res.project);
-            setEditProjectDrawerOpen(false);
+            toggleEditProjectDrawer(false);
             notification.success({
                 message: 'Project edited successfully!',
                 placement: 'bottomRight',
@@ -147,30 +142,23 @@ const ProjectPage = ({
 
     const handleAddProjectDrawerClose = () => {
         fetchProject();
-        setAddTaskDrawerOpen(!addTaskDrawerOpen);
+        toggleAddTaskDrawer();
     };
 
     const headerButtons = [];
-    if (!project?.team || canEditTeamProject) {
+
+    if (isOwnProject || !project?.team || canEditTeamProject) {
         headerButtons.push(
-            <Button
-                key="1"
-                type="default"
-                onClick={() =>
-                    setEditProjectDrawerOpen(!editProjectDrawerOpen)
-                }>
+            <Button key="1" type="default" onClick={toggleEditProjectDrawer}>
                 Edit Project
                 <EditOutlined />
             </Button>
         );
     }
 
-    if (!project?.team || canAddTeamTask) {
+    if (isOwnProject || !project?.team || canAddTeamTask) {
         headerButtons.push(
-            <Button
-                key="2"
-                type="primary"
-                onClick={() => setAddTaskDrawerOpen(!addTaskDrawerOpen)}>
+            <Button key="2" type="primary" onClick={toggleAddTaskDrawer}>
                 Add Task <PlusOutlined />
             </Button>
         );
@@ -182,13 +170,14 @@ const ProjectPage = ({
                 title={project?.title}
                 subTitle={project?.description}
                 loading={loading}
-                prevPagePath={PATH_MY_PROJECTS}>
+                prevPagePath={PATH_MY_PROJECTS}
+                headerButtons={headerButtons}>
                 <ProjectView tasks={tasks} />
             </PageLayout>
             <Drawer
                 title="Edit Project"
                 visible={editProjectDrawerOpen}
-                onClose={() => setEditProjectDrawerOpen(!editProjectDrawerOpen)}
+                onClose={toggleEditProjectDrawer}
                 width="450">
                 <Form
                     name="editProject"
@@ -239,6 +228,7 @@ const mapStateToProps = (state: RootState) => ({
     canAddTeamTask: hasTeamRole(state, PERM_ADD_TASK),
     canEditTeamProject: hasTeamRole(state, PERM_EDIT_TEAM_PROJECT),
     canRemoveTeamProject: hasTeamRole(state, PERM_REMOVE_TEAM_PROJECT),
+    user: state.user,
 });
 
 export default connect(mapStateToProps)(ProjectPage);

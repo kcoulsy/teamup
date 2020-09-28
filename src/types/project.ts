@@ -6,4 +6,5 @@ export interface Project {
     createdAt: string;
     updatedAt: string;
     team?: string;
+    user: string;
 }

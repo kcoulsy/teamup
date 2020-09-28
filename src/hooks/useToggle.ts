@@ -7,7 +7,7 @@ const useToggle = (
 ): [boolean, (newState?: any) => void] => {
     const [state, setToggle] = useState(initialState);
     const toggle = useCallback((arg) => {
-        if (typeof arg !== 'boolean') {
+        if (typeof arg === 'boolean') {
             setToggle(arg);
         } else {
             setToggle((state) => !state);

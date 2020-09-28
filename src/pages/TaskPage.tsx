@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Button, Drawer, Result, notification, Modal } from 'antd';
+import { Button, Drawer, notification, Modal } from 'antd';
 import TaskView from '../components/TaskView/TaskView';
-
 import { ArrowRightOutlined, EditOutlined } from '@ant-design/icons';
 import { useParams, useHistory } from 'react-router-dom';
-import { PATH_HOME } from './../constants/pageRoutes';
 import { fetchTask, updateTask } from './../actions/task';
 import { Task, TaskStatus, taskStatusLabel } from './../types/task';
 import TaskForm from './../components/TaskForm/TaskForm';
@@ -18,6 +16,7 @@ import {
 } from '../constants/permissions';
 import { User } from './../types/user';
 import PageLayout from '../components/PageLayout/PageLayout';
+import useToggle from './../hooks/useToggle';
 
 const { confirm } = Modal;
 
@@ -33,7 +32,7 @@ const TaskPage = ({
 }: TaskPageProps) => {
     let { projectid, taskid } = useParams();
     const history = useHistory();
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalVisible, toggleModal] = useToggle();
     const [task, setTask] = useState<Task | undefined>();
     const createdByLoggedInUser = task?.createdBy === loggedInUser._id;
     const [loading, setLoading] = useState(false);
@@ -67,14 +66,14 @@ const TaskPage = ({
                 });
                 setTask(undefined);
             })
-            .finally(() => setModalOpen(false));
+            .finally(() => toggleModal(false));
     };
 
     let headerButtons = [];
 
     if (createdByLoggedInUser || canEditOthersTasks) {
         headerButtons.push(
-            <Button key="editTask" onClick={() => setModalOpen(true)}>
+            <Button key="editTask" onClick={toggleModal}>
                 Edit Task <EditOutlined />
             </Button>
         );
@@ -116,12 +115,12 @@ const TaskPage = ({
             </PageLayout>
             <Drawer
                 title="Edit Project Task"
-                visible={modalOpen}
-                onClose={() => setModalOpen(false)}
+                visible={modalVisible}
+                onClose={toggleModal}
                 width="450">
                 <TaskForm
                     onFormFinish={async (values) => {
-                        setModalOpen(false);
+                        toggleModal(false);
                         handleEditTask(values);
                     }}
                     type="Edit"
@@ -142,7 +141,7 @@ const TaskPage = ({
                                         'DELETE'
                                     );
                                     if (res) {
-                                        setModalOpen(false);
+                                        toggleModal(false);
                                         notification.success({
                                             message: 'Task deleted!',
                                             placement: 'bottomRight',

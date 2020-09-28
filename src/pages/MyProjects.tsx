@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import {
-    PageHeader,
-    Button,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Spin,
-} from 'antd';
+import { Button, Drawer, Form, Input, notification } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
 import { Project } from './../types/project';
 import { Store } from 'antd/lib/form/interface';
 import PageLayout from './../components/PageLayout/PageLayout';
+import useToggle from './../hooks/useToggle';
 
 const MyProjects: React.FunctionComponent = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
-    const [modalOpen, setModalOpen] = useState(false);
+    const [drawerOpen, toggleDrawer] = useToggle();
     const [loading, setLoading] = useState(false);
 
     const fetchProjects = async () => {
@@ -46,7 +39,7 @@ const MyProjects: React.FunctionComponent = () => {
         });
         if (res.project) {
             setProjects([...projects, res.project]);
-            setModalOpen(false);
+            toggleDrawer(false);
             notification.success({
                 message: 'Project created successfully!',
                 placement: 'bottomRight',
@@ -54,15 +47,13 @@ const MyProjects: React.FunctionComponent = () => {
         }
     };
 
-    const toggleModal = () => setModalOpen(!modalOpen);
-
     return (
         <>
             <PageLayout
                 title="My Projects"
                 loading={loading}
                 headerButtons={[
-                    <Button key="3" onClick={toggleModal}>
+                    <Button key="3" onClick={toggleDrawer}>
                         Create Project <EditOutlined />
                     </Button>,
                 ]}>
@@ -74,8 +65,8 @@ const MyProjects: React.FunctionComponent = () => {
 
             <Drawer
                 title="Create Project"
-                visible={modalOpen}
-                onClose={toggleModal}
+                visible={drawerOpen}
+                onClose={toggleDrawer}
                 width="450">
                 <Form
                     name="createProject"

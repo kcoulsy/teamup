@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    PageHeader,
-    Button,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Spin,
-} from 'antd';
+import { Button, Drawer, Form, Input, notification } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
@@ -16,8 +8,8 @@ import { RootState } from '../store/configure';
 import { PERM_CREATE_TEAM_PROJECT } from './../constants/permissions';
 import hasTeamRole from '../helpers/hasTeamRole';
 import { connect } from 'react-redux';
-import useApi from './../hooks/useApi';
 import PageLayout from '../components/PageLayout/PageLayout';
+import useToggle from './../hooks/useToggle';
 
 interface TeamProjectsProps {
     canCreateProject: boolean;
@@ -26,7 +18,8 @@ interface TeamProjectsProps {
 const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [completionData, setCompletionData] = useState({});
-    const [modalOpen, setModalOpen] = useState(false);
+    const [drawerVisible, toggleDrawer] = useToggle();
+
     const [loading, setLoading] = useState(false);
 
     const fetchProjects = async () => {
@@ -50,7 +43,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     const headerButtons = [];
     if (canCreateProject) {
         headerButtons.push(
-            <Button key="3" onClick={() => setModalOpen(!modalOpen)}>
+            <Button key="3" onClick={toggleDrawer}>
                 Create Project <EditOutlined />
             </Button>
         );
@@ -68,8 +61,8 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
             </PageLayout>
             <Drawer
                 title="Create Project"
-                visible={modalOpen}
-                onClose={() => setModalOpen(!modalOpen)}
+                visible={drawerVisible}
+                onClose={toggleDrawer}
                 width="450">
                 <Form
                     name="createProject"
@@ -86,7 +79,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                         });
                         if (res.project) {
                             setProjects([...projects, res.project]);
-                            setModalOpen(false);
+                            toggleDrawer(false);
                             notification.success({
                                 message: 'Project created successfully!',
                                 placement: 'bottomRight',
