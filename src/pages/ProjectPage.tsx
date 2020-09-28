@@ -31,7 +31,6 @@ import {
     PERM_REMOVE_TEAM_PROJECT,
 } from './../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
-import useApi from './../hooks/useApi';
 
 const { confirm } = Modal;
 
@@ -51,26 +50,24 @@ const ProjectPage = ({
     const [project, setProject] = useState<Project>();
     const [editProjectDrawerOpen, setEditProjectDrawerOpen] = useState(false);
     const [addTaskDrawerOpen, setAddTaskDrawerOpen] = useState(false);
-    const { response, loading, error, refetch } = useApi(
-        `/project/${projectid}`,
-        'GET'
-    );
+    const [loading, setLoading] = useState(false);
+
+    const fetchProject = async () => {
+        try {
+            setLoading(true);
+            const res = await api(`/project/${projectid}`, 'GET');
+            if (res) {
+                setLoading(false);
+                setProject(res.project);
+            }
+        } catch (err) {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        (async () => {
-            if (response?.project) {
-                setProject(response.project);
-            }
-        })();
-    }, [
-        history,
-        project,
-        editProjectDrawerOpen,
-        addTaskDrawerOpen,
-        response,
-        loading,
-        error,
-    ]);
+        fetchProject();
+    }, []);
 
     let tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
 
@@ -89,7 +86,7 @@ const ProjectPage = ({
         });
 
         if (res) {
-            refetch();
+            fetchProject();
             setAddTaskDrawerOpen(false);
         }
     };
@@ -148,7 +145,7 @@ const ProjectPage = ({
     };
 
     const handleAddProjectDrawerClose = () => {
-        refetch();
+        fetchProject();
         setAddTaskDrawerOpen(!addTaskDrawerOpen);
     };
 
