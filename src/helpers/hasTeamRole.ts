@@ -9,7 +9,7 @@ export default (state: RootState, permissionToCheck: string): boolean => {
     );
     const roleIndex = teamUser?.roleIndex;
 
-    if (!roleIndex) return false;
+    if (typeof roleIndex !== 'number') return false;
 
     const rolePerm = state.team.rolePermissions.find(
         (rolePerm) => rolePerm.roleIndex === roleIndex
