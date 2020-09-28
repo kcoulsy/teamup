@@ -1,0 +1,10 @@
+.project-card {
+    margin-bottom: $padding-xl;
+    .project-card__space {
+        width: 100%;
+        .project-card__description,
+        .project-card__hours-remaining {
+            margin-bottom: $padding-xl;
+        }
+    }
+}

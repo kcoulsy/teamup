@@ -119,9 +119,8 @@ const TaskPage = ({
     return (
         <div>
             <PageHeader
-                className="site-page-header"
+                className="page__page-header"
                 title={task?.title}
-                style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 onBack={() => history.push(`/project/${projectid}`)}
                 extra={headerButtons}
             />

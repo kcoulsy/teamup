@@ -75,7 +75,7 @@ const TeamRoles: React.FunctionComponent<TeamRolesProps> = ({
                         ? 'You do not have permissions to modify role permissions but can see them.'
                         : undefined
                 }
-                style={{ padding: 0 }}
+                className="team-settings__page-header"
             />
             <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel}>
                 {teamRoles.map((role, index) => {
@@ -86,7 +86,7 @@ const TeamRoles: React.FunctionComponent<TeamRolesProps> = ({
                             <Form.Item noStyle>
                                 <Input
                                     placeholder="Role Name"
-                                    style={{ width: '60%' }}
+                                    className="team-team-roles__input"
                                     value={role}
                                     disabled={!canUpdateTeamRoles}
                                     onChange={(ev) =>
@@ -99,8 +99,7 @@ const TeamRoles: React.FunctionComponent<TeamRolesProps> = ({
                             </Form.Item>
                             {index !== 0 && canUpdateTeamRoles ? (
                                 <MinusCircleOutlined
-                                    className="dynamic-delete-button"
-                                    style={{ margin: '0 8px' }}
+                                    className="dynamic-delete-button team-team-roles__delete-icon"
                                     onClick={() => {
                                         removeTeamRole(index);
                                     }}

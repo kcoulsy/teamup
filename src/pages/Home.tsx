@@ -26,7 +26,7 @@ const Home: React.FunctionComponent<HomeProps> = ({
                         key={team._id}
                         message={`You have been invited to join the team "${team.name}"`}
                         closeText="Respond"
-                        style={{ marginBottom: '20px' }}
+                        className="page__page-header"
                         onClose={() => {
                             confirm({
                                 title: 'Join Team',

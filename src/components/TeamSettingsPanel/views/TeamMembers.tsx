@@ -75,7 +75,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
             <PageHeader
                 title="Team Members"
                 subTitle={permissonErrorLabel}
-                style={{ padding: 0 }}
+                className="team-settings__page-header"
             />
             <Table
                 dataSource={members}
@@ -155,7 +155,7 @@ const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
                 ]}
                 size="middle"
             />
-            <Title level={4} style={{ marginBottom: '20px' }}>
+            <Title level={4} className="team-team-members__invite-title">
                 Invite Member
             </Title>
             {canInviteTeamMembers ? (

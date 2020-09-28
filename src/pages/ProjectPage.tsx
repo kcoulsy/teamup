@@ -8,6 +8,7 @@ import {
     notification,
     Modal,
     Spin,
+    Space,
 } from 'antd';
 import ProjectView from '../components/ProjectView/ProjectView';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
@@ -180,10 +181,9 @@ const ProjectPage = ({
     return (
         <div>
             <PageHeader
-                className="site-page-header"
+                className="page__page-header"
                 title={project?.title}
                 subTitle={project?.description}
-                style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
                 onBack={() => history.push(PATH_MY_PROJECTS)}
                 extra={headerButtons}
             />
@@ -213,17 +213,16 @@ const ProjectPage = ({
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Edit Project
-                        </Button>
-                        {canRemoveTeamProject && (
-                            <Button
-                                danger
-                                style={{ marginLeft: '5px' }}
-                                onClick={handleDelete}>
-                                Remove Project
+                        <Space>
+                            <Button type="primary" htmlType="submit">
+                                Edit Project
                             </Button>
-                        )}
+                            {canRemoveTeamProject && (
+                                <Button danger onClick={handleDelete}>
+                                    Remove Project
+                                </Button>
+                            )}
+                        </Space>
                     </Form.Item>
                 </Form>
             </Drawer>

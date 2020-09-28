@@ -6,7 +6,9 @@ const { Title } = Typography;
 const ChangePassword: React.FunctionComponent = () => {
     return (
         <div>
-            <Title level={4} style={{marginBottom: '20px'}}>Change Password</Title>
+            <Title level={4} className="user-change-password__title">
+                Change Password
+            </Title>
             <Form
                 labelCol={{
                     sm: {

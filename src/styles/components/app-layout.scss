@@ -1,0 +1,10 @@
+.app-layout {
+    min-height: 100vh;
+    .app-layout__content {
+        margin: 0 $padding-lg;
+        .app-layout__container {
+            padding: $padding-xl;
+            min-height: 360px;
+        }
+    }
+}

@@ -52,7 +52,7 @@ const GeneralSettings: React.FunctionComponent<GeneralSettingsProps> = ({
                         ? 'You do not have permissions to update team settings.'
                         : undefined
                 }
-                style={{ padding: 0 }}
+                className="team-settings__page-header"
             />
             <Form
                 labelCol={{

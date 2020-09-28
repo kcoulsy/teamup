@@ -25,7 +25,7 @@ export const RegisterForm: React.FunctionComponent<RegisterFormProps> = ({
     const history = useHistory();
 
     return (
-        <Card title="Register" size="small" style={{ width: 400 }}>
+        <Card title="Register" size="small" className="register-form__card">
             <Form
                 onFinish={({ username, email, password, confirm }) => {
                     startRegister({ username, email, password, confirm });

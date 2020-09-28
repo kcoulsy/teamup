@@ -5,6 +5,7 @@ import { initialise } from './actions/initialise';
 
 import AppRouter from './components/Router/AppRouter';
 import 'antd/dist/antd.css';
+import './styles.scss';
 
 interface AppProps {
     initialise: Function;

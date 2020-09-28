@@ -46,10 +46,10 @@ interface TaskViewProps {
 const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
     return (
         <>
-            <Card size="small" style={{ marginBottom: '16px' }}>
+            <Card size="small" className="task-view">
                 <Row>
                     <Col span={8}>
-                        <Text strong style={{ paddingRight: 5 }}>
+                        <Text strong className="task-view__assignee">
                             Assignee:
                         </Text>
                         <Link>
@@ -57,20 +57,20 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                         </Link>
                     </Col>
                     <Col span={8}>
-                        <Text strong style={{ paddingRight: 5 }}>
+                        <Text strong className="task-view__status">
                             Status:
                         </Text>
                         <Tag color={task.status.color}>{task.status.label}</Tag>
                     </Col>
                     <Col span={8}>
-                        <Text strong style={{ paddingRight: 5 }}>
+                        <Text strong className="task-view__time">
                             Estimated Time Remaining:
                         </Text>
                         <Text>{task.estimatedHours}</Text>
                     </Col>
                 </Row>
             </Card>
-            <Card size="small" style={{ marginBottom: '16px' }}>
+            <Card size="small" className="task-view__description">
                 <Paragraph
                     ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}>
                     {task.description}

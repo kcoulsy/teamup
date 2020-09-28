@@ -1,0 +1,14 @@
+.settings-panel__layout {
+    padding: $padding-xl 0;
+    background: #fff;
+    .settings-panel__sider {
+        background: #fff;
+    }
+    .settings-panel__menu {
+        height: 100%;
+    }
+    .settings-panel__content {
+        padding: 0 $padding-xl;
+        min-height: 280px;
+    }
+}

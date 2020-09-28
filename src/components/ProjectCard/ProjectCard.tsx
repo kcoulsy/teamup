@@ -27,17 +27,17 @@ const ProjectCard: React.FunctionComponent<ProjectCardProps> = ({
         <Card
             title={title}
             bordered={false}
-            style={{ marginBottom: '20px' }}
+            className="project-card"
             size="small"
             hoverable
             onClick={handleClick}>
-            <Space direction="vertical" style={{ width: '100%' }}>
-                <Text type="secondary" style={{ marginBottom: '20px' }}>
+            <Space direction="vertical" className="project-card__space">
+                <Text type="secondary" className="project-card__description">
                     {description.length > 100
                         ? description?.slice(0, 100) + '...'
                         : description}
                 </Text>
-                <Text style={{ marginBottom: '20px' }}>
+                <Text className="project-card__hours-remaining">
                     {`${hoursLeft} hours left`}
                 </Text>
                 <Progress percent={completion} />

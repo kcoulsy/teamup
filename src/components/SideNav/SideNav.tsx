@@ -91,11 +91,7 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                     mode="inline">
                     <Menu.Item
                         key={MenuItemKey.DEFAULT}
-                        style={{
-                            fontFamily: "'Lobster', cursive",
-                            color: 'white',
-                            fontSize: 22,
-                        }}>
+                        className="side-nav__logo">
                         TeamUp
                     </Menu.Item>
                     <Menu.Item
@@ -125,11 +121,7 @@ export const SideNav: React.FunctionComponent<SideNavProps> = ({
                     mode="inline">
                     <Menu.Item
                         key={MenuItemKey.DEFAULT}
-                        style={{
-                            fontFamily: "'Lobster', cursive",
-                            color: 'white',
-                            fontSize: 22,
-                        }}>
+                        className="side-nav__logo">
                         TeamUp
                     </Menu.Item>
                     <Menu.Item

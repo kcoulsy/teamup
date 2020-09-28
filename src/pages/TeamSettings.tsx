@@ -5,11 +5,7 @@ import TeamSettingsPanel from '../components/TeamSettingsPanel/TeamSettingsPanel
 const TeamSettings: React.FunctionComponent = () => {
     return (
         <div>
-            <PageHeader
-                className="site-page-header"
-                title="Team Settings"
-                style={{ margin: 0, padding: 0, paddingBottom: '10px' }}
-            />
+            <PageHeader className="page__page-header" title="Team Settings" />
             <TeamSettingsPanel />
         </div>
     );

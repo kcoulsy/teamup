@@ -1,0 +1,11 @@
+.task-view {
+    margin-bottom: $padding-lg;
+    .task-view__assignee,
+    .task-view__status,
+    .task-view__time {
+        padding-right: $padding-sm;
+    }
+    .task-view__description {
+        margin-bottom: $padding-lg;
+    }
+}

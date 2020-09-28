@@ -20,7 +20,7 @@ export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
 }) => {
     const history = useHistory();
     return (
-        <Card title="Login" style={{ width: 400 }} size="small">
+        <Card title="Login" className="login-form__card" size="small">
             <Form
                 onFinish={({ username, password }) =>
                     startLogin(username, password)

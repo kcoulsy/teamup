@@ -15,7 +15,7 @@ const ProfileSettings: React.FunctionComponent = () => {
     };
     return (
         <div>
-            <Title level={4} style={{ marginBottom: '20px' }}>
+            <Title level={4} className="user-profile-settings__title">
                 Profile Settings
             </Title>
             <Form

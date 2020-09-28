@@ -69,11 +69,11 @@ const RolePermissions: React.FunctionComponent<RolePermissionsProps> = ({
                         ? 'You do not have permissions to modify role permissions but can see them.'
                         : undefined
                 }
-                style={{ padding: 0 }}
+                className="team-settings__page-header"
             />
             <Select
                 defaultValue={roles[selectedRoleIndex]}
-                style={{ marginBottom: '20px' }}
+                className="team-role-perms__role-select"
                 onChange={handleSelectChange}>
                 {roles.map((role) => {
                     return (

@@ -21,15 +21,13 @@ const SettingsPanel: React.FunctionComponent<SettingsPanelProps> = ({
     const [selectedPanelIndex, setSelectedPanelIndex] = useState<number>(0);
 
     return (
-        <Layout
-            className="site-layout-background"
-            style={{ padding: '24px 0', background: '#fff' }}>
-            <Sider style={{ background: '#fff' }} width={200}>
+        <Layout className="site-layout-background settings-panel__layout">
+            <Sider className="settings-panel__sider" width={200}>
                 <Menu
                     mode="inline"
                     defaultSelectedKeys={[views[selectedPanelIndex].key]}
                     selectedKeys={[views[selectedPanelIndex].key]}
-                    style={{ height: '100%' }}>
+                    className="settings-panel__menu">
                     {views.length &&
                         views.map((view: SettingsPanelView, index: number) => {
                             return (
@@ -45,7 +43,7 @@ const SettingsPanel: React.FunctionComponent<SettingsPanelProps> = ({
                         })}
                 </Menu>
             </Sider>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
+            <Content className="settings-panel__content">
                 {views[selectedPanelIndex].viewComponent}
             </Content>
         </Layout>

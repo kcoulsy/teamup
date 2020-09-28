@@ -6,9 +6,8 @@ const AccountSettings: React.FunctionComponent = () => {
     return (
         <div>
             <PageHeader
-                className="site-page-header"
+                className="page__page-header"
                 title="Account Settings"
-                style={{margin: 0, padding: 0, paddingBottom: '10px'}}
             />
             <UserSettings />
         </div>

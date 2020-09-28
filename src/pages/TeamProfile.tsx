@@ -27,7 +27,7 @@ const TeamProfile: React.FunctionComponent<TeamProfileProps> = ({
                 <Row justify="center">
                     <Col>
                         <Button
-                            style={{ marginTop: '20px' }}
+                            className="page-team-profile__create-team-button"
                             onClick={() => history.push(PATH_TEAM_CREATE)}>
                             Create Team
                         </Button>
