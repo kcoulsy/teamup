@@ -31,6 +31,7 @@ import {
     PERM_REMOVE_TEAM_PROJECT,
 } from './../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
+import PageLayout from './../components/PageLayout/PageLayout';
 
 const { confirm } = Modal;
 
@@ -176,14 +177,14 @@ const ProjectPage = ({
     }
 
     return (
-        <div>
-            <PageHeader
-                className="page__page-header"
+        <>
+            <PageLayout
                 title={project?.title}
                 subTitle={project?.description}
-                onBack={() => history.push(PATH_MY_PROJECTS)}
-                extra={headerButtons}
-            />
+                loading={loading}
+                prevPagePath={PATH_MY_PROJECTS}>
+                <ProjectView tasks={tasks} />
+            </PageLayout>
             <Drawer
                 title="Edit Project"
                 visible={editProjectDrawerOpen}
@@ -230,19 +231,7 @@ const ProjectPage = ({
                 width="450">
                 <TaskForm teamView={false} onFormFinish={addTask} type="Add" />
             </Drawer>
-            {loading ? (
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}>
-                    <Spin />
-                </div>
-            ) : (
-                <ProjectView tasks={tasks} />
-            )}
-        </div>
+        </>
     );
 };
 
