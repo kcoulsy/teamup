@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Form, Input, notification } from 'antd';
+import { Button, Drawer, Form, Input, notification, Empty } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
@@ -54,10 +54,20 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
                 title="Team Projects"
                 loading={loading}
                 headerButtons={headerButtons}>
-                <ProjectBrowser
-                    projects={projects}
-                    completionData={completionData}
-                />
+                {!projects.length ? (
+                    <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                        description={<span>No projects found.</span>}>
+                        <Button type="primary" onClick={toggleDrawer}>
+                            Create Now
+                        </Button>
+                    </Empty>
+                ) : (
+                    <ProjectBrowser
+                        projects={projects}
+                        completionData={completionData}
+                    />
+                )}
             </PageLayout>
             <Drawer
                 title="Create Project"
