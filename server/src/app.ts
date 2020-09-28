@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-
+import path from 'path';
 import config from './config/config';
 import apiRouter from './routes/api';
 
@@ -23,5 +23,11 @@ connection.once('open', () => {
 });
 
 app.use('/api', apiRouter);
+
+app.use(express.static(path.join(__dirname, './../../', 'build')));
+app.get('/', (req, res) => {
+    console.log(path.join(__dirname, './../../', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, './../../', 'build', 'index.html'));
+});
 
 export default app;
