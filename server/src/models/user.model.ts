@@ -5,186 +5,186 @@ import { TOKEN_ACCESS_AUTH } from '../constants/auth';
 import { ITeam } from './team.model';
 
 export interface UserAccessTokenData {
-    _id: string;
-    access: string;
+  _id: string;
+  access: string;
 }
 
 export interface UserAccessToken {
-    token: string;
-    access: string;
+  token: string;
+  access: string;
 }
 
 interface IUserSchema extends Document {
-    username: string;
-    email: string;
-    password: string;
-    fullName: string;
-    occupation: string;
-    aboutMe: string;
-    team: ITeam;
-    teamInvites: ITeam[];
+  username: string;
+  email: string;
+  password: string;
+  fullName: string;
+  occupation: string;
+  aboutMe: string;
+  team: ITeam;
+  teamInvites: ITeam[];
 }
 
 interface IUserBase extends IUserSchema {
-    createAuthToken(): Promise<string>;
-    hasTeamPermission(permission: string): Promise<boolean>;
-    populateTeam(withUsers?: boolean): Promise<IUser>;
+  createAuthToken(): Promise<string>;
+  hasTeamPermission(permission: string): Promise<boolean>;
+  populateTeam(withUsers?: boolean): Promise<IUser>;
 }
 
 export interface IUser extends IUserBase {
-    tokens: UserAccessToken[];
+  tokens: UserAccessToken[];
 }
 
 export interface IUserModel extends Model<IUser> {
-    findByToken(token: string): Promise<IUser>;
-    findByCredentials(username: string, password: string): Promise<IUser>;
+  findByToken(token: string): Promise<IUser>;
+  findByCredentials(username: string, password: string): Promise<IUser>;
 }
 
 const userSchema: Schema = new Schema(
-    {
-        username: {
-            type: String,
-            required: true,
-            unique: true,
-            trim: true,
-            minlength: 3,
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            trim: true,
-            minlength: 3,
-        },
-        password: {
-            type: String,
-            require: true,
-            minlength: 6,
-        },
-        tokens: [
-            {
-                token: {
-                    type: String,
-                    required: true,
-                },
-                access: {
-                    type: String,
-                    require: true,
-                },
-            },
-        ],
-        fullName: String,
-        occupation: String,
-        aboutMe: String,
-        team: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Team',
-        },
-        teamInvites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Team' }],
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      minlength: 3,
     },
-    {
-        timestamps: true,
-    }
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      minlength: 3,
+    },
+    password: {
+      type: String,
+      require: true,
+      minlength: 6,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+        access: {
+          type: String,
+          require: true,
+        },
+      },
+    ],
+    fullName: String,
+    occupation: String,
+    aboutMe: String,
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+    },
+    teamInvites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Team' }],
+  },
+  {
+    timestamps: true,
+  }
 );
 
 /**
  * Overriting default with Custom method to get the user object without including the password
  */
 userSchema.methods.toJSON = function () {
-    const user = this;
-    const {
-        _id,
-        username,
-        email,
-        team,
-        fullName,
-        occupation,
-        aboutMe,
-        teamInvites,
-    } = user.toObject();
+  const user = this;
+  const {
+    _id,
+    username,
+    email,
+    team,
+    fullName,
+    occupation,
+    aboutMe,
+    teamInvites,
+  } = user.toObject();
 
-    return {
-        _id,
-        username,
-        email,
-        team,
-        fullName,
-        occupation,
-        aboutMe,
-        teamInvites,
-    };
+  return {
+    _id,
+    username,
+    email,
+    team,
+    fullName,
+    occupation,
+    aboutMe,
+    teamInvites,
+  };
 };
 
 /**
  * Generates an auth token and saves it with the user
  */
 userSchema.methods.createAuthToken = function () {
-    const user = this;
+  const user = this;
 
-    const token = jwt
-        .sign(
-            {
-                _id: user._id.toHexString(),
-                access: TOKEN_ACCESS_AUTH,
-            },
-            process.env.JWT_SECRET
-        )
-        .toString();
+  const token = jwt
+    .sign(
+      {
+        _id: user._id.toHexString(),
+        access: TOKEN_ACCESS_AUTH,
+      },
+      process.env.JWT_SECRET
+    )
+    .toString();
 
-    user.tokens = [...user.tokens, { token, access: TOKEN_ACCESS_AUTH }];
+  user.tokens = [...user.tokens, { token, access: TOKEN_ACCESS_AUTH }];
 
-    return user.save().then(() => token);
+  return user.save().then(() => token);
 };
 
 userSchema.methods.hasTeamPermission = function hasTeamPermission(
-    permission: string
+  permission: string
 ): Promise<boolean> {
-    return new Promise(async (resolve) => {
-        const user: IUser = this;
-        await user.populate('team').execPopulate();
+  return new Promise(async (resolve) => {
+    const user: IUser = this;
+    await user.populate('team').execPopulate();
 
-        const userRoleIndex = user.team.users.find((teamUser) => {
-            return user._id.equals(teamUser.user);
-        }).roleIndex;
-        const rolePerms = user.team.rolePermissions[userRoleIndex];
+    const userRoleIndex = user.team.users.find((teamUser) => {
+      return user._id.equals(teamUser.user);
+    }).roleIndex;
+    const rolePerms = user.team.rolePermissions[userRoleIndex];
 
-        if (rolePerms?.permissions.includes(permission)) {
-            resolve(true);
-        } else {
-            resolve(false);
-        }
-    });
+    if (rolePerms?.permissions.includes(permission)) {
+      resolve(true);
+    } else {
+      resolve(false);
+    }
+  });
 };
 interface Populate {
-    path: string;
-    model?: string;
-    select?: string;
-    populate?: Populate;
+  path: string;
+  model?: string;
+  select?: string;
+  populate?: Populate;
 }
 
 userSchema.methods.populateTeam = async function populateTeam(
-    withUsers: boolean = false
+  withUsers: boolean = false
 ) {
-    return new Promise(async (resolve, reject) => {
-        const user = this;
+  return new Promise(async (resolve, reject) => {
+    const user = this;
 
-        const populateQuery: Populate = { path: 'team' };
+    const populateQuery: Populate = { path: 'team' };
 
-        if (withUsers) {
-            populateQuery.populate = {
-                path: 'users',
-                populate: {
-                    path: 'user',
-                    model: 'User',
-                    select: '_id, username, email',
-                },
-            };
-        }
+    if (withUsers) {
+      populateQuery.populate = {
+        path: 'users',
+        populate: {
+          path: 'user',
+          model: 'User',
+          select: '_id, username, email',
+        },
+      };
+    }
 
-        await user.populate(populateQuery).execPopulate();
+    await user.populate(populateQuery).execPopulate();
 
-        resolve(user);
-    });
+    resolve(user);
+  });
 };
 
 /**
@@ -193,22 +193,22 @@ userSchema.methods.populateTeam = async function populateTeam(
  * @param {string} token
  */
 userSchema.statics.findByToken = function (token: string) {
-    let decodedJwt: UserAccessTokenData;
+  let decodedJwt: UserAccessTokenData;
 
-    try {
-        decodedJwt = jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        ) as UserAccessTokenData;
-    } catch (err) {
-        return Promise.reject();
-    }
+  try {
+    decodedJwt = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    ) as UserAccessTokenData;
+  } catch (err) {
+    return Promise.reject();
+  }
 
-    return this.findOne({
-        _id: decodedJwt._id,
-        'tokens.token': token,
-        'tokens.access': TOKEN_ACCESS_AUTH,
-    });
+  return this.findOne({
+    _id: decodedJwt._id,
+    'tokens.token': token,
+    'tokens.access': TOKEN_ACCESS_AUTH,
+  });
 };
 
 // TODO: add remove token method
@@ -217,18 +217,18 @@ userSchema.statics.findByToken = function (token: string) {
  * Hashing passwords before saving
  */
 userSchema.pre('save', function (next) {
-    const user = this as IUser;
+  const user = this as IUser;
 
-    if (user.isModified('password')) {
-        bcrypt.genSalt(10, (_, salt) => {
-            bcrypt.hash(user.password, salt, (__, hash) => {
-                user.password = hash;
-                next();
-            });
-        });
-    } else {
+  if (user.isModified('password')) {
+    bcrypt.genSalt(10, (_, salt) => {
+      bcrypt.hash(user.password, salt, (__, hash) => {
+        user.password = hash;
         next();
-    }
+      });
+    });
+  } else {
+    next();
+  }
 });
 
 /**
@@ -238,24 +238,24 @@ userSchema.pre('save', function (next) {
  * @param {string} password
  */
 userSchema.statics.findByCredentials = function (
-    username: string,
-    password: string
+  username: string,
+  password: string
 ) {
-    // const User = this;
+  // const User = this;
 
-    return this.findOne({ username }).then((user: IUser) => {
-        if (!user) return Promise.reject();
+  return this.findOne({ username }).then((user: IUser) => {
+    if (!user) return Promise.reject('nothing');
 
-        return new Promise((resolve, reject) => {
-            bcrypt.compare(password, user.password, (err, res) => {
-                if (res) {
-                    resolve(user);
-                } else {
-                    reject();
-                }
-            });
-        });
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          resolve(user);
+        } else {
+          reject('nothing');
+        }
+      });
     });
+  });
 };
 
 export default mongoose.model<IUser, IUserModel>('User', userSchema);

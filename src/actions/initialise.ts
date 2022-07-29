@@ -8,60 +8,57 @@ import { storeTeam } from './team';
 import { userFetch } from './user';
 
 export const initialise = () => {
-    return async (
-        dispatch: Dispatch<AppActions>,
-        getState: () => RootState
-    ) => {
-        if (getState().auth.appInitialising) return;
+  return async (dispatch: Dispatch<AppActions>, getState: () => RootState) => {
+    if (getState().auth.appInitialising) return;
 
-        dispatch(appInitialising());
+    dispatch(appInitialising());
 
-        const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken');
 
-        dispatch(loginAttempt());
+    dispatch(loginAttempt());
 
-        if (typeof token === 'string') {
-            const response = await api('auth/verify', 'GET');
+    if (typeof token === 'string') {
+      const response = await api('auth/verify', 'GET');
 
-            if (response.valid) {
-                dispatch(loginSuccess(token));
-                if (response.user) {
-                    dispatch(userFetch(response.user));
-                }
-                const { team } = await api('team/', 'GET');
-                if (team && Object.keys(team).length) {
-                    dispatch(
-                        storeTeam({
-                            _id: team._id,
-                            name: team.name,
-                            description: team.description,
-                            users: team.users,
-                            roles: team.roles,
-                            rolePermissions: team.rolePermissions,
-                        })
-                    );
-                } else {
-                    dispatch(appInitialised());
-                }
-            } else {
-                dispatch(loginFail());
-                dispatch(appInitialised());
-            }
-        } else {
-            dispatch(loginFail());
-            dispatch(appInitialised());
+      if (response.valid) {
+        dispatch(loginSuccess(token));
+        if (response.user) {
+          dispatch(userFetch(response.user));
         }
-    };
+        const { team } = await api('team/', 'GET');
+        if (team && Object.keys(team).length) {
+          dispatch(
+            storeTeam({
+              _id: team._id,
+              name: team.name,
+              description: team.description,
+              users: team.users,
+              roles: team.roles,
+              rolePermissions: team.rolePermissions,
+            })
+          );
+        } else {
+          dispatch(appInitialised());
+        }
+      } else {
+        dispatch(loginFail());
+        dispatch(appInitialised());
+      }
+    } else {
+      dispatch(loginFail());
+      dispatch(appInitialised());
+    }
+  };
 };
 
 export function appInitialised(): AppActions {
-    return {
-        type: APP_INITIALISED,
-    };
+  return {
+    type: APP_INITIALISED,
+  };
 }
 
 export function appInitialising(): AppActions {
-    return {
-        type: APP_INITIALISING,
-    };
+  return {
+    type: APP_INITIALISING,
+  };
 }

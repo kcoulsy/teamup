@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -11,26 +12,26 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(config.mongo.uri, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
 const connection = mongoose.connection;
 connection.once('open', () => {
-    // tslint:disable-next-line
-    console.log('MongoDB connection established');
+  // @ts-ignore
+  console.log('MongoDB connection established');
 });
 
 app.use('/api', apiRouter);
 
 app.use(express.static(path.join(__dirname, './../../', 'build')));
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './../../', 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, './../../', 'build', 'index.html'));
 });
 
 app.get('*', (_, res) => {
-    res.redirect('/');
+  res.redirect('/');
 });
 
 export default app;

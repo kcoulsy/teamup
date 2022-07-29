@@ -8,13 +8,13 @@ import 'antd/dist/antd.css';
 import './styles.scss';
 
 interface AppProps {
-    initialise: Function;
+  initialise: Function;
 }
 
 export const App: React.FunctionComponent<AppProps> = ({ initialise }) => {
-    initialise();
+  initialise();
 
-    return <AppRouter />;
+  return <AppRouter />;
 };
 
 const mapDispatchToProps = { initialise };
