@@ -1,29 +1,21 @@
 import express from 'express';
 import Authenticate from './../../middleware/authenticate';
-import Task, { TaskStatus } from '../../models/task.model';
-import User from '../../models/user.model';
-import Project from '../../models/project.model';
 import { RequestWithUser } from '../../types/express';
+import TaskService from '../../services/task.service';
+import { z } from 'zod';
+import paramValidator from '../../middleware/paramValidator';
 
 const router = express.Router();
 
-/**
- * GET single task
- */
 router.get('/:id', Authenticate, async (req: RequestWithUser, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id });
-    await task.populate('project').execPopulate();
-    await task.populate('assignee').execPopulate();
+    const task = await TaskService.findOne(req.params.id);
     res.send({ task });
   } catch (err) {
     res.send({ task: null });
   }
 });
 
-/**
- * POST create a task
- */
 router.post('/', Authenticate, async (req: RequestWithUser, res) => {
   const {
     title,
@@ -34,104 +26,44 @@ router.post('/', Authenticate, async (req: RequestWithUser, res) => {
     project,
   } = req.body;
 
-  if (!Object.values(TaskStatus).includes(status)) {
-    return res.status(400).send({
-      error: `Status must be one of the following: ${Object.values(
-        TaskStatus
-      ).join(' ')}`,
+  try {
+    const task = TaskService.create({
+      title,
+      description,
+      estimatedHours,
+      status,
+      assignee,
+      project,
+      userId: req.user._id,
     });
+    res.send({ task });
+  } catch (error) {
+    res.status(500).send('Something went wrong');
   }
-  const foundProject = await Project.findById(project);
-
-  if (!foundProject) {
-    return res.status(404).send({ error: 'Project not found' });
-  }
-
-  const task = new Task({
-    title,
-    description,
-    estimatedHours,
-    status,
-    assignee,
-    project,
-    createdBy: req.user._id,
-    tasks: [],
-  });
-
-  if (!foundProject.team) {
-    task.assignee = req.user._id;
-  }
-
-  await task.save();
-
-  foundProject.tasks = [...foundProject.tasks, task];
-  foundProject.save();
-
-  res.send({ task });
 });
 
-/**
- * PUT update a task
- */
 router.put('/:id', Authenticate, async (req: RequestWithUser, res) => {
   const { title, description, assignee, status, estimatedHours } = req.body;
 
-  if (status && !Object.values(TaskStatus).includes(status)) {
-    return res.status(400).send({
-      error: `Status must be one of the following: ${Object.values(
-        TaskStatus
-      ).join(' ')}`,
-    });
-  }
-
   try {
-    const task = await Task.findOne({ _id: req.params.id });
-    if (title) {
-      task.title = title;
-    }
-    if (description) {
-      task.description = description;
-    }
-    if (assignee) {
-      const user = await User.findOne({ _id: assignee });
-
-      if (!user) {
-        return res.status(400).send({ error: 'That user does not exist' });
-      }
-
-      task.assignee = assignee;
-    }
-    if (estimatedHours) {
-      task.estimatedHours = estimatedHours;
-    }
-    if (status) {
-      task.status = status;
-    }
-    await task.save();
-    await task.populate('project').execPopulate();
-
+    const task = await TaskService.update({
+      title,
+      description,
+      assignee,
+      status,
+      estimatedHours,
+      _id: req.params.id,
+    });
     res.send({ task });
   } catch (err) {
     res.send({ task: null });
   }
 });
 
-/**
- * DELETE a task
- */
 router.delete('/:id', Authenticate, async (req: RequestWithUser, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id });
-    if (!task.createdBy.equals(req.user._id)) {
-      return res.status(401).send({ error: 'Not your task!' });
-    }
-
-    task.deleteOne((err) => {
-      if (err) {
-        return res.send(400).send({ error: 'Something went wrong' });
-      }
-      res.send({ message: 'Task deleted!' });
-    });
+    await TaskService.deleteOne(req.params.id, req.user.id);
+    res.send({ message: 'Task deleted!' });
   } catch (err) {
     return res.send(400).send({ error: 'Something went wrong' });
   }
