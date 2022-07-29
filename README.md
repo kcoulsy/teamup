@@ -1,5 +1,8 @@
 # TeamUp
 
+This is an old project.
+
+
 This project was bootstraped by my [MERN-Typescript-Starter Project](https://github.com/kcoulsy/MERN-Typescript-Starter)
 
 It is a project management application that allows you to create teams to collaborate on projects together.
