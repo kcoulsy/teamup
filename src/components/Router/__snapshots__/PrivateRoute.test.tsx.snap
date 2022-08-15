@@ -1,4 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render PrivateRoute component > should handle PrivateRouteRender when logged in 1`] = `ShallowWrapper {}`;
+
+exports[`render PrivateRoute component > should handle PrivateRouteRender when not logged in 1`] = `ShallowWrapper {}`;
+
+exports[`render PrivateRoute component > should render PrivateRoute component 1`] = `
+<Component
+  render={[Function]}
+/>
+`;
 
 exports[`render PrivateRoute component should handle PrivateRouteRender when logged in 1`] = `
 <div>

@@ -1,4 +1,16 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render Login component > should render Login page component 1`] = `
+<div>
+  <Row
+    justify="center"
+  >
+    <Col>
+      <Connect(LoginForm) />
+    </Col>
+  </Row>
+</div>
+`;
 
 exports[`render Login component should render Login page component 1`] = `
 <div>

@@ -1,4 +1,77 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render AppRouter component > should render AppRouter component 1`] = `
+<BrowserRouter>
+  <AppLayout>
+    <Switch>
+      <Connect(PrivateRoute)
+        exact={true}
+        path="/"
+      >
+        <Connect(Home) />
+      </Connect(PrivateRoute)>
+      <Connect(PublicRoute)
+        path="/register"
+      >
+        <Register />
+      </Connect(PublicRoute)>
+      <Connect(PublicRoute)
+        path="/login"
+      >
+        <Login />
+      </Connect(PublicRoute)>
+      <Connect(PrivateRoute)
+        path="/me"
+      >
+        <MyProfile />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        path="/projects"
+      >
+        <MyProjects />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        path="/settings"
+      >
+        <AccountSettings />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        exact={true}
+        path="/team"
+      >
+        <Connect(TeamProfile) />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        exact={true}
+        path="/team/create"
+      >
+        <Connect(CreateTeamPage) />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        path="/team/projects"
+      >
+        <Connect(TeamProjects) />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        path="/team/settings"
+      >
+        <TeamSettings />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        exact={true}
+        path="/project/:projectid"
+      >
+        <Connect(ProjectPage) />
+      </Connect(PrivateRoute)>
+      <Connect(PrivateRoute)
+        path="/project/:projectid/task/:taskid"
+      >
+        <Connect(TaskPage) />
+      </Connect(PrivateRoute)>
+    </Switch>
+  </AppLayout>
+</BrowserRouter>
+`;
 
 exports[`render AppRouter component should render AppRouter component 1`] = `
 <BrowserRouter>

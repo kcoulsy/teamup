@@ -3,7 +3,7 @@ import Authenticate from './../../middleware/authenticate';
 import { RequestWithUser } from '../../types/express';
 import TaskService from '../../services/task.service';
 import { z } from 'zod';
-import paramValidator from '../../middleware/paramValidator';
+// import paramValidator from '../../middleware/paramValidator';
 
 const router = express.Router();
 

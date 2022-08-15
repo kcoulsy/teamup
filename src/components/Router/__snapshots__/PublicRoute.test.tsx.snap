@@ -1,4 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render PublicRoute component > should handle publicRouteRender when logged in 1`] = `ShallowWrapper {}`;
+
+exports[`render PublicRoute component > should handle publicRouteRender when not logged in 1`] = `ShallowWrapper {}`;
+
+exports[`render PublicRoute component > should render PublicRoute component 1`] = `
+<Route
+  render={[Function]}
+/>
+`;
 
 exports[`render PublicRoute component should handle publicRouteRender when logged in 1`] = `
 <div>

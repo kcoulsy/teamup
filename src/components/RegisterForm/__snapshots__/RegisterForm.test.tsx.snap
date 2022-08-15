@@ -1,4 +1,236 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render login form component > should render RegisterForm component 1`] = `
+<Card
+  className="register-form__card"
+  size="small"
+  title="Register"
+>
+  <ForwardRef(InternalForm)
+    onFinish={[Function]}
+  >
+    <FormItem
+      label="Username"
+      name="username"
+      rules={
+        [
+          {
+            "message": "Username must be at least 3 characters",
+            "min": 3,
+          },
+          {
+            "message": "Please input your username!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      label="Email"
+      name="email"
+      rules={
+        [
+          {
+            "message": "The input is not valid email!",
+            "type": "email",
+          },
+          {
+            "message": "Please input an email!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      label="Password"
+      name="password"
+      rules={
+        [
+          {
+            "message": "Please input your password!",
+            "required": true,
+          },
+          {
+            "message": "Password must be at least 6 characters",
+            "min": 6,
+          },
+          [Function],
+        ]
+      }
+    >
+      <Password
+        action="click"
+        iconRender={[Function]}
+        visibilityToggle={true}
+      />
+    </FormItem>
+    <FormItem
+      label="Confirm"
+      name="confirm"
+      rules={
+        [
+          {
+            "message": "Please confirm your password!",
+            "required": true,
+          },
+          [Function],
+        ]
+      }
+    >
+      <Password
+        action="click"
+        iconRender={[Function]}
+        visibilityToggle={true}
+      />
+    </FormItem>
+    <FormItem>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="submit"
+        loading={false}
+        type="primary"
+      >
+        Register
+      </Button>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="button"
+        loading={false}
+        onClick={[Function]}
+        type="link"
+      >
+        Already registered? Click here to login
+      </Button>
+    </FormItem>
+  </ForwardRef(InternalForm)>
+</Card>
+`;
+
+exports[`render login form component > should show loader with attemptingRegister 1`] = `
+<Card
+  className="register-form__card"
+  size="small"
+  title="Register"
+>
+  <ForwardRef(InternalForm)
+    onFinish={[Function]}
+  >
+    <FormItem
+      label="Username"
+      name="username"
+      rules={
+        [
+          {
+            "message": "Username must be at least 3 characters",
+            "min": 3,
+          },
+          {
+            "message": "Please input your username!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      label="Email"
+      name="email"
+      rules={
+        [
+          {
+            "message": "The input is not valid email!",
+            "type": "email",
+          },
+          {
+            "message": "Please input an email!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      label="Password"
+      name="password"
+      rules={
+        [
+          {
+            "message": "Please input your password!",
+            "required": true,
+          },
+          {
+            "message": "Password must be at least 6 characters",
+            "min": 6,
+          },
+          [Function],
+        ]
+      }
+    >
+      <Password
+        action="click"
+        iconRender={[Function]}
+        visibilityToggle={true}
+      />
+    </FormItem>
+    <FormItem
+      label="Confirm"
+      name="confirm"
+      rules={
+        [
+          {
+            "message": "Please confirm your password!",
+            "required": true,
+          },
+          [Function],
+        ]
+      }
+    >
+      <Password
+        action="click"
+        iconRender={[Function]}
+        visibilityToggle={true}
+      />
+    </FormItem>
+    <FormItem>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="submit"
+        loading={true}
+        type="primary"
+      >
+        Register
+      </Button>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="button"
+        loading={false}
+        onClick={[Function]}
+        type="link"
+      >
+        Already registered? Click here to login
+      </Button>
+    </FormItem>
+  </ForwardRef(InternalForm)>
+</Card>
+`;
 
 exports[`render login form component should render RegisterForm component 1`] = `
 <Card

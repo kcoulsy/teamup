@@ -1,4 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render AppLayout component > should render AppLayout component 1`] = `
+<Layout
+  className="app-layout"
+>
+  <Connect(SideNav) />
+  <Layout>
+    <Content
+      className="app-layout__content"
+    >
+      <div
+        className="app-layout__container"
+      >
+        <Component />
+      </div>
+    </Content>
+  </Layout>
+</Layout>
+`;
 
 exports[`render AppLayout component should render AppLayout component 1`] = `
 <Layout

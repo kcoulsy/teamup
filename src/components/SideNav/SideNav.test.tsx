@@ -1,25 +1,26 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { describe, expect, test, vi } from 'vitest';
 
 import { SideNav } from './SideNav';
 import { shallowToJson } from 'enzyme-to-json';
 
 describe('render SideNav component', () => {
-    it('should render SideNav component while logged in', () => {
-        const mockLogout = jest.fn();
-        const wrapper = shallow(
-            <SideNav isLoggedIn={true} startLogout={mockLogout}></SideNav>
-        );
+  test('should render SideNav component while logged in', () => {
+    const mockLogout = vi.fn();
+    const wrapper = shallow(
+      <SideNav isLoggedIn={true} startLogout={mockLogout}></SideNav>
+    );
 
-        expect(shallowToJson(wrapper)).toMatchSnapshot();
-    });
+    expect(shallowToJson(wrapper)).toMatchSnapshot();
+  });
 
-    it('should render SideNav component while logged out', () => {
-        const mockLogout = jest.fn();
-        const wrapper = shallow(
-            <SideNav isLoggedIn={false} startLogout={mockLogout}></SideNav>
-        );
+  test('should render SideNav component while logged out', () => {
+    const mockLogout = vi.fn();
+    const wrapper = shallow(
+      <SideNav isLoggedIn={false} startLogout={mockLogout}></SideNav>
+    );
 
-        expect(shallowToJson(wrapper)).toMatchSnapshot();
-    });
+    expect(shallowToJson(wrapper)).toMatchSnapshot();
+  });
 });

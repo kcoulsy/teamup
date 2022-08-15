@@ -1,4 +1,14 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render Register component > should render Register page component 1`] = `
+<Row
+  justify="center"
+>
+  <Col>
+    <Connect(RegisterForm) />
+  </Col>
+</Row>
+`;
 
 exports[`render Register component should render Register page component 1`] = `
 <div>

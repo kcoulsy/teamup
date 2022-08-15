@@ -1,4 +1,72 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render login form component > should render LoginForm component 1`] = `
+<Card
+  className="login-form__card"
+  size="small"
+  title="Login"
+>
+  <ForwardRef(InternalForm)
+    onFinish={[Function]}
+  >
+    <FormItem
+      label="Username"
+      name="username"
+      rules={
+        [
+          {
+            "message": "Please input your username!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      label="Password"
+      name="password"
+      rules={
+        [
+          {
+            "message": "Please input your password!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Password
+        action="click"
+        iconRender={[Function]}
+        visibilityToggle={true}
+      />
+    </FormItem>
+    <FormItem>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="submit"
+        loading={false}
+        type="primary"
+      >
+        Login
+      </Button>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="button"
+        loading={false}
+        onClick={[Function]}
+        type="link"
+      >
+        Not registered? Click here
+      </Button>
+    </FormItem>
+  </ForwardRef(InternalForm)>
+</Card>
+`;
 
 exports[`render login form component should call startLogin on submit 1`] = `
 <Card

@@ -1,4 +1,67 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`render Card component > should render Card component 1`] = `
+<div
+  className="ui card"
+>
+  <div
+    className="content"
+  />
+</div>
+`;
+
+exports[`render Card component > should render Card component with a title 1`] = `
+<div
+  className="ui card"
+>
+  <div
+    className="content"
+  >
+    <div
+      className="header"
+    >
+      Test Title
+    </div>
+  </div>
+  <div
+    className="content"
+  />
+</div>
+`;
+
+exports[`render Card component > should render Card component with centered class 1`] = `
+<div
+  className="ui card centered"
+>
+  <div
+    className="content"
+  />
+</div>
+`;
+
+exports[`render Card component > should render Card component with children 1`] = `
+<div
+  className="ui card"
+>
+  <div
+    className="content"
+  >
+    <p>
+      Child JSX
+    </p>
+  </div>
+</div>
+`;
+
+exports[`render Card component > should render Card component with fluid class 1`] = `
+<div
+  className="ui card fluid"
+>
+  <div
+    className="content"
+  />
+</div>
+`;
 
 exports[`render Card component should render Card component 1`] = `
 <div

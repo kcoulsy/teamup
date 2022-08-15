@@ -20,38 +20,10 @@
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
+    "test": "vitest",
     "lint": "eslint ./src ./server",
     "lint:fix": "eslint --fix ./src ./server",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md|ts|tsx)\""
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/index.tsx",
-      "!src/serviceWorker.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "./src/*/*.types.{ts,tsx}",
-      "./src/index.tsx",
-      "./src/serviceWorker.ts"
-    ],
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text-summary",
-      "clover"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "transform": {
-      ".+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      ".+\\.module\\.(css|sass|scss)$"
-    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -93,7 +65,8 @@
     "redux-devtools": "3.5.0",
     "sass": "^1.54.0",
     "ts-jest": "24.2.0",
-    "typescript": "3.9.7"
+    "typescript": "3.9.7",
+    "vitest": "^0.19.1"
   },
   "husky": {
     "hooks": {
