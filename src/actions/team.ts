@@ -11,14 +11,12 @@ export function storeTeam({
   description = null,
   users = [],
   roles = [],
-  rolePermissions = [],
 }: {
   _id?: string | null;
   name?: string | null;
   description?: string | null;
   users?: any[];
-  roles?: string[];
-  rolePermissions?: any[];
+  roles?: { id: string; name: string; permissions: string[] }[];
 }): TeamMyFetchAction {
   return {
     type: TEAM_MY_FETCH,
@@ -28,7 +26,6 @@ export function storeTeam({
       description,
       users,
       roles,
-      rolePermissions,
     },
   };
 }
@@ -98,26 +95,25 @@ export const leaveTeam = () => {
 
 export const updateTeamRoles = (roles: string[]) => {
   return async (dispatch: Dispatch<AppActions>, getState: () => RootState) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const res = await api('/team/roles', 'POST', { roles });
-        const { team } = getState();
-
-        if (res.success) {
-          dispatch(
-            storeTeam({
-              ...team,
-              roles,
-            })
-          );
-          resolve(true);
-        } else {
-          reject(false);
-        }
-      } catch (error) {
-        reject(false);
-      }
-    });
+    // return new Promise(async (resolve, reject) => {
+    //   try {
+    //     const res = await api('/team/roles', 'POST', { roles });
+    //     const { team } = getState();
+    //     if (res.success) {
+    //       dispatch(
+    //         storeTeam({
+    //           ...team,
+    //           roles,
+    //         })
+    //       );
+    //       resolve(true);
+    //     } else {
+    //       reject(false);
+    //     }
+    //   } catch (error) {
+    //     reject(false);
+    //   }
+    // });
   };
 };
 

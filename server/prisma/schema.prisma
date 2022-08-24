@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+model User {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  username      String
+  email         String
+  password      String
+  fullName      String?
+  occupation    String?
+  aboutMe       String?
+  teamIDs       String[] @db.ObjectId
+  teams         Team[]   @relation(name: "teamusers", fields: [teamIDs], references: [id])
+  teamInviteIDs String[] @db.ObjectId
+  teamInvites   Team[]   @relation(name: "invitedUsers", fields: [teamInviteIDs], references: [id])
+
+  tasks        Task[]    @relation(name: "taskAssignee")
+  projects     Project[]
+  createdTasks Task[]
+
+  roleIDs String[] @db.ObjectId
+  roles   Role[]   @relation(name: "roles", fields: [roleIDs], references: [id])
+}
+
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  permissions String[]
+  Team        Team?    @relation(fields: [teamId], references: [id])
+  teamId      String?  @db.ObjectId
+  order       Int
+
+  userIDs String[] @db.ObjectId
+  users   User[]   @relation(name: "roles", fields: [userIDs], references: [id])
+}
+
+model Team {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  roles           Role[]
+  userIDs         String[]  @db.ObjectId
+  users           User[]    @relation(name: "teamusers", fields: [userIDs], references: [id])
+  invitedUsersIDs String[]  @db.ObjectId
+  invitedUsers    User[]    @relation(name: "invitedUsers", fields: [invitedUsersIDs], references: [id])
+  projects        Project[]
+}
+
+model Project {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+
+  createdById String @db.ObjectId
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  teamId String? @db.ObjectId
+  team   Team?   @relation(fields: [teamId], references: [id])
+
+  tasks Task[]
+}
+
+model Task {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  description    String
+  estimatedHours Float
+  status         String
+
+  assigneeId String? @db.ObjectId
+  assignee   User?   @relation(name: "taskAssignee", fields: [assigneeId], references: [id])
+
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?  @db.ObjectId
+
+  createdById String @db.ObjectId
+  createdBy   User   @relation(fields: [createdById], references: [id])
+}

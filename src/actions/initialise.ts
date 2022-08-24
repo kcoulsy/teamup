@@ -25,16 +25,16 @@ export const initialise = () => {
         if (response.user) {
           dispatch(userFetch(response.user));
         }
-        const { team } = await api('team/', 'GET');
+        const { teams } = await api('team/', 'GET');
+        const [team] = teams;
         if (team && Object.keys(team).length) {
           dispatch(
             storeTeam({
-              _id: team._id,
+              _id: team.id,
               name: team.name,
               description: team.description,
               users: team.users,
               roles: team.roles,
-              rolePermissions: team.rolePermissions,
             })
           );
         } else {

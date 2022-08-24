@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { RequestWithUser } from '../types/exprress';
+import { RequestWithUser } from '../types/express';
 import Authenticate from './authenticate';
 
 const RequireTeamPermission = (permission: string) => (

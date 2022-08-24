@@ -1,19 +1,10 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { connect } from 'react-redux';
-import isLoggedIn from '../../helpers/isLoggedIn';
-import { RootState } from '../../store/configure';
 import * as H from 'history';
+import useUser from '../../hooks/useUser';
 
-interface PrivateRouteProps extends RouteProps {
-  isLoggedIn: boolean;
-}
-
-export const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = ({
-  isLoggedIn,
-  children,
-  ...rest
-}) => {
+export const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const { isLoggedIn } = useUser();
   // @ts-ignore
   return <Route {...rest} render={privateRouteRender(isLoggedIn, children)} />;
 };
@@ -39,10 +30,4 @@ export const privateRouteRender = (
   };
 };
 
-export const mapStateToProps = (state: RootState) => {
-  return {
-    isLoggedIn: isLoggedIn(state.auth.token),
-  };
-};
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;

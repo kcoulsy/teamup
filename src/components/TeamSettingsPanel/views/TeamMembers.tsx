@@ -1,221 +1,177 @@
 import React from 'react';
 import {
-    Table,
-    Typography,
-    Space,
-    Select,
-    Form,
-    Input,
-    Button,
-    notification,
-    PageHeader,
+  Table,
+  Typography,
+  Space,
+  Select,
+  Form,
+  Input,
+  Button,
+  notification,
+  PageHeader,
 } from 'antd';
 import { api } from './../../../services/api';
-import { RootState } from '../../../store/configure';
-import { connect } from 'react-redux';
-import { updateTeamMemberRole, removeTeamUser } from '../../../actions/team';
-import { User } from './../../../types/user';
-import hasTeamRole from '../../../helpers/hasTeamRole';
 import { PERM_UPDATE_TEAM_MEMBERS } from '../../../constants/permissions';
 import {
-    PERM_INVITE_TEAM_MEMBERS,
-    PERM_REMOVE_TEAM_MEMBERS,
+  PERM_INVITE_TEAM_MEMBERS,
+  PERM_REMOVE_TEAM_MEMBERS,
 } from './../../../constants/permissions';
+import useTeams from '../../../hooks/useTeams';
+import useUser from '../../../hooks/useUser';
 
 const { Title, Link, Text } = Typography;
 const { Option } = Select;
 
-interface TeamMemberTableRowData {
-    key: string;
-    name: string;
-    roleIndex: number;
-}
+const TeamMembers = () => {
+  const { data } = useUser();
+  const loggedInUser = data?.user;
+  const { hasPermission, team } = useTeams();
+  const canUpdateTeamMembers = hasPermission(PERM_UPDATE_TEAM_MEMBERS);
+  const canInviteTeamMembers = hasPermission(PERM_INVITE_TEAM_MEMBERS);
+  const canRemoveTeamMembers = hasPermission(PERM_REMOVE_TEAM_MEMBERS);
+  const [inviteForm] = Form.useForm();
+  const members = team.users.map((user) => {
+    return {
+      key: user.id,
+      name: user.email,
+      roleIndex: team.roles.find((role) => role.userIDs.includes(user.id))?.id,
+    };
+  });
 
-interface TeamMemberProps {
-    teamMembers: any[];
-    roles: string[];
-    updateTeamMemberRole: Function;
-    removeTeamUser: Function;
-    loggedInUser: User;
-    canInviteTeamMembers: boolean;
-    canUpdateTeamMembers: boolean;
-    canRemoveTeamMembers: boolean;
-}
+  let permissonErrorLabel: string | undefined = undefined;
+  if (!canUpdateTeamMembers && !canRemoveTeamMembers) {
+    permissonErrorLabel =
+      'You do not have permissions to update or remove team members.';
+  } else if (!canUpdateTeamMembers) {
+    permissonErrorLabel = 'You do not have permissions to update team members.';
+  } else if (!canRemoveTeamMembers) {
+    permissonErrorLabel = 'You do not have permissions to remove team members.';
+  }
 
-const TeamMembers: React.FunctionComponent<TeamMemberProps> = ({
-    teamMembers,
-    roles,
-    updateTeamMemberRole,
-    removeTeamUser,
-    loggedInUser,
-    canInviteTeamMembers,
-    canUpdateTeamMembers,
-    canRemoveTeamMembers,
-}) => {
-    const [inviteForm] = Form.useForm();
-    const members: TeamMemberTableRowData[] = teamMembers.map((teamMember) => {
-        return {
-            key: teamMember.user._id,
-            name: teamMember.user.email,
-            roleIndex: teamMember.roleIndex,
-        };
-    });
-    let permissonErrorLabel: string | undefined = undefined;
-    if (!canUpdateTeamMembers && !canRemoveTeamMembers) {
-        permissonErrorLabel =
-            'You do not have permissions to update or remove team members.';
-    } else if (!canUpdateTeamMembers) {
-        permissonErrorLabel =
-            'You do not have permissions to update team members.';
-    } else if (!canRemoveTeamMembers) {
-        permissonErrorLabel =
-            'You do not have permissions to remove team members.';
-    }
-
-    return (
-        <div>
-            <PageHeader
-                title="Team Members"
-                subTitle={permissonErrorLabel}
-                className="team-settings__page-header"
-            />
-            <Table
-                dataSource={members}
-                columns={[
-                    {
-                        title: 'Name',
-                        dataIndex: 'name',
-                        key: 'name',
-                    },
-                    {
-                        title: 'Role',
-                        dataIndex: 'role',
-                        key: 'role',
-                        render: (_: any, record: TeamMemberTableRowData) => {
-                            if (
-                                loggedInUser._id !== record.key &&
-                                canUpdateTeamMembers
-                            ) {
-                                return (
-                                    <Select
-                                        defaultValue={roles[record.roleIndex]}
-                                        onChange={async (value) => {
-                                            let newIndex = parseInt(value, 10);
-                                            const updated = await updateTeamMemberRole(
-                                                record.key,
-                                                newIndex
-                                            );
-                                            if (updated) {
-                                                notification.success({
-                                                    message: `User ${record.name} updated to role ${roles[newIndex]}`,
-                                                    placement: 'bottomRight',
-                                                });
-                                            }
-                                        }}>
-                                        {roles.map((role, index) => {
-                                            return (
-                                                <Option
-                                                    key={role}
-                                                    value={index}>
-                                                    {role}
-                                                </Option>
-                                            );
-                                        })}
-                                    </Select>
-                                );
-                            }
-                            return roles[record.roleIndex];
-                        },
-                    },
-                    {
-                        title: 'Actions',
-                        dataIndex: 'actions',
-                        key: 'actions',
-                        render: (_: any, record: TeamMemberTableRowData) => {
-                            if (
-                                loggedInUser._id !== record.key &&
-                                canRemoveTeamMembers
-                            ) {
-                                return (
-                                    <Space size="middle">
-                                        <Link
-                                            onClick={async () => {
-                                                removeTeamUser(record.key).then(
-                                                    () => {
-                                                        notification.success({
-                                                            message: `${record.name} successfully removed from the team!`,
-                                                            placement:
-                                                                'bottomRight',
-                                                        });
-                                                    }
-                                                );
-                                            }}>
-                                            Remove
-                                        </Link>
-                                    </Space>
-                                );
-                            }
-                            return null;
-                        },
-                    },
-                ]}
-                size="middle"
-            />
-            <Title level={4} className="team-team-members__invite-title">
-                Invite Member
-            </Title>
-            {canInviteTeamMembers ? (
-                <Form
-                    form={inviteForm}
-                    layout="inline"
-                    name="invite"
-                    initialValues={{ remember: true }}
-                    onFinish={async (values) => {
-                        const res = await api('/team/invite', 'POST', {
-                            email: values.email,
-                        });
-
-                        if (res.success) {
-                            notification.success({
-                                message: res.message,
-                                placement: 'bottomRight',
-                            });
-                        } else {
-                            notification.error({
-                                message: res.message,
-                                placement: 'bottomRight',
-                            });
-                        }
-                        inviteForm.resetFields();
+  return (
+    <div>
+      <PageHeader
+        title='Team Members'
+        subTitle={permissonErrorLabel}
+        className='team-settings__page-header'
+      />
+      <Table
+        dataSource={members}
+        columns={[
+          {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+          },
+          {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+            render: (_: any, record) => {
+              const currentRoleName = team.roles.find(
+                (role) => role.id === record.roleIndex
+              )?.name;
+              if (loggedInUser?.id !== record.key && canUpdateTeamMembers) {
+                return (
+                  <Select
+                    defaultValue={currentRoleName}
+                    onChange={async (value) => {
+                      alert('Handle updating team role');
+                      //   let newIndex = parseInt(value, 10);
+                      //   const updated = await updateTeamMemberRole(
+                      //     record.key,
+                      //     newIndex
+                      //   );
+                      //   if (updated) {
+                      //     notification.success({
+                      //       message: `User ${record.name} updated to role ${roles[newIndex]}`,
+                      //       placement: 'bottomRight',
+                      //     });
+                      //   }
                     }}>
-                    <Form.Item label="Email" name="email">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Invite
-                        </Button>
-                    </Form.Item>
-                </Form>
-            ) : (
-                <Text>You do not have permissions to invite team members.</Text>
-            )}
-        </div>
-    );
+                    {team.roles.map((role) => {
+                      return (
+                        <Option key={role.id} value={role.id}>
+                          {role.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                );
+              }
+              return currentRoleName;
+            },
+          },
+          {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_: any, record) => {
+              if (loggedInUser?.id !== record.key && canRemoveTeamMembers) {
+                return (
+                  <Space size='middle'>
+                    <Link
+                      onClick={async () => {
+                        alert('handle remove team member');
+                        // removeTeamUser(record.key).then(() => {
+                        //   notification.success({
+                        //     message: `${record.name} successfully removed from the team!`,
+                        //     placement: 'bottomRight',
+                        //   });
+                        // });
+                      }}>
+                      Remove
+                    </Link>
+                  </Space>
+                );
+              }
+              return null;
+            },
+          },
+        ]}
+        size='middle'
+      />
+      <Title level={4} className='team-team-members__invite-title'>
+        Invite Member
+      </Title>
+      {canInviteTeamMembers ? (
+        <Form
+          form={inviteForm}
+          layout='inline'
+          name='invite'
+          initialValues={{ remember: true }}
+          onFinish={async (values) => {
+            const res = await api('/team/invite', 'POST', {
+              email: values.email,
+            });
+
+            if (res.success) {
+              notification.success({
+                message: res.message,
+                placement: 'bottomRight',
+              });
+            } else {
+              notification.error({
+                message: res.message,
+                placement: 'bottomRight',
+              });
+            }
+            inviteForm.resetFields();
+          }}>
+          <Form.Item label='Email' name='email'>
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type='primary' htmlType='submit'>
+              Invite
+            </Button>
+          </Form.Item>
+        </Form>
+      ) : (
+        <Text>You do not have permissions to invite team members.</Text>
+      )}
+    </div>
+  );
 };
 
-const mapStateToProps = (state: RootState) => ({
-    teamMembers: state.team.users,
-    roles: state.team.roles,
-    loggedInUser: state.user,
-    canUpdateTeamMembers: hasTeamRole(state, PERM_UPDATE_TEAM_MEMBERS),
-    canInviteTeamMembers: hasTeamRole(state, PERM_INVITE_TEAM_MEMBERS),
-    canRemoveTeamMembers: hasTeamRole(state, PERM_REMOVE_TEAM_MEMBERS),
-});
-
-const mapDispatchToProps = {
-    updateTeamMemberRole,
-    removeTeamUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TeamMembers);
+export default TeamMembers;

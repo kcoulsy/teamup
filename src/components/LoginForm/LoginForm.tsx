@@ -1,28 +1,18 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-import { startLogin } from '../../actions/auth';
-import { RootState } from '../../store/configure';
 import { Card, Form, Input, Button } from 'antd';
 import { PATH_REGISTER } from './../../constants/pageRoutes';
+import useUser from '../../hooks/useUser';
 
-interface LoginFormProps {
-  startLogin: Function;
-  attemptingLogin: boolean;
-  loginAttemptFailed: boolean;
-}
-
-export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
-  startLogin,
-  attemptingLogin,
-  loginAttemptFailed,
-}) => {
+export const LoginForm = () => {
+  const { login, isFetching, error } = useUser();
   const history = useHistory();
+
   return (
     <Card title='Login' className='login-form__card' size='small'>
       <Form
-        onFinish={({ username, password }) => startLogin(username, password)}>
+        onFinish={({ username, password }) => login({ username, password })}>
         <Form.Item
           label='Username'
           name='username'
@@ -46,11 +36,11 @@ export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
           ]}>
           <Input.Password />
         </Form.Item>
-        {loginAttemptFailed ? (
+        {error ? (
           <Form.Item>Unable to login with those credentials</Form.Item>
         ) : null}
         <Form.Item>
-          <Button type='primary' htmlType='submit' loading={attemptingLogin}>
+          <Button type='primary' htmlType='submit' loading={isFetching}>
             Login
           </Button>
           <Button
@@ -65,13 +55,4 @@ export const LoginForm: React.FunctionComponent<LoginFormProps> = ({
   );
 };
 
-export const mapStateToProps = (state: RootState) => {
-  return {
-    attemptingLogin: state.auth.attemptingLogin,
-    loginAttemptFailed: state.auth.loginAttemptFailed,
-  };
-};
-
-const mapDispatchToProps = { startLogin };
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default LoginForm;

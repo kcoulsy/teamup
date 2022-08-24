@@ -1,79 +1,74 @@
 import React from 'react';
 import { Card, Form, Button, notification, Input } from 'antd';
-import { createTeam } from '../actions/team';
-import { connect } from 'react-redux';
 import { useHistory, Redirect } from 'react-router-dom';
-import {
-    PATH_TEAM_PROFILE,
-    PATH_TEAM_PROJECTS,
-} from './../constants/pageRoutes';
-import { RootState } from '../store/configure';
-import hasTeam from '../helpers/hasTeam';
+import { PATH_TEAM_PROJECTS } from './../constants/pageRoutes';
+
+import useTeams from '../hooks/useTeams';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '../services/api';
 
 const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
 };
 const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 8, span: 16 },
 };
 
-const CreateTeamPage: React.FunctionComponent<{
-    createTeam: Function;
-    hasTeamFromState: boolean;
-}> = ({ createTeam, hasTeamFromState }) => {
-    const history = useHistory();
+const CreateTeamPage = () => {
+  const { hasTeam, refetch } = useTeams();
+  const history = useHistory();
 
-    if (hasTeamFromState) {
-        return <Redirect to={PATH_TEAM_PROJECTS} />;
+  const mutation = useMutation(
+    (data: { name: string; description: string }) => {
+      return api('team/create', 'POST', data);
+    },
+    {
+      onSuccess: async () => {
+        await refetch();
+        notification.success({
+          message: 'Team Created',
+          placement: 'bottomRight',
+        });
+        history.push(PATH_TEAM_PROJECTS);
+      },
     }
+  );
 
-    return (
-        <div>
-            <Card title="Create Team">
-                <Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{ remember: true }}
-                    onFinish={async ({ teamName, teamDesc }) => {
-                        const done = await createTeam({
-                            name: teamName,
-                            description: teamDesc,
-                        });
-                        if (done) {
-                            notification.success({
-                                message: 'Team Created',
-                                placement: 'bottomRight',
-                            });
-                            history.push(PATH_TEAM_PROJECTS); //TODO: to profile when it exists
-                        }
-                    }}>
-                    <Form.Item label="Team Name" name="teamName">
-                        <Input />
-                    </Form.Item>
+  if (hasTeam) {
+    // TODO: this should redirect in router
+    return <Redirect to={PATH_TEAM_PROJECTS} />;
+  }
 
-                    <Form.Item label="Team Description" name="teamDesc">
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Create Team
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Card>
-        </div>
-    );
+  return (
+    <div>
+      <Card title='Create Team'>
+        <Form
+          {...layout}
+          name='basic'
+          initialValues={{ remember: true }}
+          onFinish={async ({ teamName, teamDesc }) => {
+            await mutation.mutate({
+              name: teamName,
+              description: teamDesc,
+            });
+          }}>
+          <Form.Item label='Team Name' name='teamName'>
+            <Input />
+          </Form.Item>
+
+          <Form.Item label='Team Description' name='teamDesc'>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Button type='primary' htmlType='submit'>
+              Create Team
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
+    </div>
+  );
 };
 
-const mapStateToProps = (state: RootState) => {
-    return {
-        hasTeamFromState: hasTeam(state),
-    };
-};
-
-const mapDispatchToProps = {
-    createTeam: createTeam,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTeamPage);
+export default CreateTeamPage;
