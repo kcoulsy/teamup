@@ -26,6 +26,7 @@ model User {
   tasks        Task[]    @relation(name: "taskAssignee")
   projects     Project[]
   createdTasks Task[]
+  createdTeams Team[]
 
   roleIDs String[] @db.ObjectId
   roles   Role[]   @relation(name: "roles", fields: [roleIDs], references: [id])
@@ -35,7 +36,7 @@ model Role {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   permissions String[]
-  Team        Team?    @relation(fields: [teamId], references: [id])
+  team        Team?    @relation(fields: [teamId], references: [id])
   teamId      String?  @db.ObjectId
   order       Int
 
@@ -53,6 +54,9 @@ model Team {
   invitedUsersIDs String[]  @db.ObjectId
   invitedUsers    User[]    @relation(name: "invitedUsers", fields: [invitedUsersIDs], references: [id])
   projects        Project[]
+
+  createdByID String @db.ObjectId
+  createdBy   User   @relation(fields: [createdByID], references: [id])
 }
 
 model Project {

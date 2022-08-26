@@ -1,4 +1,11 @@
-import express, { Request } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import {
+  CreateTeamBodySchema,
+  createTeamBodySchema,
+  UpdateTeamBodySchema,
+  updateTeamBodySchema,
+} from '../../validation/team';
+import { validateRequest } from 'zod-express-middleware';
 import {
   acceptTeamInvite,
   createTeam,
@@ -7,6 +14,7 @@ import {
   inviteUserToTeam,
   leaveTeam,
   removeUserFromTeam,
+  updateRolesInTeam,
   updateTeam,
   updateUserRoleInTeam,
 } from '../../services/team.service';
@@ -14,35 +22,73 @@ import { requireAuthentication } from '../../utils/auth';
 
 const router = express.Router();
 
-router.get('/', requireAuthentication, async (req: Request, res) => {
-  const teams = await getUsersTeams(req.user);
+router.get(
+  '/',
+  requireAuthentication,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const teams = await getUsersTeams(req.user);
 
-  res.json({ teams });
-});
+      res.json({ teams });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
-router.post('/create', requireAuthentication, async (req: Request, res) => {
-  const { name, description } = req.body;
+router.post(
+  '/create',
+  requireAuthentication,
+  validateRequest({
+    body: createTeamBodySchema,
+  }),
+  async (
+    req: Request<{}, {}, CreateTeamBodySchema>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { name, description } = req.body;
 
-  const team = await createTeam({ name, description, user: req.user });
+      const team = await createTeam({ name, description, user: req.user });
 
-  res.send({ team });
-});
+      res.send({ team });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
-router.put('/update', requireAuthentication, async (req: Request, res) => {
-  // TODO - add validation
-  const team = await updateTeam({
-    id: req.body.id,
-    name: req.body.name,
-    description: req.body.description,
-  });
+router.put(
+  '/update',
+  requireAuthentication,
+  validateRequest({ body: updateTeamBodySchema }),
+  async (
+    req: Request<{}, {}, UpdateTeamBodySchema>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const team = await updateTeam({
+        id: req.body.id,
+        name: req.body.name,
+        description: req.body.description,
+        user: req.user,
+      });
 
-  res.send({ team });
-});
+      res.send({ team });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// TODO go through and catch errors
 
 /**
  * Allows the user to leave the team BUT does not remove the team.
  */
-router.post('/leave', requireAuthentication, async (req: Request, res) => {
+router.post('/leave', requireAuthentication, async (req: Request<{}>, res) => {
   const { teamId } = req.body;
 
   await leaveTeam({ teamId, userId: req.user.id });
@@ -51,7 +97,7 @@ router.post('/leave', requireAuthentication, async (req: Request, res) => {
 /**
  * Invites a user (by email) to the team
  */
-router.post('/invite', requireAuthentication, async (req: Request, res) => {
+router.post('/invite', requireAuthentication, async (req: Request<{}>, res) => {
   const [team] = await getUsersTeams(req.user);
 
   const { email } = req.body;
@@ -113,27 +159,20 @@ router.post(
 /**
  * Update roles, permissions are based off the index of the role to keep it simple.
  */
-router.post('/roles', requireAuthentication, async (req: Request, res) => {
-  // const { roles } = req.body;
-  // if (!Array.isArray(roles) || !roles.every((i) => typeof i === 'string')) {
-  //   return res.status(400).send('Roles must be of type strings');
-  // }
-  // await req.user.populateTeam();
-  // req.user.team.roles = roles;
-  // const newRolePerms = roles.map((_, index) => {
-  //   if (typeof req.user.team.rolePermissions[index] !== 'undefined') {
-  //     const roleObj = req.user.team.rolePermissions[index];
-  //     roleObj.roleIndex = index;
-  //     return roleObj;
-  //   }
-  //   return {
-  //     roleIndex: index,
-  //     permissions: [],
-  //   };
-  // });
-  // req.user.team.rolePermissions = newRolePerms;
-  // req.user.team.save();
-  // res.json({ message: 'updated roles', success: true });
+router.put('/roles', requireAuthentication, async (req: Request, res, next) => {
+  try {
+    // TODO check that the user can perform this action
+
+    // TODO check that the user isn't removing their own role
+    const team = await updateRolesInTeam({
+      teamId: req.body.teamId,
+      roles: req.body.roles,
+    });
+
+    res.json({ team });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**

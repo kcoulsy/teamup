@@ -9,12 +9,6 @@
     "outDir": "dist",
     "allowJs": true,
     "typeRoots": ["src/types"],
-    "baseUrl": ".",
-    "paths": {
-      "src/*": [
-        "./src/*"
-      ]
-    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules/*", "../node_modules/*", "./dist/*"]
