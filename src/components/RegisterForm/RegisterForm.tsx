@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import containsNumber from '../../helpers/containsNumber';
 import {
   MIN_USERNAME_LENGTH,
   MIN_PASS_LENGTH,
@@ -14,6 +13,7 @@ export const RegisterForm = () => {
   const { register, error, isRegistering } = useUser();
   const history = useHistory();
 
+  // TODO proper validation
   return (
     <Card title='Register' size='small' className='register-form__card'>
       <Form
@@ -65,7 +65,7 @@ export const RegisterForm = () => {
             },
             () => ({
               validator(_, value) {
-                if (containsNumber(value)) {
+                if (/\d/.test(value)) {
                   return Promise.resolve();
                 }
                 return Promise.reject('Your password must contain a number!');

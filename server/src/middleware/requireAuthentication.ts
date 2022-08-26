@@ -11,3 +11,5 @@ export const requireAuthentication = (
 
   res.status(401).send({ message: 'Unauthorized' });
 };
+
+export default requireAuthentication;

@@ -1,8 +1,12 @@
 /* eslint-disable no-console */
 import app from './app';
-import config from './config/config';
+import dotenv from 'dotenv';
 
-app.listen(config.port, () => {
+dotenv.config();
+
+const { PORT } = process.env;
+
+app.listen(PORT, () => {
   // @ts-ignore
-  console.log(`Server started on port ${config.port}`);
+  console.log(`Server started on port ${PORT}`);
 });

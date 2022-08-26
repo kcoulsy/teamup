@@ -429,18 +429,16 @@ export const updateRolesInTeam = async ({
 
     await removedRoles.reduce(async (prev, role) => {
       await prev;
-      await prisma.role.delete({
+      return prisma.role.delete({
         where: { id: role.id },
       });
-    }, Promise.resolve());
+    }, Promise.resolve({}));
   } catch (error) {
     throw new BadRequestError(
       'Something went wrong trying to remove roles from team'
     );
   }
 
-  console.log(team.roles.map(({ id }) => id));
-  console.log(roles.map(({ id }) => id));
   await roles.reduce(async (prev, role) => {
     await prev;
 

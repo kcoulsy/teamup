@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { Team, User, Role } from '../../server/node_modules/@prisma/client';
 import useUser from './useUser';
@@ -8,23 +8,47 @@ interface UpdateTeamOpts {
   description: string;
 }
 
-type TeamType = Team & {
+export type TeamType = Team & {
   users: User[];
   roles: Role[];
 };
-const useTeams = () => {
+
+interface UseTeamsOptions {
+  onSuccess?: (teams: TeamType[]) => void;
+}
+const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
   const { data: userData } = useUser();
   const { data, error, isLoading, refetch } = useQuery<{ teams: TeamType[] }>(
     ['getTeams'],
     async () => await api('team/', 'GET'),
     {
       retry: false,
+      onSuccess: (data) => {
+        if (onSuccess) {
+          onSuccess(data.teams);
+        }
+      },
     }
   );
 
   const teams: TeamType[] = data?.teams || [];
   const [team] = teams;
   const hasTeam = !!team;
+
+  const updateRolesMutation = useMutation(
+    ['updateTeamRoles'],
+    async (roles: Role[]) => {
+      await api('team/roles', 'PUT', {
+        teamId: team.id,
+        roles,
+      });
+    },
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
 
   const hasPermission = (permission: string) => {
     if (!userData || !userData.user) return false;
@@ -55,6 +79,7 @@ const useTeams = () => {
     updateTeam,
     refetch,
     hasPermission,
+    updateRolesMutation,
   } as const;
 };
 

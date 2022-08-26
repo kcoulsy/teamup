@@ -1,12 +1,12 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { createUser } from '../../services/auth.service';
+import { createUser } from '../../../services/auth.service';
 import passport from 'passport';
 import { validateRequest } from 'zod-express-middleware';
 import {
   loginBodySchema,
   registerBodySchema,
   RegisterBodySchema,
-} from '../../validation/auth';
+} from './validation';
 
 const router = express.Router();
 

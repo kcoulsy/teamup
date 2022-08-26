@@ -1,10 +1,10 @@
 import express from 'express';
 
-import userRouter from './api/user';
-import authRouter from './api/auth';
-import teamRouter from './api/team';
-import projectRouter from './api/project';
-import taskRouter from './api/task';
+import userRouter from './v1/user/router';
+import authRouter from './v1/auth/router';
+import teamRouter from './v1/team/router';
+import projectRouter from './v1/project/router';
+import taskRouter from './v1/task/router';
 
 const router = express.Router();
 

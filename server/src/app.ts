@@ -1,12 +1,10 @@
 /* eslint-disable no-console */
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import path from 'path';
 import dotenv from 'dotenv';
 
-import config from './config/config';
-import apiRouter from './routes/api';
+import apiRouter from './api/router';
 
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -14,7 +12,6 @@ import { authLogin } from './services/auth.service';
 import session from 'express-session';
 import { User } from '@prisma/client';
 import handleErrors from './middleware/handleErrors';
-import { NotFoundError, UnauthorizedError } from './utils/error';
 
 dotenv.config();
 
@@ -59,28 +56,11 @@ passport.deserializeUser(function (user: User, done) {
   done(null, user);
 });
 
-mongoose.connect(config.mongo.uri, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-});
-
-const connection = mongoose.connection;
-connection.once('open', () => {
-  // @ts-ignore
-  console.log('MongoDB connection established');
-});
-
 app.use('/api', apiRouter);
 
 app.use(express.static(path.join(__dirname, './../../', 'build')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './../../', 'build', 'index.html'));
-});
-
-app.get('/test', (req, res) => {
-  // res.send('test');
-  throw new NotFoundError();
 });
 
 app.get('*', (_, res) => {
