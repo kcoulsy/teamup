@@ -6,7 +6,7 @@ import { PATH_REGISTER } from './../../constants/pageRoutes';
 import useUser from '../../hooks/useUser';
 
 export const LoginForm = () => {
-  const { login, isFetching, error } = useUser();
+  const { login, isFetching, loginError } = useUser();
   const history = useHistory();
 
   return (
@@ -36,7 +36,7 @@ export const LoginForm = () => {
           ]}>
           <Input.Password />
         </Form.Item>
-        {error ? (
+        {loginError ? (
           <Form.Item>Unable to login with those credentials</Form.Item>
         ) : null}
         <Form.Item>

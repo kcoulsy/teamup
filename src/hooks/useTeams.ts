@@ -16,7 +16,10 @@ const useTeams = () => {
   const { data: userData } = useUser();
   const { data, error, isLoading, refetch } = useQuery<{ teams: TeamType[] }>(
     ['getTeams'],
-    async () => await api('team/', 'GET')
+    async () => await api('team/', 'GET'),
+    {
+      retry: false,
+    }
   );
 
   const teams: TeamType[] = data?.teams || [];

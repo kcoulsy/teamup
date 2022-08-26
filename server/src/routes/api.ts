@@ -8,8 +8,8 @@ import taskRouter from './api/task';
 
 const router = express.Router();
 
-router.use('/user', userRouter);
 router.use('/auth', authRouter);
+router.use('/user', userRouter);
 router.use('/team', teamRouter);
 router.use('/project', projectRouter);
 router.use('/task', taskRouter);

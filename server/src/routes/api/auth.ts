@@ -1,47 +1,67 @@
-import express from 'express';
-import { RES_AUTH_HEADER } from '../../constants/auth';
+import express, { NextFunction, Request, Response } from 'express';
+import { createUser } from '../../services/auth.service';
+import passport from 'passport';
+import { validateRequest } from 'zod-express-middleware';
 import {
-  authLogin,
-  authWithToken,
-  createUser,
-} from '../../services/auth.service';
+  loginBodySchema,
+  registerBodySchema,
+  RegisterBodySchema,
+} from '../../validation/auth';
 
 const router = express.Router();
 
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const response = await authLogin(username, password);
-
-    res.send(response);
-  } catch (error) {
-    res.status(401).send({ error: 'Invalid Login' });
-  }
-});
-
-router.get('/verify', async (req, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-
-  const user = await authWithToken(token);
-
-  if (!user) {
-    return res.status(200).json({ valid: false });
-  }
-
-  res.status(200).json({ valid: true, user });
-});
-
-router.post('/register', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    const data = await createUser({ username, email, password });
-
-    res.json({ ...data });
-  } catch (err) {
-    res.status(400).json({
-      error: 'Something went wrong trying to register you',
+router.post(
+  '/login',
+  validateRequest({ body: loginBodySchema }),
+  passport.authenticate('local'),
+  (req, res) => {
+    const { password, ...userWithoutPassword } = req.user;
+    res.status(200).json({
+      message: 'Successfully logged in',
+      user: userWithoutPassword,
     });
   }
+);
+
+router.post('/logout', function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json({
+      message: 'Successfully logged out',
+    });
+  });
 });
+
+router.post(
+  '/register',
+  validateRequest({
+    body: registerBodySchema,
+  }),
+  async (
+    req: Request<{}, {}, RegisterBodySchema>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { username, email, password } = req.body;
+      const user = await createUser({ username, email, password });
+
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        const { password, ...userWithoutPassword } = user;
+        res.status(200).json({
+          message: 'Successfully registered',
+          user: userWithoutPassword,
+        });
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 export default router;

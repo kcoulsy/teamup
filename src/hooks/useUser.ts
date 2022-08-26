@@ -5,7 +5,13 @@ import { api } from '../services/api';
 const useUser = () => {
   const query = useQuery<{ user: User }>(
     ['getUser'],
-    async () => await api('user/', 'GET')
+    async () => await api('user/', 'GET'),
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+      retry: false,
+    }
   );
 
   const loginMutation = useMutation(
@@ -14,11 +20,7 @@ const useUser = () => {
       return await api('auth/login', 'POST', { username, password });
     },
     {
-      onSuccess: (data) => {
-        // TODO this should be a server side httponly cookie
-        if (data.token) {
-          localStorage.setItem('userToken', data.token);
-        }
+      onSuccess: () => {
         query.refetch();
       },
     }
@@ -49,16 +51,17 @@ const useUser = () => {
     }
   );
 
-  const logout = () => {
-    localStorage.removeItem('userToken');
+  const logout = async () => {
+    await api('auth/logout', 'POST');
     query.refetch();
   };
 
   return {
     ...query,
     logout,
-    isLoggedIn: query.data?.user !== null,
+    isLoggedIn: !!query.data?.user,
     login: loginMutation.mutate,
+    loginError: loginMutation.error,
     register: registerMutation.mutate,
     isRegistering: registerMutation.isLoading || query.isLoading,
     isLoggingIn: loginMutation.isLoading || query.isLoading,

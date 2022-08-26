@@ -1,9 +1,4 @@
-import express from 'express';
-import Team from '../../models/team.model';
-import User from '../../models/user.model';
-import Authenticate from '../../middleware/authenticate';
-import PERMISSIONS from '../../constants/permissions';
-import { RequestWithUser } from '../../types/express';
+import express, { Request } from 'express';
 import {
   acceptTeamInvite,
   createTeam,
@@ -15,32 +10,26 @@ import {
   updateTeam,
   updateUserRoleInTeam,
 } from '../../services/team.service';
-import { RES_AUTH_HEADER } from '../../constants/auth';
-import { authWithToken } from '../../services/auth.service';
+import { requireAuthentication } from '../../utils/auth';
 
 const router = express.Router();
 
-// @TODO - Need to try catch all over the place
-router.get('/', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
-
-  const teams = await getUsersTeams(user);
+router.get('/', requireAuthentication, async (req: Request, res) => {
+  const teams = await getUsersTeams(req.user);
 
   res.json({ teams });
 });
 
-router.post('/create', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
+router.post('/create', requireAuthentication, async (req: Request, res) => {
   const { name, description } = req.body;
 
-  const team = await createTeam({ name, description, user });
+  const team = await createTeam({ name, description, user: req.user });
 
   res.send({ team });
 });
 
-router.put('/update', async (req: RequestWithUser, res) => {
+router.put('/update', requireAuthentication, async (req: Request, res) => {
+  // TODO - add validation
   const team = await updateTeam({
     id: req.body.id,
     name: req.body.name,
@@ -53,21 +42,17 @@ router.put('/update', async (req: RequestWithUser, res) => {
 /**
  * Allows the user to leave the team BUT does not remove the team.
  */
-router.post('/leave', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
+router.post('/leave', requireAuthentication, async (req: Request, res) => {
   const { teamId } = req.body;
 
-  await leaveTeam({ teamId, userId: user.id });
+  await leaveTeam({ teamId, userId: req.user.id });
 });
 
 /**
  * Invites a user (by email) to the team
  */
-router.post('/invite', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
-  const [team] = await getUsersTeams(user);
+router.post('/invite', requireAuthentication, async (req: Request, res) => {
+  const [team] = await getUsersTeams(req.user);
 
   const { email } = req.body;
 
@@ -82,53 +67,53 @@ router.post('/invite', async (req: RequestWithUser, res) => {
 /**
  * Accepts an invitation to a team
  */
-router.post('/accept', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
+router.post('/accept', requireAuthentication, async (req: Request, res) => {
   const { teamId } = req.body;
 
-  await acceptTeamInvite({ teamId, userId: user.id });
+  await acceptTeamInvite({ teamId, userId: req.user.id });
 });
 
 /**
  * Declines an invite to a team
  */
-router.post('/decline', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
+router.post('/decline', requireAuthentication, async (req: Request, res) => {
   const { teamId } = req.body;
 
-  await declineTeamInvite({ teamId, userId: user.id });
+  await declineTeamInvite({ teamId, userId: req.user.id });
 });
 
 /**
  * Removes a user from the team.
  */
-router.post('/user/remove', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
-  const [team] = await getUsersTeams(user);
-  const { userId } = req.body;
+router.post(
+  '/user/remove',
+  requireAuthentication,
+  async (req: Request, res) => {
+    const [team] = await getUsersTeams(req.user);
+    const { userId } = req.body;
 
-  await removeUserFromTeam({ teamId: team.id, userId });
-});
+    await removeUserFromTeam({ teamId: team.id, userId });
+  }
+);
 
 /**
  * Updates a users role in the team.
  */
-router.post('/user/update', async (req: RequestWithUser, res) => {
-  const token = req.header(RES_AUTH_HEADER);
-  const user = await authWithToken(token);
-  const [team] = await getUsersTeams(user);
-  const { userId, roleId } = req.body;
+router.post(
+  '/user/update',
+  requireAuthentication,
+  async (req: Request, res) => {
+    const [team] = await getUsersTeams(req.user);
+    const { userId, roleId } = req.body;
 
-  await updateUserRoleInTeam({ teamId: team.id, userId, roleId });
-});
+    await updateUserRoleInTeam({ teamId: team.id, userId, roleId });
+  }
+);
 
 /**
  * Update roles, permissions are based off the index of the role to keep it simple.
  */
-router.post('/roles', Authenticate, async (req: RequestWithUser, res) => {
+router.post('/roles', requireAuthentication, async (req: Request, res) => {
   // const { roles } = req.body;
   // if (!Array.isArray(roles) || !roles.every((i) => typeof i === 'string')) {
   //   return res.status(400).send('Roles must be of type strings');
@@ -154,31 +139,35 @@ router.post('/roles', Authenticate, async (req: RequestWithUser, res) => {
 /**
  * Update Permissions, currently using role name. Uses indexes for now.
  */
-router.post('/permissions', Authenticate, async (req: RequestWithUser, res) => {
-  // const { roleIndex, permissions } = req.body;
-  // await req.user.populateTeam(true);
-  // if (roleIndex < 0 || roleIndex > req.user.team.roles.length - 1) {
-  //   return res
-  //     .status(400)
-  //     .send({ error: 'Role does not exist with that index' });
-  // }
-  // req.user.team.roles.forEach((_, index) => {
-  //   if (!req.user.team.rolePermissions[index]) {
-  //     req.user.team.rolePermissions[index] = {
-  //       permissions: [],
-  //       roleIndex: index,
-  //     };
-  //   }
-  //   if (index === roleIndex) {
-  //     req.user.team.rolePermissions[index].permissions = permissions;
-  //   }
-  // });
-  // await req.user.team.save();
-  // res.send({
-  //   team: req.user.team,
-  //   message: 'Updated permissions',
-  //   success: true,
-  // });
-});
+router.post(
+  '/permissions',
+  requireAuthentication,
+  async (req: Request, res) => {
+    // const { roleIndex, permissions } = req.body;
+    // await req.user.populateTeam(true);
+    // if (roleIndex < 0 || roleIndex > req.user.team.roles.length - 1) {
+    //   return res
+    //     .status(400)
+    //     .send({ error: 'Role does not exist with that index' });
+    // }
+    // req.user.team.roles.forEach((_, index) => {
+    //   if (!req.user.team.rolePermissions[index]) {
+    //     req.user.team.rolePermissions[index] = {
+    //       permissions: [],
+    //       roleIndex: index,
+    //     };
+    //   }
+    //   if (index === roleIndex) {
+    //     req.user.team.rolePermissions[index].permissions = permissions;
+    //   }
+    // });
+    // await req.user.team.save();
+    // res.send({
+    //   team: req.user.team,
+    //   message: 'Updated permissions',
+    //   success: true,
+    // });
+  }
+);
 
 export default router;
