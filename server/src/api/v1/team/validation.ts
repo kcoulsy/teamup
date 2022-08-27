@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { z } from 'zod';
 
 export const createTeamBodySchema = z.object({
@@ -62,12 +63,28 @@ export type UpdateUserRoleInTeamBodySchema = z.infer<
   typeof updateUserRoleInTeamBodySchema
 >;
 
-// TODO type this properly
+const roleSchema = z
+  .object({
+    id: z.string().optional(),
+    name: z.string(),
+    permissions: z.array(z.string()),
+    order: z.number(),
+  })
+  .required();
+
+export type RoleSchema = z.infer<typeof roleSchema>;
+
 export const updateRolesInTeamBodySchema = z.object({
   teamId: z.string(),
-  roles: z.array(z.any()),
+  roles: z.array(roleSchema),
 });
 
 export type UpdateRolesInTeamBodySchema = z.infer<
   typeof updateRolesInTeamBodySchema
 >;
+
+export const updateRoleSchema = z.object({
+  role: roleSchema,
+});
+
+export type UpdateRoleSchema = z.infer<typeof updateRoleSchema>;

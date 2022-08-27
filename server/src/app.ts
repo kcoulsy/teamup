@@ -27,7 +27,7 @@ app.use(
 app.use(express.json());
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET as string,
     cookie: { secure: process.env.NODE_ENV === 'production' },
     saveUninitialized: false,
     resave: false,

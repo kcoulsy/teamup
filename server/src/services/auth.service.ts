@@ -19,14 +19,17 @@ export const authLogin = async (username: string, password: string) => {
   }
 };
 
+interface CreateUserOptions {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export const createUser = async ({
   username,
   email,
   password,
-  fullName,
-  occupation,
-  aboutMe,
-}: Partial<User>) => {
+}: CreateUserOptions) => {
   try {
     // TODO: can this check on initial call with unique or something
     const existingUser = await prisma.user.findFirst({ where: { username } });
@@ -43,9 +46,6 @@ export const createUser = async ({
         username,
         email,
         password: hashedPassword,
-        fullName,
-        occupation,
-        aboutMe,
         teamIDs: [],
         teamInviteIDs: [],
       },

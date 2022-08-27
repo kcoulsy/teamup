@@ -15,12 +15,13 @@ export const getUsersTeams = async ({ id }: User) => {
           include: {
             users: true,
             roles: true,
+            invitedUsers: true,
           },
         },
       },
     });
 
-    return user.teams;
+    return user?.teams || [];
   } catch (error) {
     throw new BadRequestError('Unable to get user teams');
   }
@@ -66,7 +67,7 @@ export const createTeam = async ({
       },
     });
 
-    const team = await prisma.team.create({
+    return await prisma.team.create({
       data: {
         name,
         description,
@@ -86,8 +87,6 @@ export const createTeam = async ({
         invitedUsers: true,
       },
     });
-
-    return team;
   } catch (error) {
     throw new BadRequestError('Unable to create team');
   }
@@ -107,9 +106,8 @@ export const updateTeam = async ({
   description,
   user,
 }: UpdateTeamOptions) => {
-  const team = await prisma.team.update({
+  const team = await prisma.team.findFirst({
     where: { id },
-    data: { name, description },
     include: { users: true, roles: { include: { users: true } } },
   });
 
@@ -133,7 +131,11 @@ export const updateTeam = async ({
     throw new BadRequestError('User does not have permission to update team');
   }
 
-  return team;
+  return await prisma.team.update({
+    where: { id },
+    data: { name, description },
+    include: { roles: true, users: true, invitedUsers: true },
+  });
 };
 
 interface LeaveTeamOptions {
@@ -146,6 +148,7 @@ export const leaveTeam = async ({ userId, teamId }: LeaveTeamOptions) => {
     return await prisma.team.update({
       where: { id: teamId },
       data: { users: { disconnect: [{ id: userId }] } },
+      include: { roles: true, users: true, invitedUsers: true },
     });
   } catch (error) {
     throw new BadRequestError('Something went wrong trying to leave the team');
@@ -184,6 +187,7 @@ export const inviteUserToTeam = async ({
     return await prisma.team.update({
       where: { id: teamId },
       data: { invitedUsers: { connect: [{ id: user.id }] } },
+      include: { roles: true, users: true, invitedUsers: true },
     });
   } catch (error) {
     throw new BadRequestError('Something went wrong trying to invite user');
@@ -247,7 +251,7 @@ export const acceptTeamInvite = async ({
 
     return await prisma.team.findFirst({
       where: { id: teamId },
-      include: { users: true, roles: true },
+      include: { roles: true, users: true, invitedUsers: true },
     });
   } catch (error) {
     throw new BadRequestError('Something went wrong trying to accept invite');
@@ -282,6 +286,7 @@ export const declineTeamInvite = async ({
       data: {
         invitedUsers: { disconnect: [{ id: userId }] },
       },
+      include: { roles: true, users: true, invitedUsers: true },
     });
   } catch (error) {
     throw new BadRequestError('Something went wrong trying to decline invite');
@@ -316,10 +321,40 @@ export const removeUserFromTeam = async ({
       data: {
         users: { disconnect: [{ id: userId }] },
       },
+      include: { roles: true, users: true, invitedUsers: true },
     });
   } catch (error) {
     throw new BadRequestError('Something went wrong trying to remove user');
   }
+};
+
+interface GetUserRoleInTeamOptions {
+  userId: string;
+  teamId: string;
+}
+
+export const getUserRoleInTeam = async ({
+  userId,
+  teamId,
+}: GetUserRoleInTeamOptions) => {
+  const team = await prisma.team.findFirst({
+    where: { id: teamId },
+    include: { roles: { include: { users: true } } },
+  });
+
+  if (!team) {
+    throw new BadRequestError('Team not found');
+  }
+
+  const userRole = team.roles.find(({ users }) =>
+    users.find(({ id }) => id === userId)
+  );
+
+  if (!userRole) {
+    throw new BadRequestError('User is not part of team');
+  }
+
+  return userRole;
 };
 
 interface UpdateUserRoleInTeam {
@@ -357,6 +392,10 @@ export const updateUserRoleInTeam = async ({
     include: { roles: true },
   });
 
+  if (!user) {
+    throw new BadRequestError('User not found');
+  }
+
   const currentRole = user.roles.find((role) => role.teamId === teamId);
 
   if (currentRole) {
@@ -393,7 +432,7 @@ export const updateUserRoleInTeam = async ({
 
   return await prisma.team.findFirst({
     where: { id: teamId },
-    include: { roles: true, users: true },
+    include: { roles: true, users: true, invitedUsers: true },
   });
 };
 
@@ -401,6 +440,7 @@ interface UpdateRolesInTeamOptions {
   teamId: string;
   roles: Role[];
 }
+
 export const updateRolesInTeam = async ({
   teamId,
   roles,
@@ -453,7 +493,13 @@ export const updateRolesInTeam = async ({
       });
     }
 
-    const { name, order, permissions } = roles.find(({ id }) => id === role.id);
+    const foundRole = roles.find(({ id }) => id === role.id);
+
+    if (!foundRole) {
+      throw new BadRequestError('Role not found');
+    }
+
+    const { name, order, permissions } = foundRole;
 
     return prisma.role.update({
       where: { id: role.id },
@@ -471,4 +517,25 @@ export const updateRolesInTeam = async ({
   });
 };
 
-export const updatePermissionsInTeam = async () => {};
+export const updateRoleInTeam = async (role: Role) => {
+  const foundRole = await prisma.role.findFirst({
+    where: { id: role.id },
+  });
+
+  if (!foundRole) {
+    throw new BadRequestError('Role not found');
+  }
+
+  try {
+    return await prisma.role.update({
+      where: { id: role.id },
+      data: {
+        name: role.name,
+        order: role.order,
+        permissions: role.permissions,
+      },
+    });
+  } catch (error) {
+    throw new BadRequestError('Something went wrong trying to update role');
+  }
+};

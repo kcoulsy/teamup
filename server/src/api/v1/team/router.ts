@@ -12,6 +12,8 @@ import {
   rejectTeamInviteBodySchema,
   RemoveUserFromTeamBodySchema,
   removeUserFromTeamBodySchema,
+  UpdateRoleSchema,
+  updateRoleSchema,
   UpdateRolesInTeamBodySchema,
   updateRolesInTeamBodySchema,
   UpdateTeamBodySchema,
@@ -24,15 +26,25 @@ import {
   acceptTeamInvite,
   createTeam,
   declineTeamInvite,
+  getUserRoleInTeam,
   getUsersTeams,
   inviteUserToTeam,
   leaveTeam,
   removeUserFromTeam,
+  updateRoleInTeam,
   updateRolesInTeam,
   updateTeam,
   updateUserRoleInTeam,
 } from '../../../services/team.service';
 import requireAuthentication from '../../../middleware/requireAuthentication';
+import {
+  BadRequestError,
+  ForbiddenError,
+  UnauthorizedError,
+} from '../../../utils/error';
+import { PERM_UPDATE_TEAM_DETAILS } from '../../../constants/permissions';
+
+// TODO - remove passwords from users
 
 const router = express.Router();
 
@@ -41,6 +53,8 @@ router.get(
   requireAuthentication,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const teams = await getUsersTeams(req.user);
 
       res.json({ teams });
@@ -62,6 +76,8 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const { name, description } = req.body;
 
       const team = await createTeam({ name, description, user: req.user });
@@ -83,6 +99,8 @@ router.put(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const team = await updateTeam({
         id: req.body.id,
         name: req.body.name,
@@ -110,6 +128,8 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const { teamId } = req.body;
 
       await leaveTeam({ teamId, userId: req.user.id });
@@ -132,6 +152,8 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const [team] = await getUsersTeams(req.user);
 
       const { email } = req.body;
@@ -161,9 +183,16 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const { teamId } = req.body;
 
       await acceptTeamInvite({ teamId, userId: req.user.id });
+
+      return res.json({
+        success: true,
+        message: `You have accepted the invitation to team "${teamId}"!`,
+      });
     } catch (error) {
       next(error);
     }
@@ -183,9 +212,16 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const { teamId } = req.body;
 
       await declineTeamInvite({ teamId, userId: req.user.id });
+
+      return res.json({
+        success: true,
+        message: `You have declined the invitation to team "${teamId}"!`,
+      });
     } catch (error) {
       next(error);
     }
@@ -205,6 +241,8 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const [team] = await getUsersTeams(req.user);
       const { userId } = req.body;
 
@@ -228,6 +266,8 @@ router.post(
     next: NextFunction
   ) => {
     try {
+      if (!req.user) throw new UnauthorizedError();
+
       const [team] = await getUsersTeams(req.user);
       const { userId, roleId } = req.body;
 
@@ -239,7 +279,7 @@ router.post(
 );
 
 /**
- * Update roles, permissions are based off the index of the role to keep it simple.
+ * Update roles
  */
 router.put(
   '/roles',
@@ -251,15 +291,40 @@ router.put(
     next: NextFunction
   ) => {
     try {
-      // TODO check that the user can perform this action
+      if (!req.user) throw new UnauthorizedError();
 
-      // TODO check that the user isn't removing their own role
-      const team = await updateRolesInTeam({
+      const [team] = await getUsersTeams(req.user);
+
+      try {
+        const userRole = await getUserRoleInTeam({
+          teamId: team.id,
+          userId: req.user.id,
+        });
+
+        if (!userRole)
+          throw new ForbiddenError('You are not part of this roles team');
+
+        if (!userRole.permissions.includes(PERM_UPDATE_TEAM_DETAILS)) {
+          throw new ForbiddenError(
+            'You do not have permission to update roles in this team'
+          );
+        }
+
+        if (!req.body.roles.find((r) => r.id === userRole.id)) {
+          throw new BadRequestError('You cannot remove your own role');
+        }
+      } catch (error) {
+        throw new ForbiddenError(
+          'You do not have permission to update roles in this team'
+        );
+      }
+
+      const updatedTeam = await updateRolesInTeam({
         teamId: req.body.teamId,
         roles: req.body.roles,
       });
 
-      res.json({ team });
+      res.json({ team: updatedTeam });
     } catch (error) {
       next(error);
     }
@@ -267,41 +332,27 @@ router.put(
 );
 
 /**
- * Update Permissions, currently using role name. Uses indexes for now.
+ * Update the role with name, order and permissions
  */
-router.post(
-  '/permissions',
+router.put(
+  '/role',
   requireAuthentication,
-  async (req: Request, res: Response, next: NextFunction) => {
+  validateRequest({ body: updateRoleSchema }),
+  async (
+    req: Request<{}, {}, UpdateRoleSchema>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-      res.send('ok');
+      if (!req.user) throw new UnauthorizedError();
+
+      await updateRoleInTeam(req.body.role);
+
+      const [team] = await getUsersTeams(req.user);
+      res.json({ team });
     } catch (error) {
       next(error);
     }
-    // const { roleIndex, permissions } = req.body;
-    // await req.user.populateTeam(true);
-    // if (roleIndex < 0 || roleIndex > req.user.team.roles.length - 1) {
-    //   return res
-    //     .status(400)
-    //     .send({ error: 'Role does not exist with that index' });
-    // }
-    // req.user.team.roles.forEach((_, index) => {
-    //   if (!req.user.team.rolePermissions[index]) {
-    //     req.user.team.rolePermissions[index] = {
-    //       permissions: [],
-    //       roleIndex: index,
-    //     };
-    //   }
-    //   if (index === roleIndex) {
-    //     req.user.team.rolePermissions[index].permissions = permissions;
-    //   }
-    // });
-    // await req.user.team.save();
-    // res.send({
-    //   team: req.user.team,
-    //   message: 'Updated permissions',
-    //   success: true,
-    // });
   }
 );
 

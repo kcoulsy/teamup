@@ -7,6 +7,7 @@ import {
   registerBodySchema,
   RegisterBodySchema,
 } from './validation';
+import { UnauthorizedError } from '../../../utils/error';
 
 const router = express.Router();
 
@@ -14,8 +15,11 @@ router.post(
   '/login',
   validateRequest({ body: loginBodySchema }),
   passport.authenticate('local'),
-  (req, res) => {
+  (req: Request, res) => {
+    if (!req.user) throw new UnauthorizedError();
+
     const { password, ...userWithoutPassword } = req.user;
+
     res.status(200).json({
       message: 'Successfully logged in',
       user: userWithoutPassword,
