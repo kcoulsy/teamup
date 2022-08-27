@@ -68,6 +68,8 @@ const roleSchema = z
     id: z.string().optional(),
     name: z.string(),
     permissions: z.array(z.string()),
+    teamId: z.string().or(z.null()).optional(),
+    userIDs: z.array(z.string()).optional(),
     order: z.number(),
   })
   .required();
@@ -76,7 +78,16 @@ export type RoleSchema = z.infer<typeof roleSchema>;
 
 export const updateRolesInTeamBodySchema = z.object({
   teamId: z.string(),
-  roles: z.array(roleSchema),
+  roles: z.array(
+    z
+      .object({
+        id: z.string().optional(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        order: z.number(),
+      })
+      .required()
+  ),
 });
 
 export type UpdateRolesInTeamBodySchema = z.infer<

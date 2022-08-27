@@ -438,7 +438,7 @@ export const updateUserRoleInTeam = async ({
 
 interface UpdateRolesInTeamOptions {
   teamId: string;
-  roles: Role[];
+  roles: Partial<Role>[];
 }
 
 export const updateRolesInTeam = async ({
@@ -485,8 +485,8 @@ export const updateRolesInTeam = async ({
     if (!team.roles.find(({ id }) => id === role.id)) {
       return prisma.role.create({
         data: {
-          name: role.name,
-          order: role.order,
+          name: role.name || '',
+          order: role.order || 0,
           permissions: role.permissions,
           team: { connect: { id: teamId } },
         },
