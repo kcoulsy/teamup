@@ -10,6 +10,7 @@ interface UpdateTeamOpts {
 
 export type TeamType = Team & {
   users: User[];
+  invitedUsers: User[];
   roles: Role[];
 };
 

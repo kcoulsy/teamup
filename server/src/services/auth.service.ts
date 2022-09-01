@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import prisma from '../lib/prisma';
 import bcrypt from 'bcrypt';
 import { BadRequestError } from '../utils/error';
+import { passwordSchema } from '../validation/password';
 
 export const authLogin = async (username: string, password: string) => {
   try {
@@ -31,15 +32,14 @@ export const createUser = async ({
   password,
 }: CreateUserOptions) => {
   try {
-    // TODO: can this check on initial call with unique or something
     const existingUser = await prisma.user.findFirst({ where: { username } });
     if (existingUser) throw new BadRequestError('Username Exists');
 
     const existingEmail = await prisma.user.findFirst({ where: { email } });
     if (existingEmail) throw new BadRequestError('Email Exists');
 
-    // TODO: fields/password validation
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const validatedPassword = passwordSchema.parse(password);
+    const hashedPassword = await bcrypt.hash(validatedPassword, 10);
 
     return await prisma.user.create({
       data: {

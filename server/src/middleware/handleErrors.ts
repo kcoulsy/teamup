@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import serverEnv from '../utils/config';
 import { GenericError } from '../utils/error';
 
 export const handleErrors = (
@@ -7,7 +8,7 @@ export const handleErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (serverEnv.NODE_ENV === 'development') {
     console.log(
       `${new Date()} - ${req.method} ${req.originalUrl} - ${err.message}`
     );

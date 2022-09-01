@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import { Layout, Menu } from 'antd';
 import {
@@ -10,9 +9,6 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import isLoggedIn from '../../helpers/isLoggedIn';
-import { startLogout } from '../../actions/auth';
-import { RootState } from '../../store/configure';
 
 import {
   PATH_HOME,
@@ -24,8 +20,6 @@ import {
   PATH_TEAM_PROJECTS,
   PATH_TEAM_SETTINGS,
 } from '../../constants/pageRoutes';
-import hasTeam from '../../helpers/hasTeam';
-import hasTeamRole from '../../helpers/hasTeamRole';
 import { PERM_VIEW_TEAM_SETTINGS } from './../../constants/permissions';
 import useTeams from '../../hooks/useTeams';
 import useUser from '../../hooks/useUser';

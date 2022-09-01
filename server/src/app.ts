@@ -1,17 +1,10 @@
-/* eslint-disable no-console */
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
-
 import apiRouter from './api/router';
-
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { authLogin } from './services/auth.service';
-import session from 'express-session';
-import { User } from '@prisma/client';
 import handleErrors from './middleware/handleErrors';
+import setupPassport from './lib/passport';
 
 dotenv.config();
 
@@ -25,36 +18,8 @@ app.use(
 );
 
 app.use(express.json());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET as string,
-    cookie: { secure: process.env.NODE_ENV === 'production' },
-    saveUninitialized: false,
-    resave: false,
-  })
-);
-app.use(passport.session());
 
-// TODO move all this passport shit somewhere else
-passport.use(
-  new LocalStrategy(function verify(username, password, cb) {
-    authLogin(username, password)
-      .then((user) => {
-        cb(null, user);
-      })
-      .catch((err) => {
-        cb(err, false);
-      });
-  })
-);
-
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (user: User, done) {
-  done(null, user);
-});
+setupPassport(app);
 
 app.use('/api', apiRouter);
 

@@ -63,6 +63,7 @@ const useUser = () => {
     login: loginMutation.mutate,
     loginError: loginMutation.error,
     register: registerMutation.mutate,
+    registerError: registerMutation.error,
     isRegistering: registerMutation.isLoading || query.isLoading,
     isLoggingIn: loginMutation.isLoading || query.isLoading,
   };

@@ -25,16 +25,17 @@ const { Option } = Select;
 const TeamMembers = () => {
   const { data } = useUser();
   const loggedInUser = data?.user;
-  const { hasPermission, team } = useTeams();
+  const { hasPermission, team, refetch } = useTeams();
   const canUpdateTeamMembers = hasPermission(PERM_UPDATE_TEAM_MEMBERS);
   const canInviteTeamMembers = hasPermission(PERM_INVITE_TEAM_MEMBERS);
   const canRemoveTeamMembers = hasPermission(PERM_REMOVE_TEAM_MEMBERS);
+
   const [inviteForm] = Form.useForm();
-  const members = team.users.map((user) => {
+  const members = [...team.users, ...team.invitedUsers].map((user) => {
     return {
-      key: user.id,
-      name: user.email,
-      roleIndex: team.roles.find((role) => role.userIDs.includes(user.id))?.id,
+      key: user?.id,
+      name: user?.email,
+      role: team.roles.find((role) => role.userIDs.includes(user.id))?.id,
     };
   });
 
@@ -68,38 +69,48 @@ const TeamMembers = () => {
             dataIndex: 'role',
             key: 'role',
             render: (_: any, record) => {
-              const currentRoleName = team.roles.find(
-                (role) => role.id === record.roleIndex
-              )?.name;
-              if (loggedInUser?.id !== record.key && canUpdateTeamMembers) {
-                return (
-                  <Select
-                    defaultValue={currentRoleName}
-                    onChange={async (value) => {
-                      alert('Handle updating team role');
-                      //   let newIndex = parseInt(value, 10);
-                      //   const updated = await updateTeamMemberRole(
-                      //     record.key,
-                      //     newIndex
-                      //   );
-                      //   if (updated) {
-                      //     notification.success({
-                      //       message: `User ${record.name} updated to role ${roles[newIndex]}`,
-                      //       placement: 'bottomRight',
-                      //     });
-                      //   }
-                    }}>
-                    {team.roles.map((role) => {
-                      return (
-                        <Option key={role.id} value={role.id}>
-                          {role.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                );
+              if (team.invitedUsers.find((user) => user.id === record.key)) {
+                return 'Invited';
               }
-              return currentRoleName;
+
+              const currentRoleName = team.roles.find((role) =>
+                role.userIDs.find((userID) => userID === record.key)
+              )?.name;
+
+              if (loggedInUser?.id === record.key) {
+                return currentRoleName;
+              }
+
+              if (!canUpdateTeamMembers) {
+                return currentRoleName;
+              }
+
+              return (
+                <Select
+                  defaultValue={currentRoleName}
+                  onChange={async (value) => {
+                    alert('Handle updating team role');
+                    //   let newIndex = parseInt(value, 10);
+                    //   const updated = await updateTeamMemberRole(
+                    //     record.key,
+                    //     newIndex
+                    //   );
+                    //   if (updated) {
+                    //     notification.success({
+                    //       message: `User ${record.name} updated to role ${roles[newIndex]}`,
+                    //       placement: 'bottomRight',
+                    //     });
+                    //   }
+                  }}>
+                  {team.roles.map((role) => {
+                    return (
+                      <Option key={role.id} value={role.id}>
+                        {role.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              );
             },
           },
           {
@@ -107,25 +118,30 @@ const TeamMembers = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (_: any, record) => {
-              if (loggedInUser?.id !== record.key && canRemoveTeamMembers) {
-                return (
-                  <Space size='middle'>
-                    <Link
-                      onClick={async () => {
-                        alert('handle remove team member');
-                        // removeTeamUser(record.key).then(() => {
-                        //   notification.success({
-                        //     message: `${record.name} successfully removed from the team!`,
-                        //     placement: 'bottomRight',
-                        //   });
-                        // });
-                      }}>
-                      Remove
-                    </Link>
-                  </Space>
-                );
+              if (loggedInUser?.id === record.key || !canRemoveTeamMembers) {
+                return null;
               }
-              return null;
+
+              const isInvitedUser = team.invitedUsers.find(
+                (user) => user.id === record.key
+              );
+
+              return (
+                <Space size='middle'>
+                  <Link
+                    onClick={async () => {
+                      alert('handle remove team member');
+                      // removeTeamUser(record.key).then(() => {
+                      //   notification.success({
+                      //     message: `${record.name} successfully removed from the team!`,
+                      //     placement: 'bottomRight',
+                      //   });
+                      // });
+                    }}>
+                    {isInvitedUser ? 'Revoke' : 'Remove'}
+                  </Link>
+                </Space>
+              );
             },
           },
         ]}
@@ -145,6 +161,7 @@ const TeamMembers = () => {
               email: values.email,
             });
 
+            // TODO: notifications aren't working
             if (res.success) {
               notification.success({
                 message: res.message,
@@ -157,6 +174,8 @@ const TeamMembers = () => {
               });
             }
             inviteForm.resetFields();
+
+            await refetch();
           }}>
           <Form.Item label='Email' name='email'>
             <Input />

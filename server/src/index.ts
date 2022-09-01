@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 import app from './app';
-import dotenv from 'dotenv';
+import serverEnv from './utils/config';
 
-dotenv.config();
-
-const { PORT } = process.env;
+const PORT = serverEnv.PORT;
 
 app.listen(PORT, () => {
   // @ts-ignore

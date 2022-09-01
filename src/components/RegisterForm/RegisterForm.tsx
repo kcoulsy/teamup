@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { passwordSchema } from '../../../server/src/validation/password';
 import {
   MIN_USERNAME_LENGTH,
   MIN_PASS_LENGTH,
@@ -8,17 +8,16 @@ import {
 import { Form, Card, Input, Button } from 'antd';
 import { PATH_LOGIN } from '../../constants/pageRoutes';
 import useUser from '../../hooks/useUser';
+import { ZodError } from 'zod';
 
 export const RegisterForm = () => {
-  const { register, error, isRegistering } = useUser();
+  const { register, registerError, isRegistering } = useUser();
   const history = useHistory();
 
-  // TODO proper validation
   return (
     <Card title='Register' size='small' className='register-form__card'>
       <Form
         onFinish={({ username, email, password, confirm }) => {
-          // TODO form validation and error handling
           register({ username, email, password });
         }}>
         <Form.Item
@@ -59,16 +58,23 @@ export const RegisterForm = () => {
               required: true,
               message: 'Please input your password!',
             },
-            {
-              min: MIN_PASS_LENGTH,
-              message: `Password must be at least ${MIN_PASS_LENGTH} characters`,
-            },
             () => ({
               validator(_, value) {
-                if (/\d/.test(value)) {
+                if (value === '') {
                   return Promise.resolve();
                 }
-                return Promise.reject('Your password must contain a number!');
+                try {
+                  passwordSchema.parse(value);
+                  return Promise.resolve();
+                } catch (err) {
+                  if (err instanceof ZodError) {
+                    return Promise.reject(
+                      err?.errors.map(({ message }) => message).join('\r\n') +
+                        '.'
+                    );
+                  }
+                  return Promise.reject('Invalid password.');
+                }
               },
             }),
           ]}>
@@ -95,7 +101,9 @@ export const RegisterForm = () => {
           ]}>
           <Input.Password />
         </Form.Item>
-        {/* {error ? <Form.Item>{error}</Form.Item> : null} */}
+        {registerError ? (
+          <Form.Item>Something went wrong trying to register you</Form.Item>
+        ) : null}
         <Form.Item>
           <Button type='primary' htmlType='submit' loading={isRegistering}>
             Register

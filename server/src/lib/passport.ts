@@ -4,12 +4,13 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { authLogin } from '../services/auth.service';
 import { Express } from 'express';
 import session from 'express-session';
+import serverEnv from '../utils/config';
 
 const setupPassport = (app: Express) => {
   app.use(
     session({
-      secret: process.env.SESSION_SECRET as string,
-      cookie: { secure: process.env.NODE_ENV === 'production' },
+      secret: serverEnv.SESSION_SECRET as string,
+      cookie: { secure: serverEnv.NODE_ENV === 'production' },
       saveUninitialized: false,
       resave: false,
     })

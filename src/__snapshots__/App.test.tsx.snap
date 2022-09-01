@@ -1,5 +1,0 @@
-// Vitest Snapshot v1
-
-exports[`render AppRouter component > should render AppRouter component 1`] = `<AppRouter />`;
-
-exports[`render AppRouter component should render AppRouter component 1`] = `<AppRouter />`;
