@@ -43,63 +43,60 @@ const { Paragraph, Text, Link } = Typography;
 // ];
 
 interface TaskViewProps {
-    task?: Task;
+  task?: Task;
 }
 
 const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
-    const history = useHistory();
-    if (!task) {
-        return (
-            <Result
-                status="warning"
-                title="This task does not exist!."
-                extra={
-                    <Button
-                        type="primary"
-                        key="console"
-                        onClick={() => {
-                            history.push(PATH_HOME);
-                        }}>
-                        Back to dashboard
-                    </Button>
-                }
-            />
-        );
-    }
-
+  const history = useHistory();
+  if (!task) {
     return (
-        <>
-            <Card size="small" className="task-view">
-                <Row>
-                    <Col span={8}>
-                        <Text strong className="task-view__assignee">
-                            Assignee:
-                        </Text>
-                        <Link>
-                            {task.assignee ? task.assignee.email : 'Unassigned'}
-                        </Link>
-                    </Col>
-                    <Col span={8}>
-                        <Text strong className="task-view__status">
-                            Status:
-                        </Text>
-                        <Tag color={task.status.color}>{task.status.label}</Tag>
-                    </Col>
-                    <Col span={8}>
-                        <Text strong className="task-view__time">
-                            Estimated Time Remaining:
-                        </Text>
-                        <Text>{task.estimatedHours}</Text>
-                    </Col>
-                </Row>
-            </Card>
-            <Card size="small" className="task-view__description">
-                <Paragraph
-                    ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}>
-                    {task.description}
-                </Paragraph>
-            </Card>
-            {/* <Row gutter={[16, 16]}>
+      <Result
+        status='warning'
+        title='This task does not exist!.'
+        extra={
+          <Button
+            type='primary'
+            key='console'
+            onClick={() => {
+              history.push(PATH_HOME);
+            }}>
+            Back to dashboard
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <>
+      <Card size='small' className='task-view'>
+        <Row>
+          <Col span={8}>
+            <Text strong className='task-view__assignee'>
+              Assignee:
+            </Text>
+            <Link>{task.assignee ? task.assignee.email : 'Unassigned'}</Link>
+          </Col>
+          <Col span={8}>
+            <Text strong className='task-view__status'>
+              Status:
+            </Text>
+            <Tag color={task.status.color}>{task.status.label}</Tag>
+          </Col>
+          <Col span={8}>
+            <Text strong className='task-view__time'>
+              Estimated Time Remaining:
+            </Text>
+            <Text>{task.estimatedHours}</Text>
+          </Col>
+        </Row>
+      </Card>
+      <Card size='small' className='task-view__description'>
+        <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}>
+          {task.description}
+        </Paragraph>
+      </Card>
+      {/* <Row gutter={[16, 16]}>
                 <Col span={8}>
                     <Card title="Work Log" size="small">
                         <Timeline>
@@ -152,8 +149,8 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
                     </Card>
                 </Col>
             </Row> */}
-        </>
-    );
+    </>
+  );
 };
 
 export default TaskView;

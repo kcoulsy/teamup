@@ -16,24 +16,8 @@ const tailLayout = {
 };
 
 const CreateTeamPage = () => {
-  const { hasTeam, refetch } = useTeams();
+  const { hasTeam, createTeamMutation } = useTeams();
   const history = useHistory();
-
-  const mutation = useMutation(
-    (data: { name: string; description: string }) => {
-      return api('team/create', 'POST', data);
-    },
-    {
-      onSuccess: async () => {
-        await refetch();
-        notification.success({
-          message: 'Team Created',
-          placement: 'bottomRight',
-        });
-        history.push(PATH_TEAM_PROJECTS);
-      },
-    }
-  );
 
   if (hasTeam) {
     // TODO: this should redirect in router
@@ -48,10 +32,15 @@ const CreateTeamPage = () => {
           name='basic'
           initialValues={{ remember: true }}
           onFinish={async ({ teamName, teamDesc }) => {
-            await mutation.mutate({
+            await createTeamMutation.mutate({
               name: teamName,
               description: teamDesc,
             });
+            notification.success({
+              message: 'Team Created',
+              placement: 'bottomRight',
+            });
+            history.push(PATH_TEAM_PROJECTS);
           }}>
           <Form.Item label='Team Name' name='teamName'>
             <Input />

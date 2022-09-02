@@ -2,9 +2,6 @@ import React from 'react';
 import { Form, Input, Select, InputNumber, AutoComplete, Button } from 'antd';
 import { TaskStatus, taskStatusLabel } from '../../types/task';
 import { Task } from './../../types/task';
-import { connect } from 'react-redux';
-import { RootState } from '../../store/configure';
-import { Team } from '../../types/team';
 import { Store } from 'antd/lib/form/interface';
 import useTeams from '../../hooks/useTeams';
 

@@ -17,6 +17,7 @@ export type TeamType = Team & {
 interface UseTeamsOptions {
   onSuccess?: (teams: TeamType[]) => void;
 }
+
 const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
   const { data: userData } = useUser();
   const { data, error, isLoading, refetch } = useQuery<{ teams: TeamType[] }>(
@@ -35,6 +36,17 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
   const teams: TeamType[] = data?.teams || [];
   const [team] = teams;
   const hasTeam = !!team;
+
+  const createTeamMutation = useMutation(
+    (data: { name: string; description: string }) => {
+      return api('team/create', 'POST', data);
+    },
+    {
+      onSuccess: async () => {
+        await refetch();
+      },
+    }
+  );
 
   const updateRolesMutation = useMutation(
     ['updateTeamRoles'],
@@ -80,6 +92,7 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
     updateTeam,
     refetch,
     hasPermission,
+    createTeamMutation,
     updateRolesMutation,
   } as const;
 };
