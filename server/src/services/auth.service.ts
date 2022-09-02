@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import prisma from '../lib/prisma';
 import bcrypt from 'bcrypt';
 import { BadRequestError } from '../utils/error';

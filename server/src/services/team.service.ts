@@ -2,7 +2,8 @@ import { Role, User } from '@prisma/client';
 import prisma from '../lib/prisma';
 import permissions from '../constants/permissions';
 import { BadRequestError } from '../utils/error';
-import { USER_MAX_TEAMS } from '../constants/team';
+
+const USER_MAX_TEAMS = 1;
 
 export const getUsersTeams = async ({ id }: User) => {
   try {

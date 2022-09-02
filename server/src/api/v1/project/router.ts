@@ -1,4 +1,14 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import { validateRequest } from 'zod-express-middleware';
+import requireAuthentication from '../../../middleware/requireAuthentication';
+import { createProject, findProjects } from '../../../services/project.service';
+import { UnauthorizedError } from '../../../utils/error';
+import {
+  createProjectBodySchema,
+  CreateProjectBodySchemaType,
+  GetProjectsQuery,
+  getProjectsQuerySchema,
+} from './validation';
 // import Project from '../../models/project.model';
 // import Authenticate from './../../middleware/authenticate';
 // import {
@@ -10,38 +20,61 @@ import express from 'express';
 
 const router = express.Router();
 
-// router.get('/', Authenticate, async (req: RequestWithUser, res) => {
-//   const isTeam = req.query.team;
-//   const query: any = {};
-//   if (isTeam && !req.user.team) {
-//     return res.status(404).send({ error: 'No team found' });
-//   }
+router.get(
+  '/',
+  validateRequest({
+    query: getProjectsQuerySchema,
+  }),
+  requireAuthentication,
+  async (
+    req: Request<{}, {}, {}, GetProjectsQuery>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.user) throw new UnauthorizedError();
 
-//   if (isTeam) {
-//     query.team = req.user.team._id;
-//   } else {
-//     query.user = req.user._id;
-//   }
+      const projects = await findProjects({
+        userId: req.user.id,
+        teamId: req.query.teamId,
+      });
 
-//   const projects = await Project.find(query).populate('tasks');
-//   const estimatedCompletions: any = {};
+      res.send({ projects });
+    } catch (error) {
+      next(error);
+    }
+    // const isTeam = req.query.team;
+    // const query: any = {};
+    // if (isTeam && !req.user.team) {
+    //   return res.status(404).send({ error: 'No team found' });
+    // }
 
-//   projects.forEach(async (project) => {
-//     estimatedCompletions[project._id] = { totalTime: 0, complete: 0 };
-//     project.tasks.forEach((task) => {
-//       estimatedCompletions[project._id].totalTime += task.estimatedHours;
-//       if (task.status === 'DONE') {
-//         estimatedCompletions[project._id].complete += task.estimatedHours;
-//       }
-//     });
-//   });
+    // if (isTeam) {
+    //   query.team = req.user.team._id;
+    // } else {
+    //   query.user = req.user._id;
+    // }
 
-//   res.send({
-//     message: 'Getting all projects',
-//     projects,
-//     estimatedCompletions,
-//   });
-// });
+    // const projects = await Project.find(query).populate('tasks');
+    // const estimatedCompletions: any = {};
+
+    // projects.forEach(async (project) => {
+    //   estimatedCompletions[project._id] = { totalTime: 0, complete: 0 };
+    //   project.tasks.forEach((task) => {
+    //     estimatedCompletions[project._id].totalTime += task.estimatedHours;
+    //     if (task.status === 'DONE') {
+    //       estimatedCompletions[project._id].complete += task.estimatedHours;
+    //     }
+    //   });
+    // });
+
+    // res.send({
+    //   message: 'Getting all projects',
+    //   projects,
+    //   estimatedCompletions,
+    // });
+  }
+);
 
 // router.get('/:id', Authenticate, async (req: RequestWithUser, res) => {
 //   const project = await Project.findOne({ _id: req.params.id });
@@ -57,27 +90,32 @@ const router = express.Router();
 //   res.send({ message: 'Getting specific project', project });
 // });
 
-// router.post('/', Authenticate, async (req: RequestWithUser, res) => {
-//   const { title, description } = req.body;
-//   const isTeam = req.query.team;
+router.post(
+  '/',
+  validateRequest({ body: createProjectBodySchema }),
+  requireAuthentication,
+  async (
+    req: Request<{}, {}, CreateProjectBodySchemaType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.user) throw new UnauthorizedError();
+      const { title, description } = req.body;
 
-//   if (isTeam) {
-//     const canAddTask = await req.user.hasTeamPermission(PERM_ADD_TASK);
+      const project = await createProject({
+        title,
+        description,
+        userId: req.user.id,
+        teamId: req.body.teamId,
+      });
 
-//     if (!canAddTask) {
-//       return res.status(401).send({
-//         error: `You do not have the permission ${PERM_ADD_TASK}`,
-//       });
-//     }
-//   }
-
-//   const project = new Project({ title, description, user: req.user._id });
-//   if (isTeam) {
-//     project.team = req.user.team._id;
-//   }
-//   await project.save();
-//   res.send({ message: 'Creating a project', project });
-// });
+      res.send({ project });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // router.put('/', Authenticate, async (req: RequestWithUser, res) => {
 //   const { title, description, projectId } = req.body;

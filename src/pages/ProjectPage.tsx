@@ -157,7 +157,7 @@ const ProjectPage = () => {
         loading={loading}
         prevPagePath={PATH_MY_PROJECTS}
         headerButtons={headerButtons}>
-        <ProjectView tasks={tasks} />
+        <ProjectView />
       </PageLayout>
       <Drawer
         title='Edit Project'

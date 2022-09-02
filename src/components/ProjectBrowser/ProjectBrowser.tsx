@@ -1,12 +1,16 @@
 import React from 'react';
 import { Col, Row } from 'antd';
 import ProjectCard from './../ProjectCard/ProjectCard';
-import { Project } from './../../types/project';
+import useProjects from '../../hooks/useProjects';
 
-const ProjectBrowser: React.FunctionComponent<{
-  projects: Project[];
-  completionData: any;
-}> = ({ projects, completionData }) => {
+interface ProjectBrowserProps {
+  teamId?: string;
+}
+const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
+  const completionData = {} as any;
+  const { data } = useProjects(teamId);
+  const projects = data?.projects || [];
+
   function getCompletionPercentage(id: string) {
     if (!completionData[id]) return 0;
     if (completionData[id].totalTime === 0) return 0;
@@ -19,6 +23,7 @@ const ProjectBrowser: React.FunctionComponent<{
     const { complete, totalTime } = completionData[id];
     return totalTime - complete;
   }
+
   return (
     <div className='site-card-wrapper'>
       <Row gutter={16}>
@@ -27,12 +32,12 @@ const ProjectBrowser: React.FunctionComponent<{
             if (index % 3 === 0) {
               return (
                 <ProjectCard
-                  _id={project._id}
+                  _id={project.id}
                   key={index}
                   title={project.title}
                   description={project.description}
-                  hoursLeft={getHoursLeft(project._id)}
-                  completion={getCompletionPercentage(project._id)}
+                  hoursLeft={getHoursLeft(project.id)}
+                  completion={getCompletionPercentage(project.id)}
                 />
               );
             }
@@ -44,12 +49,12 @@ const ProjectBrowser: React.FunctionComponent<{
             if (index % 3 === 1) {
               return (
                 <ProjectCard
-                  _id={project._id}
+                  _id={project.id}
                   key={index}
                   title={project.title}
                   description={project.description}
-                  hoursLeft={getHoursLeft(project._id)}
-                  completion={getCompletionPercentage(project._id)}
+                  hoursLeft={getHoursLeft(project.id)}
+                  completion={getCompletionPercentage(project.id)}
                 />
               );
             }
@@ -61,12 +66,12 @@ const ProjectBrowser: React.FunctionComponent<{
             if (index % 3 === 2) {
               return (
                 <ProjectCard
-                  _id={project._id}
+                  _id={project.id}
                   key={index}
                   title={project.title}
                   description={project.description}
-                  hoursLeft={getHoursLeft(project._id)}
-                  completion={getCompletionPercentage(project._id)}
+                  hoursLeft={getHoursLeft(project.id)}
+                  completion={getCompletionPercentage(project.id)}
                 />
               );
             }

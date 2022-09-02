@@ -4,7 +4,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import apiRouter from './api/router';
 import handleErrors from './middleware/handleErrors';
-import setupPassport from './lib/passport';
+import setupPassport from './middleware/setupPassport';
 
 dotenv.config();
 

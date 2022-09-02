@@ -1,63 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Drawer, Form, Input, notification, Empty } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
-import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
-import { Project } from './../types/project';
 import { Store } from 'antd/lib/form/interface';
 import PageLayout from './../components/PageLayout/PageLayout';
 import useToggle from './../hooks/useToggle';
+import useProjects from '../hooks/useProjects';
 
 const MyProjects: React.FunctionComponent = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [completionData, setCompletionData] = useState({});
+  const { data, isLoading, createMutation } = useProjects();
   const [drawerOpen, toggleDrawer] = useToggle();
-  const [loading, setLoading] = useState(false);
-
-  // const fetchProjects = async () => {
-  //     try {
-  //         setLoading(true);
-  //         const res = await api('/project', 'GET');
-  //         if (res) {
-  //             setLoading(false);
-  //             setProjects(res.projects);
-  //             setCompletionData(res.estimatedCompletions);
-  //         }
-  //     } catch (err) {
-  //         setLoading(false);
-  //     }
-  // };
-
-  // useEffect(() => {
-  //     fetchProjects();
-  // }, []);
 
   const handleCreateProject = async ({ title, description }: Store) => {
-    const res = await api('/project', 'POST', {
-      title,
-      description,
+    await createMutation.mutateAsync({ title, description });
+
+    toggleDrawer(false);
+    notification.success({
+      message: 'Project created successfully!',
+      placement: 'bottomRight',
     });
-    if (res.project) {
-      setProjects([...projects, res.project]);
-      toggleDrawer(false);
-      notification.success({
-        message: 'Project created successfully!',
-        placement: 'bottomRight',
-      });
-    }
   };
 
   return (
     <>
       <PageLayout
         title='My Projects'
-        loading={loading}
+        loading={isLoading}
         headerButtons={[
           <Button key='3' onClick={toggleDrawer}>
             Create Project <EditOutlined />
           </Button>,
         ]}>
-        {!projects.length ? (
+        {!data?.projects.length ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description={<span>No projects found.</span>}>
@@ -66,7 +40,7 @@ const MyProjects: React.FunctionComponent = () => {
             </Button>
           </Empty>
         ) : (
-          <ProjectBrowser projects={projects} completionData={completionData} />
+          <ProjectBrowser />
         )}
       </PageLayout>
 

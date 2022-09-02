@@ -3,38 +3,28 @@ import { Button, Drawer, Form, Input, notification, Empty } from 'antd';
 import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { api } from './../services/api';
 import { EditOutlined } from '@ant-design/icons';
-import { Project } from './../types/project';
+import { Store } from 'antd/lib/form/interface';
 import PageLayout from '../components/PageLayout/PageLayout';
 import useToggle from './../hooks/useToggle';
+import useProjects from '../hooks/useProjects';
+import useTeams from '../hooks/useTeams';
+import { PERM_CREATE_TEAM_PROJECT } from '../constants/permissions';
 
-interface TeamProjectsProps {
-  canCreateProject: boolean;
-}
-
-const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [completionData, setCompletionData] = useState({});
+const TeamProjects = () => {
+  const { team, hasPermission } = useTeams();
+  const canCreateProject = hasPermission(PERM_CREATE_TEAM_PROJECT);
+  const { data, isLoading, createMutation } = useProjects(team.id);
   const [drawerVisible, toggleDrawer] = useToggle();
 
-  const [loading, setLoading] = useState(false);
+  const handleCreateProject = async ({ title, description }: Store) => {
+    await createMutation.mutateAsync({ title, description, teamId: team.id });
 
-  // const fetchProjects = async () => {
-  //     try {
-  //         setLoading(true);
-  //         const res = await api('/project?team=true', 'GET');
-  //         if (res) {
-  //             setLoading(false);
-  //             setProjects(res.projects);
-  //             setCompletionData(res.estimatedCompletions);
-  //         }
-  //     } catch (err) {
-  //         setLoading(false);
-  //     }
-  // };
-
-  // useEffect(() => {
-  //     fetchProjects();
-  // }, []);
+    toggleDrawer(false);
+    notification.success({
+      message: 'Project created successfully!',
+      placement: 'bottomRight',
+    });
+  };
 
   const headerButtons = [];
   if (canCreateProject) {
@@ -48,9 +38,9 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
     <>
       <PageLayout
         title='Team Projects'
-        loading={loading}
+        loading={isLoading}
         headerButtons={headerButtons}>
-        {!projects.length ? (
+        {!data?.projects.length ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description={<span>No projects found.</span>}>
@@ -59,7 +49,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
             </Button>
           </Empty>
         ) : (
-          <ProjectBrowser projects={projects} completionData={completionData} />
+          <ProjectBrowser teamId={team.id} />
         )}
       </PageLayout>
       <Drawer
@@ -75,20 +65,7 @@ const TeamProjects = ({ canCreateProject }: TeamProjectsProps) => {
           wrapperCol={{
             span: 19,
           }}
-          onFinish={async ({ title, description }) => {
-            const res = await api('/project/?team=true', 'POST', {
-              title,
-              description,
-            });
-            if (res.project) {
-              setProjects([...projects, res.project]);
-              toggleDrawer(false);
-              notification.success({
-                message: 'Project created successfully!',
-                placement: 'bottomRight',
-              });
-            }
-          }}>
+          onFinish={handleCreateProject}>
           <Form.Item
             label='Title'
             name='title'
