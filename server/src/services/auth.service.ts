@@ -1,7 +1,7 @@
 import prisma from '../lib/prisma';
-import bcrypt from 'bcrypt';
 import { BadRequestError } from '../utils/error';
 import { passwordSchema } from '../validation/password';
+import { hash, verify } from '../utils/password';
 
 export const authLogin = async (username: string, password: string) => {
   try {
@@ -10,7 +10,7 @@ export const authLogin = async (username: string, password: string) => {
     });
     if (!user) throw new BadRequestError();
 
-    const result = bcrypt.compare(password, user.password);
+    const result = await verify(password, user.password);
     if (!result) throw new BadRequestError();
 
     return user;
@@ -38,7 +38,14 @@ export const createUser = async ({
     if (existingEmail) throw new BadRequestError('Email Exists');
 
     const validatedPassword = passwordSchema.parse(password);
-    const hashedPassword = await bcrypt.hash(validatedPassword, 10);
+
+    let hashedPassword: string;
+
+    try {
+      hashedPassword = await hash(validatedPassword);
+    } catch (error) {
+      throw new BadRequestError('Password Error');
+    }
 
     return await prisma.user.create({
       data: {
