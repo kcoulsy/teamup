@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { passwordSchema } from '../../../server/src/validation/password';
+import { passwordSchema } from '../../../../server/src/validation/password';
 import { MIN_USERNAME_LENGTH } from './../../constants/register';
 import { Form, Card, Input, Button } from 'antd';
 import { PATH_LOGIN } from '../../constants/pageRoutes';
