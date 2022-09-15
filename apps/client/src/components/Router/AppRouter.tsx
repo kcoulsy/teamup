@@ -33,10 +33,11 @@ import {
   PATH_TASK_PAGE,
   PATH_TEAM_CREATE,
 } from './../../constants/pageRoutes';
+import clientEnv from '../../constants/config';
 
 const AppRouter: React.FunctionComponent = ({ children }) => {
   return (
-    <Router>
+    <Router basename={clientEnv.APP_PATH}>
       {children}
       <AppLayout>
         <Switch>

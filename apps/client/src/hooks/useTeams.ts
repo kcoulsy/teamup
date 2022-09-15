@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-import { Team, User, Role } from '../../server/node_modules/@prisma/client';
+import {
+  Team,
+  User,
+  Role,
+} from './../../../server/node_modules/@prisma/client';
 import useUser from './useUser';
 
 interface UpdateTeamOpts {

@@ -12,6 +12,10 @@
     },
     "dev": {
       "outputs": []
+    },
+    "server#build": {
+      "dependsOn": ["client#build"],
+      "outputs": []
     }
   }
 }

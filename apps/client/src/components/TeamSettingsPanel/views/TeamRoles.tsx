@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, notification, PageHeader } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PERM_UPDATE_TEAM_ROLES } from '../../../constants/permissions';
-import { Role } from '../../../../server/node_modules/@prisma/client';
+import { Role } from './../../../../../server/node_modules/@prisma/client';
 import useTeams from '../../../hooks/useTeams';
 
 const formItemLayoutWithOutLabel = {

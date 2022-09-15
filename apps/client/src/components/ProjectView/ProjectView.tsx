@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Table, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { TaskRow, TaskStatusColor } from '../../types/task';
-import { User } from '../../../server/node_modules/@prisma/client';
+import { User } from './../../../../server/node_modules/@prisma/client';
 
 const columns = [
   {

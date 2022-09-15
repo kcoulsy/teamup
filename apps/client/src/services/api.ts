@@ -1,4 +1,5 @@
-import appConfig from '../constants/config';
+import clientEnv from '../constants/config';
+
 export const API_GET = 'GET';
 export const API_POST = 'POST';
 export const API_PUT = 'PUT';
@@ -33,7 +34,11 @@ export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
     config.body = JSON.stringify(bodyObject);
   }
 
-  const response = await fetch(appConfig.apiUrl + path, config);
+  // TODO remove this slash
+  const response = await fetch(
+    clientEnv.BASE_URL + clientEnv.API_PATH + '/' + path,
+    config
+  );
 
   return response.json();
 };

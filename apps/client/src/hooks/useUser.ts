@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { User } from '../../server/node_modules/@prisma/client';
+import { User } from './../../../server/node_modules/@prisma/client';
 import { api } from '../services/api';
 
 const useUser = () => {
