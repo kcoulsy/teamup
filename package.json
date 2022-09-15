@@ -1,0 +1,29 @@
+{
+  "name": "teamup",
+  "version": "1.0.0",
+  "description": "This is an old project.",
+  "main": "commitlint.config.js",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcoulsy/teamup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kcoulsy/teamup/issues"
+  },
+  "homepage": "https://github.com/kcoulsy/teamup#readme",
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "turbo": "^1.4.6"
+  }
+}

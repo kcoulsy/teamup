@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+// TODO : remove this package
 import * as H from 'history';
 import useUser from '../../hooks/useUser';
 
