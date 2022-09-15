@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// TODO prefix with server
 const serverEnvSchema = z.object({
   NODE_ENV: z.string(),
   PORT: z.number(),
