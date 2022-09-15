@@ -18,7 +18,6 @@
       "outputs": []
     },
     "server#start": {
-      "dependsOn": ["server#build"],
       "outputs": []
     }
   }
