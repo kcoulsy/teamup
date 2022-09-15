@@ -8,6 +8,9 @@ COPY . .
 RUN cd ./apps/client && npm install
 RUN cd ./apps/server && npm install
 
+ARG VITE_BASE_URL 
+ARG VITE_APP_PATH 
+ARG VITE_API_PATH 
 ENV PORT=8080
 
 EXPOSE 8080
