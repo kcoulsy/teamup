@@ -16,6 +16,10 @@
     "server#build": {
       "dependsOn": ["client#build"],
       "outputs": []
+    },
+    "server#start": {
+      "dependsOn": ["server#build"],
+      "outputs": []
     }
   }
 }
