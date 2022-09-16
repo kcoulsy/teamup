@@ -20,7 +20,7 @@ import {
   PATH_TEAM_PROJECTS,
   PATH_TEAM_SETTINGS,
 } from '../../constants/pageRoutes';
-import { PERM_VIEW_TEAM_SETTINGS } from './../../constants/permissions';
+import { PERM_VIEW_TEAM_SETTINGS } from '../../constants/permissions';
 import useTeams from '../../hooks/useTeams';
 import useUser from '../../hooks/useUser';
 
@@ -44,39 +44,34 @@ enum MenuItemKey {
   TEAM_SETTINGS = 'team_settings',
 }
 
-export const SideNav = () => {
+function SideNav() {
   const { data, logout } = useUser();
   const isLoggedIn = data && !!data.user;
   const { hasTeam, hasPermission } = useTeams();
   const showTeamSettings = hasPermission(PERM_VIEW_TEAM_SETTINGS);
 
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKeys, setSelectedKeys] = useState<MenuItemKey[]>([
-    MenuItemKey.HOME,
-  ]);
+  const [selectedKeys, setSelectedKeys] = useState<MenuItemKey[]>([MenuItemKey.HOME]);
   const history = useHistory();
   useEffect(() => {
     if (
       isLoggedIn &&
-      (selectedKeys.includes(MenuItemKey.LOGIN) ||
-        selectedKeys.includes(MenuItemKey.REGISTER))
+      (selectedKeys.includes(MenuItemKey.LOGIN) || selectedKeys.includes(MenuItemKey.REGISTER))
     ) {
       setSelectedKeys([MenuItemKey.HOME]);
     }
   }, [isLoggedIn, selectedKeys]);
 
   return (
-    <Sider
-      collapsible
-      collapsed={collapsed}
-      onCollapse={() => setCollapsed(!collapsed)}>
+    <Sider collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
       <div className='logo' />
       {!isLoggedIn ? (
         <Menu
           theme='dark'
           defaultSelectedKeys={selectedKeys}
           selectedKeys={selectedKeys}
-          mode='inline'>
+          mode='inline'
+        >
           <Menu.Item key={MenuItemKey.DEFAULT} className='side-nav__logo'>
             TeamUp
           </Menu.Item>
@@ -86,7 +81,8 @@ export const SideNav = () => {
             onClick={() => {
               setSelectedKeys([MenuItemKey.LOGIN]);
               history.push(PATH_LOGIN);
-            }}>
+            }}
+          >
             Login
           </Menu.Item>
           <Menu.Item
@@ -95,7 +91,8 @@ export const SideNav = () => {
             onClick={() => {
               setSelectedKeys([MenuItemKey.REGISTER]);
               history.push(PATH_REGISTER);
-            }}>
+            }}
+          >
             Register
           </Menu.Item>
         </Menu>
@@ -104,7 +101,8 @@ export const SideNav = () => {
           theme='dark'
           defaultSelectedKeys={selectedKeys}
           selectedKeys={selectedKeys}
-          mode='inline'>
+          mode='inline'
+        >
           <Menu.Item key={MenuItemKey.DEFAULT} className='side-nav__logo'>
             TeamUp
           </Menu.Item>
@@ -114,7 +112,8 @@ export const SideNav = () => {
             onClick={() => {
               setSelectedKeys([MenuItemKey.HOME]);
               history.push(PATH_HOME);
-            }}>
+            }}
+          >
             Dashboard
           </Menu.Item>
           <SubMenu key={MenuItemKey.USER} icon={<UserOutlined />} title='User'>
@@ -131,7 +130,8 @@ export const SideNav = () => {
               onClick={() => {
                 setSelectedKeys([MenuItemKey.USER_PROJECTS]);
                 history.push(PATH_MY_PROJECTS);
-              }}>
+              }}
+            >
               My Projects
             </Menu.Item>
             <Menu.Item
@@ -139,7 +139,8 @@ export const SideNav = () => {
               onClick={() => {
                 setSelectedKeys([MenuItemKey.USER_SETTINGS]);
                 history.push(PATH_ACCOUNT_SETTINGS);
-              }}>
+              }}
+            >
               Account Settings
             </Menu.Item>
           </SubMenu>
@@ -150,7 +151,8 @@ export const SideNav = () => {
                 onClick={() => {
                   setSelectedKeys([MenuItemKey.TEAM_PROFILE]);
                   history.push(PATH_TEAM_PROFILE);
-                }}>
+                }}
+              >
                 My Team
               </Menu.Item>
             ) : null}
@@ -161,7 +163,8 @@ export const SideNav = () => {
                 onClick={() => {
                   setSelectedKeys([MenuItemKey.TEAM_PROJECTS]);
                   history.push(PATH_TEAM_PROJECTS);
-                }}>
+                }}
+              >
                 Team Projects
               </Menu.Item>
             ) : null}
@@ -171,7 +174,8 @@ export const SideNav = () => {
                 onClick={() => {
                   setSelectedKeys([MenuItemKey.TEAM_SETTINGS]);
                   history.push(PATH_TEAM_SETTINGS);
-                }}>
+                }}
+              >
                 Team Settings
               </Menu.Item>
             ) : null}
@@ -183,13 +187,14 @@ export const SideNav = () => {
               setSelectedKeys([MenuItemKey.HOME]);
               await logout();
               history.push(PATH_HOME);
-            }}>
+            }}
+          >
             Logout
           </Menu.Item>
         </Menu>
       )}
     </Sider>
   );
-};
+}
 
 export default SideNav;

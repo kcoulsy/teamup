@@ -1,4 +1,4 @@
-import { TaskStatusColor, TaskStatus, taskStatusLabel } from './../types/task';
+import { TaskStatusColor, TaskStatus, taskStatusLabel } from '../types/task';
 
 export default (status: string): TaskStatusColor => {
   switch (status) {

@@ -5,14 +5,7 @@ import { PERM_UPDATE_TEAM_ROLES } from '../../../constants/permissions';
 import { Role } from './../../../../../server/node_modules/@prisma/client';
 import useTeams from '../../../hooks/useTeams';
 
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-};
-
-const TeamRoles = () => {
+function TeamRoles() {
   const [localRoles, setLocalRoles] = useState<Role[]>([]);
   const { updateRolesMutation, hasPermission } = useTeams({
     onSuccess: ([team]) => setLocalRoles(team.roles),
@@ -51,42 +44,50 @@ const TeamRoles = () => {
         }
         className='team-settings__page-header'
       />
-      <Form name='dynamic_form_item' {...formItemLayoutWithOutLabel}>
-        {localRoles.map((role, index) => {
-          return (
-            <Form.Item {...formItemLayoutWithOutLabel} key={role.id}>
-              <Form.Item noStyle>
-                <Input
-                  placeholder='Role Name'
-                  className='team-team-roles__input'
-                  value={role.name}
-                  disabled={!canUpdateTeamRoles}
-                  onChange={(ev) => {
-                    console.log('updated role', role);
-                    const newRole = { ...role, name: ev.target.value };
-                    const newRoles = localRoles.map((r) => {
-                      if (r.id === role.id) {
-                        return newRole;
-                      }
-                      return r;
-                    });
-                    setLocalRoles(newRoles);
-                  }}
-                />
-              </Form.Item>
-              {index !== 0 && canUpdateTeamRoles ? (
-                <MinusCircleOutlined
-                  className='dynamic-delete-button team-team-roles__delete-icon'
-                  onClick={() => {
-                    setLocalRoles(
-                      localRoles.filter(({ id }) => id !== role.id)
-                    );
-                  }}
-                />
-              ) : null}
+      <Form
+        name='dynamic_form_item'
+        wrapperCol={{
+          xs: { span: 24, offset: 0 },
+          sm: { span: 20, offset: 4 },
+        }}
+      >
+        {localRoles.map((role, index) => (
+          <Form.Item
+            wrapperCol={{
+              xs: { span: 24, offset: 0 },
+              sm: { span: 20, offset: 4 },
+            }}
+            key={role.id}
+          >
+            <Form.Item noStyle>
+              <Input
+                placeholder='Role Name'
+                className='team-team-roles__input'
+                value={role.name}
+                disabled={!canUpdateTeamRoles}
+                onChange={(ev) => {
+                  console.log('updated role', role);
+                  const newRole = { ...role, name: ev.target.value };
+                  const newRoles = localRoles.map((r) => {
+                    if (r.id === role.id) {
+                      return newRole;
+                    }
+                    return r;
+                  });
+                  setLocalRoles(newRoles);
+                }}
+              />
             </Form.Item>
-          );
-        })}
+            {index !== 0 && canUpdateTeamRoles ? (
+              <MinusCircleOutlined
+                className='dynamic-delete-button team-team-roles__delete-icon'
+                onClick={() => {
+                  setLocalRoles(localRoles.filter(({ id }) => id !== role.id));
+                }}
+              />
+            ) : null}
+          </Form.Item>
+        ))}
         {canUpdateTeamRoles ? (
           <Form.Item>
             <Button
@@ -98,14 +99,16 @@ const TeamRoles = () => {
                   // @ts-ignore TODO: fix this
                   {
                     name: '',
-                    id: 'TEMP_ID' + Date.now(),
+                    id: `TEMP_ID${Date.now()}`,
                     permissions: [],
                     order: 0,
                   },
                 ]);
               }}
-              style={{ width: '60%' }}>
-              <PlusOutlined /> Add Role
+              style={{ width: '60%' }}
+            >
+              <PlusOutlined />
+              <span>Add Role</span>
             </Button>
           </Form.Item>
         ) : null}
@@ -115,13 +118,14 @@ const TeamRoles = () => {
             htmlType='submit'
             disabled={!canUpdateTeamRoles}
             loading={updateRolesMutation.isLoading}
-            onClick={updateRoles}>
+            onClick={updateRoles}
+          >
             Save
           </Button>
         </Form.Item>
       </Form>
     </div>
   );
-};
+}
 
 export default TeamRoles;

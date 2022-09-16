@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
-import AppLayout from './../AppLayout/AppLayout';
+import AppLayout from '../AppLayout/AppLayout';
 
 import Home from '../../pages/Home';
 import Register from '../../pages/Register';
 import Login from '../../pages/Login';
-import MyProfile from './../../pages/MyProfile';
-import AccountSettings from './../../pages/AccountSettings';
-import MyProjects from './../../pages/MyProjects';
-import TeamProfile from './../../pages/TeamProfile';
-import TeamProjects from './../../pages/TeamProjects';
-import TeamSettings from './../../pages/TeamSettings';
-import ProjectPage from './../../pages/ProjectPage';
-import CreateTeam from './../../pages/CreateTeam';
-import TaskPage from './../../pages/TaskPage';
+import MyProfile from '../../pages/MyProfile';
+import AccountSettings from '../../pages/AccountSettings';
+import MyProjects from '../../pages/MyProjects';
+import TeamProfile from '../../pages/TeamProfile';
+import TeamProjects from '../../pages/TeamProjects';
+import TeamSettings from '../../pages/TeamSettings';
+import ProjectPage from '../../pages/ProjectPage';
+import CreateTeam from '../../pages/CreateTeam';
+import TaskPage from '../../pages/TaskPage';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -32,10 +32,10 @@ import {
   PATH_PROJECT_PAGE,
   PATH_TASK_PAGE,
   PATH_TEAM_CREATE,
-} from './../../constants/pageRoutes';
+} from '../../constants/pageRoutes';
 import clientEnv from '../../constants/config';
 
-const AppRouter: React.FunctionComponent = ({ children }) => {
+function AppRouter({ children }: PropsWithChildren<{}>) {
   return (
     <Router basename={clientEnv.APP_PATH}>
       {children}
@@ -81,6 +81,6 @@ const AppRouter: React.FunctionComponent = ({ children }) => {
       </AppLayout>
     </Router>
   );
-};
+}
 
 export default AppRouter;

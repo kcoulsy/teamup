@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Drawer, Form, Input, notification, Modal, Space } from 'antd';
-import ProjectView from '../components/ProjectView/ProjectView';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
-import { api } from './../services/api';
-import { Project } from './../types/project';
 import { useParams, useHistory } from 'react-router-dom';
-import {
-  PATH_MY_PROJECTS,
-  PATH_TEAM_PROJECTS,
-} from './../constants/pageRoutes';
-import { TaskRow } from '../types/task';
-import mapProjectTasksToTaskRow from '../helpers/mapProjectTasksToTaskRow';
-import TaskForm from './../components/TaskForm/TaskForm';
-import { Store } from 'antd/lib/form/interface';
-import PageLayout from './../components/PageLayout/PageLayout';
-import useToggle from './../hooks/useToggle';
+import ProjectView from '../components/ProjectView/ProjectView';
+import { api } from '../services/api';
+import { Project } from '../types/project';
+import { PATH_MY_PROJECTS, PATH_TEAM_PROJECTS } from '../constants/pageRoutes';
+import TaskForm from '../components/TaskForm/TaskForm';
+import PageLayout from '../components/PageLayout/PageLayout';
+import useToggle from '../hooks/useToggle';
 import useTeams from '../hooks/useTeams';
 import useUser from '../hooks/useUser';
 import {
@@ -25,78 +19,72 @@ import {
 
 const { confirm } = Modal;
 
-const ProjectPage = () => {
+function ProjectPage() {
   const { data } = useUser();
   const { hasPermission } = useTeams();
   const canEditTeamProject = hasPermission(PERM_EDIT_TEAM_PROJECT);
   const canAddTeamTask = hasPermission(PERM_ADD_TASK);
   const canRemoveTeamProject = hasPermission(PERM_REMOVE_TEAM_PROJECT);
-  let { projectid } = useParams<{ projectid: string }>();
+  const { projectid } = useParams<{ projectid: string }>();
   const history = useHistory();
-  const [project, setProject] = useState<Project>();
+  const [project] = useState<Project>();
   const [editProjectDrawerOpen, toggleEditProjectDrawer] = useToggle();
   const [addTaskDrawerOpen, toggleAddTaskDrawer] = useToggle();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const isOwnProject = project?.user === data?.user.id;
 
-  const fetchProject = async () => {
-    try {
-      setLoading(true);
-      const res = await api(`/project/${projectid}`, 'GET');
-      if (res) {
-        setLoading(false);
-        setProject(res.project);
-      }
-    } catch (err) {
-      setLoading(false);
-    }
+  // const fetchProject = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await api(`/project/${projectid}`, 'GET');
+  //     if (res) {
+  //       setLoading(false);
+  //       setProject(res.project);
+  //     }
+  //   } catch (err) {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchProject();
+  // }, []);
+
+  // const tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
+
+  const addTask = async () => {
+    // const res = await api('/task', 'POST', {
+    //   project: project?._id,
+    //   title,
+    //   description,
+    //   estimatedHours,
+    //   status,
+    // });
+    // if (res) {
+    //   // fetchProject();
+    //   toggleAddTaskDrawer(false);
+    // }
   };
 
-  useEffect(() => {
-    fetchProject();
-  }, []);
-
-  let tasks: TaskRow[] = mapProjectTasksToTaskRow(project?.tasks, projectid);
-
-  const addTask = async ({
-    title,
-    description,
-    estimatedHours,
-    status,
-  }: Store) => {
-    const res = await api('/task', 'POST', {
-      project: project?._id,
-      title,
-      description,
-      estimatedHours,
-      status,
-    });
-
-    if (res) {
-      fetchProject();
-      toggleAddTaskDrawer(false);
-    }
-  };
-
-  const handleEditProjectFormFinish = async ({ title, description }: Store) => {
-    const res = await api('/project', 'PUT', {
-      projectId: project?._id,
-      title,
-      description,
-    });
-    if (res.success) {
-      setProject(res.project);
-      toggleEditProjectDrawer(false);
-      notification.success({
-        message: 'Project edited successfully!',
-        placement: 'bottomRight',
-      });
-    } else {
-      notification.error({
-        message: 'You do not have permission to update this project.',
-        placement: 'bottomRight',
-      });
-    }
+  const handleEditProjectFormFinish = async () => {
+    // const res = await api('/project', 'PUT', {
+    //   projectId: project?._id,
+    //   title,
+    //   description,
+    // });
+    // if (res.success) {
+    //   setProject(res.project);
+    //   toggleEditProjectDrawer(false);
+    //   notification.success({
+    //     message: 'Project edited successfully!',
+    //     placement: 'bottomRight',
+    //   });
+    // } else {
+    //   notification.error({
+    //     message: 'You do not have permission to update this project.',
+    //     placement: 'bottomRight',
+    //   });
+    // }
   };
 
   const handleDelete = () => {
@@ -126,7 +114,7 @@ const ProjectPage = () => {
   };
 
   const handleAddProjectDrawerClose = () => {
-    fetchProject();
+    // fetchProject();
     toggleAddTaskDrawer();
   };
 
@@ -137,15 +125,16 @@ const ProjectPage = () => {
       <Button key='1' type='default' onClick={toggleEditProjectDrawer}>
         Edit Project
         <EditOutlined />
-      </Button>
+      </Button>,
     );
   }
 
   if (isOwnProject || !project?.team || canAddTeamTask) {
     headerButtons.push(
       <Button key='2' type='primary' onClick={toggleAddTaskDrawer}>
-        Add Task <PlusOutlined />
-      </Button>
+        Add Task
+        <PlusOutlined />
+      </Button>,
     );
   }
 
@@ -156,14 +145,16 @@ const ProjectPage = () => {
         subTitle={project?.description}
         loading={loading}
         prevPagePath={PATH_MY_PROJECTS}
-        headerButtons={headerButtons}>
+        headerButtons={headerButtons}
+      >
         <ProjectView />
       </PageLayout>
       <Drawer
         title='Edit Project'
         visible={editProjectDrawerOpen}
         onClose={toggleEditProjectDrawer}
-        width='450'>
+        width='450'
+      >
         <Form
           name='editProject'
           labelCol={{
@@ -176,7 +167,8 @@ const ProjectPage = () => {
             title: project?.title,
             description: project?.description,
           }}
-          onFinish={handleEditProjectFormFinish}>
+          onFinish={handleEditProjectFormFinish}
+        >
           <Form.Item
             label='Title'
             name='title'
@@ -189,7 +181,8 @@ const ProjectPage = () => {
                 min: 3,
                 message: 'Your title must be at least 3 characters.',
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item label='Description' name='description'>
@@ -214,11 +207,12 @@ const ProjectPage = () => {
         title='Add Task To Project'
         visible={addTaskDrawerOpen}
         onClose={handleAddProjectDrawerClose}
-        width='450'>
+        width='450'
+      >
         <TaskForm teamView={false} onFormFinish={addTask} type='Add' />
       </Drawer>
     </>
   );
-};
+}
 
 export default ProjectPage;

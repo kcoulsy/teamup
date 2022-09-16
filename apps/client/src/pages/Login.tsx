@@ -1,9 +1,9 @@
 import React from 'react';
 
-import LoginForm from '../components/LoginForm/LoginForm';
 import { Row, Col } from 'antd';
+import LoginForm from '../components/LoginForm/LoginForm';
 
-const Login: React.FunctionComponent = () => {
+function Login() {
   return (
     <div>
       <Row justify='center'>
@@ -13,6 +13,6 @@ const Login: React.FunctionComponent = () => {
       </Row>
     </div>
   );
-};
+}
 
 export default Login;

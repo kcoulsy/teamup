@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, Typography, Row, Col, Tag, Result, Button } from 'antd';
-import { Task } from './../../types/task';
 import { useHistory } from 'react-router-dom';
-import { PATH_HOME } from './../../constants/pageRoutes';
+import { Task } from '../../types/task';
+import { PATH_HOME } from '../../constants/pageRoutes';
 
-const { Paragraph, Text, Link } = Typography;
+const { Paragraph, Text } = Typography;
 // const data = [
 //     {
 //         author: 'Han Solo',
@@ -46,7 +46,7 @@ interface TaskViewProps {
   task?: Task;
 }
 
-const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
+function TaskView({ task }: TaskViewProps) {
   const history = useHistory();
   if (!task) {
     return (
@@ -59,7 +59,8 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
             key='console'
             onClick={() => {
               history.push(PATH_HOME);
-            }}>
+            }}
+          >
             Back to dashboard
           </Button>
         }
@@ -75,7 +76,7 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
             <Text strong className='task-view__assignee'>
               Assignee:
             </Text>
-            <Link>{task.assignee ? task.assignee.email : 'Unassigned'}</Link>
+            <button type='button'>{task.assignee ? task.assignee.email : 'Unassigned'}</button>
           </Col>
           <Col span={8}>
             <Text strong className='task-view__status'>
@@ -97,60 +98,60 @@ const TaskView: React.FunctionComponent<TaskViewProps> = ({ task }) => {
         </Paragraph>
       </Card>
       {/* <Row gutter={[16, 16]}>
-                <Col span={8}>
-                    <Card title="Work Log" size="small">
-                        <Timeline>
-                            <Timeline.Item>
-                                John Smith / 3 Hours / 14-08-2020
-                            </Timeline.Item>
-                            <Timeline.Item>
-                                John Smith / 1 Hours / 13-08-2020
-                            </Timeline.Item>
-                            <Timeline.Item>
-                                Mike Johnson / 2 Hours / 11-08-2020
-                            </Timeline.Item>
-                            <Timeline.Item>
-                                Sarah Green / 4 Hours / 10-08-2020
-                            </Timeline.Item>
-                        </Timeline>
-                    </Card>
-                </Col>
-                <Col span={16}>
-                    <Card
-                        title={`Comments (${data.length} replies)`}
-                        size="small">
-                        <List
-                            className="comment-list"
-                            itemLayout="horizontal"
-                            dataSource={data}
-                            renderItem={(item) => (
-                                <li>
-                                    <Comment
-                                        author={item.author}
-                                        avatar={item.avatar}
-                                        content={item.content}
-                                        datetime={item.datetime}
-                                    />
-                                </li>
-                            )}
-                        />
-                        <Form.Item>
-                            <Input.TextArea rows={4} onChange={() => {}} />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button
-                                htmlType="submit"
-                                loading={false}
-                                onClick={() => {}}
-                                type="primary">
-                                Add Comment
-                            </Button>
-                        </Form.Item>
-                    </Card>
-                </Col>
-            </Row> */}
+                      <Col span={8}>
+                          <Card title="Work Log" size="small">
+                              <Timeline>
+                                  <Timeline.Item>
+                                      John Smith / 3 Hours / 14-08-2020
+                                  </Timeline.Item>
+                                  <Timeline.Item>
+                                      John Smith / 1 Hours / 13-08-2020
+                                  </Timeline.Item>
+                                  <Timeline.Item>
+                                      Mike Johnson / 2 Hours / 11-08-2020
+                                  </Timeline.Item>
+                                  <Timeline.Item>
+                                      Sarah Green / 4 Hours / 10-08-2020
+                                  </Timeline.Item>
+                              </Timeline>
+                          </Card>
+                      </Col>
+                      <Col span={16}>
+                          <Card
+                              title={`Comments (${data.length} replies)`}
+                              size="small">
+                              <List
+                                  className="comment-list"
+                                  itemLayout="horizontal"
+                                  dataSource={data}
+                                  renderItem={(item) => (
+                                      <li>
+                                          <Comment
+                                              author={item.author}
+                                              avatar={item.avatar}
+                                              content={item.content}
+                                              datetime={item.datetime}
+                                          />
+                                      </li>
+                                  )}
+                              />
+                              <Form.Item>
+                                  <Input.TextArea rows={4} onChange={() => {}} />
+                              </Form.Item>
+                              <Form.Item>
+                                  <Button
+                                      htmlType="submit"
+                                      loading={false}
+                                      onClick={() => {}}
+                                      type="primary">
+                                      Add Comment
+                                  </Button>
+                              </Form.Item>
+                          </Card>
+                      </Col>
+                  </Row> */}
     </>
   );
-};
+}
 
 export default TaskView;

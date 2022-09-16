@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Button, Drawer, Form, Input, notification, Empty } from 'antd';
-import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
-import { api } from './../services/api';
+import React from 'react';
+import {
+  Button, Drawer, Form, Input, notification, Empty,
+} from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { Store } from 'antd/lib/form/interface';
+import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
+
 import PageLayout from '../components/PageLayout/PageLayout';
-import useToggle from './../hooks/useToggle';
+import useToggle from '../hooks/useToggle';
 import useProjects from '../hooks/useProjects';
 import useTeams from '../hooks/useTeams';
 import { PERM_CREATE_TEAM_PROJECT } from '../constants/permissions';
 
-const TeamProjects = () => {
+function TeamProjects() {
   const { team, hasPermission } = useTeams();
   const canCreateProject = hasPermission(PERM_CREATE_TEAM_PROJECT);
   const { data, isLoading, createMutation } = useProjects(team.id);
@@ -30,8 +32,10 @@ const TeamProjects = () => {
   if (canCreateProject) {
     headerButtons.push(
       <Button key='3' onClick={toggleDrawer}>
-        Create Project <EditOutlined />
-      </Button>
+        Create Project
+        {' '}
+        <EditOutlined />
+      </Button>,
     );
   }
   return (
@@ -39,11 +43,13 @@ const TeamProjects = () => {
       <PageLayout
         title='Team Projects'
         loading={isLoading}
-        headerButtons={headerButtons}>
+        headerButtons={headerButtons}
+      >
         {!data?.projects.length ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={<span>No projects found.</span>}>
+            description={<span>No projects found.</span>}
+          >
             <Button type='primary' onClick={toggleDrawer}>
               Create Now
             </Button>
@@ -56,7 +62,8 @@ const TeamProjects = () => {
         title='Create Project'
         visible={drawerVisible}
         onClose={toggleDrawer}
-        width='450'>
+        width='450'
+      >
         <Form
           name='createProject'
           labelCol={{
@@ -65,7 +72,8 @@ const TeamProjects = () => {
           wrapperCol={{
             span: 19,
           }}
-          onFinish={handleCreateProject}>
+          onFinish={handleCreateProject}
+        >
           <Form.Item
             label='Title'
             name='title'
@@ -78,7 +86,8 @@ const TeamProjects = () => {
                 min: 3,
                 message: 'Your title must be at least 3 characters.',
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item label='Description' name='description'>
@@ -94,6 +103,6 @@ const TeamProjects = () => {
       </Drawer>
     </>
   );
-};
+}
 
 export default TeamProjects;

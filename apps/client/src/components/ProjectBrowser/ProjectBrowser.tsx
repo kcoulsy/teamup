@@ -1,12 +1,12 @@
 import React from 'react';
 import { Col, Row } from 'antd';
-import ProjectCard from './../ProjectCard/ProjectCard';
+import ProjectCard from '../ProjectCard/ProjectCard';
 import useProjects from '../../hooks/useProjects';
 
 interface ProjectBrowserProps {
   teamId?: string;
 }
-const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
+function ProjectBrowser({ teamId }: ProjectBrowserProps) {
   const completionData = {} as any;
   const { data } = useProjects(teamId);
   const projects = data?.projects || [];
@@ -33,7 +33,7 @@ const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
               return (
                 <ProjectCard
                   _id={project.id}
-                  key={index}
+                  key={project.id}
                   title={project.title}
                   description={project.description}
                   hoursLeft={getHoursLeft(project.id)}
@@ -50,7 +50,7 @@ const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
               return (
                 <ProjectCard
                   _id={project.id}
-                  key={index}
+                  key={project.id}
                   title={project.title}
                   description={project.description}
                   hoursLeft={getHoursLeft(project.id)}
@@ -67,7 +67,7 @@ const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
               return (
                 <ProjectCard
                   _id={project.id}
-                  key={index}
+                  key={project.id}
                   title={project.title}
                   description={project.description}
                   hoursLeft={getHoursLeft(project.id)}
@@ -81,6 +81,6 @@ const ProjectBrowser = ({ teamId }: ProjectBrowserProps) => {
       </Row>
     </div>
   );
-};
+}
 
 export default ProjectBrowser;

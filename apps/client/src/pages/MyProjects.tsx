@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Drawer, Form, Input, notification, Empty } from 'antd';
-import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
 import { EditOutlined } from '@ant-design/icons';
 import { Store } from 'antd/lib/form/interface';
-import PageLayout from './../components/PageLayout/PageLayout';
-import useToggle from './../hooks/useToggle';
+import ProjectBrowser from '../components/ProjectBrowser/ProjectBrowser';
+import PageLayout from '../components/PageLayout/PageLayout';
+import useToggle from '../hooks/useToggle';
 import useProjects from '../hooks/useProjects';
 
-const MyProjects: React.FunctionComponent = () => {
+function MyProjects() {
   const { data, isLoading, createMutation } = useProjects();
   const [drawerOpen, toggleDrawer] = useToggle();
 
@@ -28,13 +28,16 @@ const MyProjects: React.FunctionComponent = () => {
         loading={isLoading}
         headerButtons={[
           <Button key='3' onClick={toggleDrawer}>
-            Create Project <EditOutlined />
+            Create Project
+            <EditOutlined />
           </Button>,
-        ]}>
+        ]}
+      >
         {!data?.projects.length ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={<span>No projects found.</span>}>
+            description={<span>No projects found.</span>}
+          >
             <Button type='primary' onClick={toggleDrawer}>
               Create Now
             </Button>
@@ -48,7 +51,8 @@ const MyProjects: React.FunctionComponent = () => {
         title='Create Project'
         visible={drawerOpen}
         onClose={toggleDrawer}
-        width='450'>
+        width='450'
+      >
         <Form
           name='createProject'
           labelCol={{
@@ -57,7 +61,8 @@ const MyProjects: React.FunctionComponent = () => {
           wrapperCol={{
             span: 19,
           }}
-          onFinish={handleCreateProject}>
+          onFinish={handleCreateProject}
+        >
           <Form.Item
             label='Title'
             name='title'
@@ -70,7 +75,8 @@ const MyProjects: React.FunctionComponent = () => {
                 min: 3,
                 message: 'Your title must be at least 3 characters.',
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item label='Description' name='description'>
@@ -86,6 +92,6 @@ const MyProjects: React.FunctionComponent = () => {
       </Drawer>
     </>
   );
-};
+}
 
 export default MyProjects;

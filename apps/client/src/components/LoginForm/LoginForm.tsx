@@ -2,17 +2,18 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Card, Form, Input, Button } from 'antd';
-import { PATH_REGISTER } from './../../constants/pageRoutes';
+import { PATH_REGISTER } from '../../constants/pageRoutes';
 import useUser from '../../hooks/useUser';
 
-export const LoginForm = () => {
+function LoginForm() {
   const { login, isFetching, loginError } = useUser();
   const history = useHistory();
 
   return (
     <Card title='Login' className='login-form__card' size='small'>
       <Form
-        onFinish={({ username, password }) => login({ username, password })}>
+        onFinish={({ username, password }) => login({ username, password })}
+      >
         <Form.Item
           label='Username'
           name='username'
@@ -21,7 +22,8 @@ export const LoginForm = () => {
               required: true,
               message: 'Please input your username!',
             },
-          ]}>
+          ]}
+        >
           <Input />
         </Form.Item>
 
@@ -33,7 +35,8 @@ export const LoginForm = () => {
               required: true,
               message: 'Please input your password!',
             },
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
         {loginError ? (
@@ -46,13 +49,14 @@ export const LoginForm = () => {
           <Button
             type='link'
             htmlType='button'
-            onClick={() => history.push(PATH_REGISTER)}>
+            onClick={() => history.push(PATH_REGISTER)}
+          >
             Not registered? Click here
           </Button>
         </Form.Item>
       </Form>
     </Card>
   );
-};
+}
 
 export default LoginForm;

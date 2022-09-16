@@ -4,8 +4,8 @@ import AppRouter from './components/Router/AppRouter';
 import 'antd/dist/antd.css';
 import './styles.scss';
 
-export const App = () => {
+function App() {
   return <AppRouter />;
-};
+}
 
 export default App;

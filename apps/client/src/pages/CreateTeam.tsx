@@ -1,21 +1,11 @@
 import React from 'react';
 import { Card, Form, Button, notification, Input } from 'antd';
 import { useHistory, Redirect } from 'react-router-dom';
-import { PATH_TEAM_PROJECTS } from './../constants/pageRoutes';
+import { PATH_TEAM_PROJECTS } from '../constants/pageRoutes';
 
 import useTeams from '../hooks/useTeams';
-import { useMutation } from '@tanstack/react-query';
-import { api } from '../services/api';
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
-const CreateTeamPage = () => {
+function CreateTeamPage() {
   const { hasTeam, createTeamMutation } = useTeams();
   const history = useHistory();
 
@@ -28,7 +18,8 @@ const CreateTeamPage = () => {
     <div>
       <Card title='Create Team'>
         <Form
-          {...layout}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
           name='basic'
           initialValues={{ remember: true }}
           onFinish={async ({ teamName, teamDesc }) => {
@@ -41,7 +32,8 @@ const CreateTeamPage = () => {
               placement: 'bottomRight',
             });
             history.push(PATH_TEAM_PROJECTS);
-          }}>
+          }}
+        >
           <Form.Item label='Team Name' name='teamName'>
             <Input />
           </Form.Item>
@@ -49,7 +41,7 @@ const CreateTeamPage = () => {
           <Form.Item label='Team Description' name='teamDesc'>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item {...tailLayout}>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type='primary' htmlType='submit'>
               Create Team
             </Button>
@@ -58,6 +50,6 @@ const CreateTeamPage = () => {
       </Card>
     </div>
   );
-};
+}
 
 export default CreateTeamPage;

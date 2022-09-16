@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 interface CardProps {
   title?: string;
@@ -6,12 +6,7 @@ interface CardProps {
   fluid?: boolean;
 }
 
-const Card: React.FunctionComponent<CardProps> = ({
-  title,
-  children,
-  centered,
-  fluid,
-}) => {
+function Card({ title, children, centered, fluid }: PropsWithChildren<CardProps>) {
   let classNames = 'ui card';
 
   if (centered) classNames += ' centered';
@@ -27,6 +22,6 @@ const Card: React.FunctionComponent<CardProps> = ({
       <div className='content'>{children}</div>
     </div>
   );
-};
+}
 
 export default Card;

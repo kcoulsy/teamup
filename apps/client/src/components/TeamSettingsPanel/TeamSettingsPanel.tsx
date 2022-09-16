@@ -1,12 +1,10 @@
 import React from 'react';
-import SettingsPanel, {
-  SettingsPanelView,
-} from './../SettingsPanel/SettingsPanel';
+import { TeamOutlined } from '@ant-design/icons';
+import SettingsPanel, { SettingsPanelView } from '../SettingsPanel/SettingsPanel';
 import GeneralSettings from './views/GeneralSettings';
 import TeamMembers from './views/TeamMembers';
 import TeamRoles from './views/TeamRoles';
 import RolePermissions from './views/RolePermissions';
-import { TeamOutlined } from '@ant-design/icons';
 
 const views: SettingsPanelView[] = [
   {
@@ -35,8 +33,8 @@ const views: SettingsPanelView[] = [
   },
 ];
 
-const UserSettings: React.FunctionComponent = () => {
+function UserSettings() {
   return <SettingsPanel views={views} />;
-};
+}
 
 export default UserSettings;

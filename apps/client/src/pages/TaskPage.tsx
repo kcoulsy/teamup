@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Drawer, notification, Modal } from 'antd';
-import TaskView from '../components/TaskView/TaskView';
+import React, { useState } from 'react';
+import {
+  Button, Drawer, notification, Modal,
+} from 'antd';
 import { ArrowRightOutlined, EditOutlined } from '@ant-design/icons';
 import { useParams, useHistory } from 'react-router-dom';
-import { Task, TaskStatus, taskStatusLabel } from './../types/task';
-import TaskForm from './../components/TaskForm/TaskForm';
-import { api } from './../services/api';
+import TaskView from '../components/TaskView/TaskView';
+import { Task, TaskStatus, taskStatusLabel } from '../types/task';
+import TaskForm from '../components/TaskForm/TaskForm';
+import { api } from '../services/api';
 import {
   PERM_EDIT_OTHER_TASK,
   PERM_DELETE_OTHER_TASK,
 } from '../constants/permissions';
 import PageLayout from '../components/PageLayout/PageLayout';
-import useToggle from './../hooks/useToggle';
+import useToggle from '../hooks/useToggle';
 import useUser from '../hooks/useUser';
 import useTeams from '../hooks/useTeams';
 
 const { confirm } = Modal;
 
-const TaskPage = () => {
+function TaskPage() {
   const { data } = useUser();
   const { hasPermission } = useTeams();
   const loggedInUser = data;
 
   const canEditOthersTasks = hasPermission(PERM_EDIT_OTHER_TASK);
   const canDeleteOthersTasks = hasPermission(PERM_DELETE_OTHER_TASK);
-  let { projectid, taskid } = useParams<{
+  const { projectid, taskid } = useParams<{
     projectid: string;
     taskid: string;
   }>();
   const history = useHistory();
   const [modalVisible, toggleModal] = useToggle();
-  const [task, setTask] = useState<Task | undefined>();
+  const [task] = useState<Task | undefined>();
   const createdByLoggedInUser = task?.createdBy === loggedInUser?.user.id;
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   //   useEffect(() => {
   //     setLoading(true);
@@ -47,7 +49,7 @@ const TaskPage = () => {
   //       });
   //   }, [taskid]);
 
-  const handleEditTask = (values: unknown) => {
+  const handleEditTask = () => {
     // updateTask(taskid, values)
     //   .then((task) => {
     //     notification.success({
@@ -71,15 +73,17 @@ const TaskPage = () => {
   if (createdByLoggedInUser || canEditOthersTasks) {
     headerButtons.push(
       <Button key='editTask' onClick={toggleModal}>
-        Edit Task <EditOutlined />
-      </Button>
+        Edit Task
+        {' '}
+        <EditOutlined />
+      </Button>,
     );
   }
 
   if (task) {
     const statuses = Object.values(TaskStatus);
     const indexOfCurrentStatus = Object.values(taskStatusLabel).indexOf(
-      task.status.label
+      task.status.label,
     );
 
     const canMoveToNextStatus = indexOfCurrentStatus + 1 <= statuses.length - 1;
@@ -92,7 +96,8 @@ const TaskPage = () => {
         <Button
           type='primary'
           key='nextStatus'
-          onClick={() => handleEditTask({ status: nextStatus })}>
+          onClick={() => handleEditTask({ status: nextStatus })}
+        >
           {nextStatusLabel}
           <ArrowRightOutlined />
         </Button>,
@@ -106,14 +111,16 @@ const TaskPage = () => {
         title={task?.title}
         prevPagePath={`/project/${projectid}`}
         headerButtons={headerButtons}
-        loading={loading}>
+        loading={loading}
+      >
         <TaskView task={task} />
       </PageLayout>
       <Drawer
         title='Edit Project Task'
         visible={modalVisible}
         onClose={toggleModal}
-        width='450'>
+        width='450'
+      >
         <TaskForm
           onFormFinish={async (values) => {
             toggleModal(false);
@@ -142,13 +149,14 @@ const TaskPage = () => {
                   }
                 },
               });
-            }}>
+            }}
+          >
             Delete Task
           </Button>
         )}
       </Drawer>
     </>
   );
-};
+}
 
 export default TaskPage;

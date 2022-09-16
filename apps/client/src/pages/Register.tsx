@@ -1,9 +1,9 @@
 import React from 'react';
 
-import RegisterForm from '../components/RegisterForm/RegisterForm';
 import { Row, Col } from 'antd';
+import RegisterForm from '../components/RegisterForm/RegisterForm';
 
-const Register: React.FunctionComponent = () => {
+function Register() {
   return (
     <Row justify='center'>
       <Col>
@@ -11,6 +11,6 @@ const Register: React.FunctionComponent = () => {
       </Col>
     </Row>
   );
-};
+}
 
 export default Register;

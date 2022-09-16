@@ -13,14 +13,14 @@ export type ApiMethod =
   | typeof API_PATCH
   | typeof API_DELETE;
 
-interface configBody extends RequestInit {
+interface ConfigBody extends RequestInit {
   method: ApiMethod;
   body?: string;
 }
 
 export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
-  const config: configBody = {
-    method: method,
+  const config: ConfigBody = {
+    method,
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
@@ -36,8 +36,8 @@ export const api = async (path: string, method: ApiMethod, bodyObject = {}) => {
 
   // TODO remove this slash
   const response = await fetch(
-    clientEnv.BASE_URL + clientEnv.API_PATH + '/' + path,
-    config
+    `${clientEnv.BASE_URL + clientEnv.API_PATH}/${path}`,
+    config,
   );
 
   return response.json();

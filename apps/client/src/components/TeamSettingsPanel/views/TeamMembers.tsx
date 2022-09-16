@@ -10,19 +10,20 @@ import {
   notification,
   PageHeader,
 } from 'antd';
-import { api } from './../../../services/api';
-import { PERM_UPDATE_TEAM_MEMBERS } from '../../../constants/permissions';
+import { api } from '../../../services/api';
 import {
+  PERM_UPDATE_TEAM_MEMBERS,
   PERM_INVITE_TEAM_MEMBERS,
   PERM_REMOVE_TEAM_MEMBERS,
-} from './../../../constants/permissions';
+} from '../../../constants/permissions';
+
 import useTeams from '../../../hooks/useTeams';
 import useUser from '../../../hooks/useUser';
 
-const { Title, Link, Text } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 
-const TeamMembers = () => {
+function TeamMembers() {
   const { data } = useUser();
   const loggedInUser = data?.user;
   const { hasPermission, team, refetch } = useTeams();
@@ -31,18 +32,15 @@ const TeamMembers = () => {
   const canRemoveTeamMembers = hasPermission(PERM_REMOVE_TEAM_MEMBERS);
 
   const [inviteForm] = Form.useForm();
-  const members = [...team.users, ...team.invitedUsers].map((user) => {
-    return {
-      key: user?.id,
-      name: user?.email,
-      role: team.roles.find((role) => role.userIDs.includes(user.id))?.id,
-    };
-  });
+  const members = [...team.users, ...team.invitedUsers].map((user) => ({
+    key: user?.id,
+    name: user?.email,
+    role: team.roles.find((role) => role.userIDs.includes(user.id))?.id,
+  }));
 
-  let permissonErrorLabel: string | undefined = undefined;
+  let permissonErrorLabel: string | undefined;
   if (!canUpdateTeamMembers && !canRemoveTeamMembers) {
-    permissonErrorLabel =
-      'You do not have permissions to update or remove team members.';
+    permissonErrorLabel = 'You do not have permissions to update or remove team members.';
   } else if (!canUpdateTeamMembers) {
     permissonErrorLabel = 'You do not have permissions to update team members.';
   } else if (!canRemoveTeamMembers) {
@@ -74,7 +72,7 @@ const TeamMembers = () => {
               }
 
               const currentRoleName = team.roles.find((role) =>
-                role.userIDs.find((userID) => userID === record.key)
+                role.userIDs.find((userID) => userID === record.key),
               )?.name;
 
               if (loggedInUser?.id === record.key) {
@@ -88,8 +86,8 @@ const TeamMembers = () => {
               return (
                 <Select
                   defaultValue={currentRoleName}
-                  onChange={async (value) => {
-                    alert('Handle updating team role');
+                  onChange={async () => {
+                    // alert('Handle updating team role');
                     //   let newIndex = parseInt(value, 10);
                     //   const updated = await updateTeamMemberRole(
                     //     record.key,
@@ -101,14 +99,13 @@ const TeamMembers = () => {
                     //       placement: 'bottomRight',
                     //     });
                     //   }
-                  }}>
-                  {team.roles.map((role) => {
-                    return (
-                      <Option key={role.id} value={role.id}>
-                        {role.name}
-                      </Option>
-                    );
-                  })}
+                  }}
+                >
+                  {team.roles.map((role) => (
+                    <Option key={role.id} value={role.id}>
+                      {role.name}
+                    </Option>
+                  ))}
                 </Select>
               );
             },
@@ -122,24 +119,24 @@ const TeamMembers = () => {
                 return null;
               }
 
-              const isInvitedUser = team.invitedUsers.find(
-                (user) => user.id === record.key
-              );
+              const isInvitedUser = team.invitedUsers.find((user) => user.id === record.key);
 
               return (
                 <Space size='middle'>
-                  <Link
+                  <button
+                    type='button'
                     onClick={async () => {
-                      alert('handle remove team member');
+                      // alert('handle remove team member');
                       // removeTeamUser(record.key).then(() => {
                       //   notification.success({
                       //     message: `${record.name} successfully removed from the team!`,
                       //     placement: 'bottomRight',
                       //   });
                       // });
-                    }}>
+                    }}
+                  >
                     {isInvitedUser ? 'Revoke' : 'Remove'}
-                  </Link>
+                  </button>
                 </Space>
               );
             },
@@ -176,7 +173,8 @@ const TeamMembers = () => {
             inviteForm.resetFields();
 
             await refetch();
-          }}>
+          }}
+        >
           <Form.Item label='Email' name='email'>
             <Input />
           </Form.Item>
@@ -191,6 +189,6 @@ const TeamMembers = () => {
       )}
     </div>
   );
-};
+}
 
 export default TeamMembers;

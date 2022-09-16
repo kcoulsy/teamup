@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { PageHeader, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ interface PageLayoutProps {
   loading: boolean;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({
+function PageLayout({
   title,
   subTitle,
   onBack,
@@ -20,10 +20,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   loading = false,
   children,
   ...rest
-}) => {
+}: PropsWithChildren<PageLayoutProps>) {
   const history = useHistory();
 
-  let onBackCb = undefined;
+  let onBackCb;
 
   if (typeof onBack !== 'undefined' || prevPagePath) {
     onBackCb = () => {
@@ -55,6 +55,6 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       )}
     </>
   );
-};
+}
 
 export default PageLayout;

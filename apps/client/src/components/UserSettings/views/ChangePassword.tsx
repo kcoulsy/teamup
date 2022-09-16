@@ -3,7 +3,7 @@ import { Form, Input, Button, Typography } from 'antd';
 
 const { Title } = Typography;
 
-const ChangePassword: React.FunctionComponent = () => {
+function ChangePassword() {
   return (
     <div>
       <Title level={4} className='user-change-password__title'>
@@ -26,7 +26,8 @@ const ChangePassword: React.FunctionComponent = () => {
             span: 12,
           },
         }}
-        name='basic'>
+        name='basic'
+      >
         <Form.Item
           label='Password'
           name='password'
@@ -35,7 +36,8 @@ const ChangePassword: React.FunctionComponent = () => {
               required: true,
               message: 'Please input your password!',
             },
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
 
@@ -54,11 +56,12 @@ const ChangePassword: React.FunctionComponent = () => {
                 }
 
                 return Promise.reject(
-                  'The two passwords that you entered do not match!'
+                  new Error('The two passwords that you entered do not match!'),
                 );
               },
             }),
-          ]}>
+          ]}
+        >
           <Input.Password />
         </Form.Item>
         <Form.Item
@@ -71,7 +74,8 @@ const ChangePassword: React.FunctionComponent = () => {
               offset: 0,
               span: 16,
             },
-          }}>
+          }}
+        >
           <Button type='primary' htmlType='submit'>
             Change Password
           </Button>
@@ -79,6 +83,6 @@ const ChangePassword: React.FunctionComponent = () => {
       </Form>
     </div>
   );
-};
+}
 
 export default ChangePassword;

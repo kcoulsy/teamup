@@ -1,11 +1,10 @@
 import React from 'react';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import SettingsPanel, {
   SettingsPanelView,
-} from './../SettingsPanel/SettingsPanel';
+} from '../SettingsPanel/SettingsPanel';
 import ProfileSettings from './views/ProfileSettings';
 import ChangePassword from './views/ChangePassword';
-
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const views: SettingsPanelView[] = [
   {
@@ -22,8 +21,8 @@ const views: SettingsPanelView[] = [
   },
 ];
 
-const UserSettings: React.FunctionComponent = () => {
+function UserSettings() {
   return <SettingsPanel views={views} />;
-};
+}
 
 export default UserSettings;

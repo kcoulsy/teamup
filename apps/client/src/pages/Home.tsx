@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, List, Typography } from 'antd';
 import TeamInvites from '../components/TeamInvites/TeamInvites';
 
-const Home = () => {
+function Home() {
   return (
     <div>
       <TeamInvites />
@@ -17,17 +17,22 @@ const Home = () => {
           permissions system that can be customised to the teams requirements.
         </p>
         <p>
-          The project is far from finished, currently in <b>v0.1</b>. With
+          The project is far from finished, currently in
+          {' '}
+          <b>v0.1</b>
+          . With
           plenty of features planned, I will update this demo as major additions
-          are added. You can check out the project on github{' '}
-          <a href='https://github.com/kcoulsy/teamup'>here</a>.
+          are added. You can check out the project on github
+          {' '}
+          <a href='https://github.com/kcoulsy/teamup'>here</a>
+          .
         </p>
         <List
-          header={
+          header={(
             <Typography.Title level={4} style={{ margin: 0 }}>
               Planned Features
             </Typography.Title>
-          }
+          )}
           dataSource={[
             'Comments on tasks for teams',
             'Work log to track time spent on tasks',
@@ -36,10 +41,11 @@ const Home = () => {
             'Mobile Resposiveness',
           ]}
           size='small'
-          renderItem={(item) => <List.Item>{item}</List.Item>}></List>
+          renderItem={(item) => <List.Item>{item}</List.Item>}
+        />
       </Card>
     </div>
   );
-};
+}
 
 export default Home;

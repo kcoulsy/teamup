@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 interface LoaderProps {
   isLoading: boolean;
@@ -6,25 +6,20 @@ interface LoaderProps {
   dark?: boolean;
 }
 
-const Loader: React.FunctionComponent<LoaderProps> = ({
-  isLoading,
-  loadingText,
-  dark,
-  children,
-}) => {
+function Loader({ isLoading, loadingText, dark, children }: PropsWithChildren<LoaderProps>) {
   let classNames = 'ui dimmer';
 
   if (isLoading) classNames += ' active';
   if (!dark) classNames += ' inverted'; // Light mode should be default
 
   return (
-    <Fragment>
+    <>
       <div className={classNames}>
         <div className='ui text loader'>{loadingText}</div>
       </div>
       {children}
-    </Fragment>
+    </>
   );
-};
+}
 
 export default Loader;

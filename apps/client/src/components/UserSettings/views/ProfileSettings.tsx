@@ -5,7 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
-const ProfileSettings: React.FunctionComponent = () => {
+function ProfileSettings() {
   // great use of typescript here... thanks antd
   const handleImageUpload = (event: any[] | any) => {
     if (Array.isArray(event)) {
@@ -36,7 +36,8 @@ const ProfileSettings: React.FunctionComponent = () => {
           },
         }}
         name='basic'
-        initialValues={{ remember: true }}>
+        initialValues={{ remember: true }}
+      >
         <Form.Item label='Full Name' name='fullName'>
           <Input />
         </Form.Item>
@@ -51,10 +52,12 @@ const ProfileSettings: React.FunctionComponent = () => {
           name='upload'
           label='Upload'
           valuePropName='fileList'
-          getValueFromEvent={handleImageUpload}>
+          getValueFromEvent={handleImageUpload}
+        >
           <Upload name='profile' action='/upload.do' listType='picture'>
             <Button>
-              <UploadOutlined /> Click to upload
+              <UploadOutlined />
+              Click to upload
             </Button>
           </Upload>
         </Form.Item>
@@ -68,7 +71,8 @@ const ProfileSettings: React.FunctionComponent = () => {
               offset: 0,
               span: 16,
             },
-          }}>
+          }}
+        >
           <Button type='primary' htmlType='submit'>
             Submit
           </Button>
@@ -76,6 +80,6 @@ const ProfileSettings: React.FunctionComponent = () => {
       </Form>
     </div>
   );
-};
+}
 
 export default ProfileSettings;

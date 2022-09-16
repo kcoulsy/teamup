@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Table, Tag } from 'antd';
 import { Link } from 'react-router-dom';
+import { User } from '@prisma/client';
 import { TaskRow, TaskStatusColor } from '../../types/task';
-import { User } from './../../../../server/node_modules/@prisma/client';
 
 const columns = [
   {
@@ -21,9 +21,7 @@ const columns = [
   {
     title: 'Assignee',
     dataIndex: 'assignee',
-    render: (assignee: User) => {
-      return assignee.email || 'Unassigned';
-    },
+    render: (assignee: User) => assignee.email || 'Unassigned',
   },
   {
     title: 'Status',
@@ -38,7 +36,7 @@ const columns = [
   },
 ];
 
-const ProjectView = () => {
+function ProjectView() {
   const tasks = [] as TaskRow[];
   return (
     <div>
@@ -47,6 +45,6 @@ const ProjectView = () => {
       </Card>
     </div>
   );
-};
+}
 
 export default ProjectView;

@@ -15,9 +15,7 @@ interface SettingsPanelProps {
   views: SettingsPanelView[];
 }
 
-const SettingsPanel: React.FunctionComponent<SettingsPanelProps> = ({
-  views,
-}) => {
+function SettingsPanel({ views }: SettingsPanelProps) {
   const [selectedPanelIndex, setSelectedPanelIndex] = useState<number>(0);
 
   return (
@@ -27,20 +25,20 @@ const SettingsPanel: React.FunctionComponent<SettingsPanelProps> = ({
           mode='inline'
           defaultSelectedKeys={[views[selectedPanelIndex].key]}
           selectedKeys={[views[selectedPanelIndex].key]}
-          className='settings-panel__menu'>
+          className='settings-panel__menu'
+        >
           {views.length &&
-            views.map((view: SettingsPanelView, index: number) => {
-              return (
-                <Menu.Item
-                  key={view.key}
-                  icon={view.icon}
-                  onClick={() => {
-                    setSelectedPanelIndex(index);
-                  }}>
-                  {view.label}
-                </Menu.Item>
-              );
-            })}
+            views.map((view: SettingsPanelView, index: number) => (
+              <Menu.Item
+                key={view.key}
+                icon={view.icon}
+                onClick={() => {
+                  setSelectedPanelIndex(index);
+                }}
+              >
+                {view.label}
+              </Menu.Item>
+            ))}
         </Menu>
       </Sider>
       <Content className='settings-panel__content'>
@@ -48,6 +46,6 @@ const SettingsPanel: React.FunctionComponent<SettingsPanelProps> = ({
       </Content>
     </Layout>
   );
-};
+}
 
 export default SettingsPanel;

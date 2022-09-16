@@ -1,23 +1,23 @@
 import React from 'react';
 import { Form, Input, Button, notification, Modal, PageHeader } from 'antd';
-import { PERM_UPDATE_TEAM_DETAILS } from '../../../constants/permissions';
 import { Store } from 'antd/lib/form/interface';
+import { PERM_UPDATE_TEAM_DETAILS } from '../../../constants/permissions';
 import useTeams from '../../../hooks/useTeams';
 
 const { confirm } = Modal;
 
-const GeneralSettings = () => {
+function GeneralSettings() {
   const { team, updateTeam, hasPermission } = useTeams();
   const canUpdateTeamSettings = hasPermission(PERM_UPDATE_TEAM_DETAILS);
   const teamName = team ? team.name : '';
   const teamDesc = team ? team.description : '';
 
-  const leaveTeam = () => alert('TODO');
-  const handleUpdate = async ({ teamName, teamDesc }: Store) => {
+  // const leaveTeam = () => alert('TODO');
+  const handleUpdate = async ({ teamName: newTeamName, teamDesc: newTeamDesc }: Store) => {
     try {
       await updateTeam({
-        name: teamName,
-        description: teamDesc,
+        name: newTeamName,
+        description: newTeamDesc,
       });
 
       notification.success({
@@ -62,7 +62,8 @@ const GeneralSettings = () => {
         }}
         name='teamGeneral'
         initialValues={{ teamName, teamDesc }}
-        onFinish={handleUpdate}>
+        onFinish={handleUpdate}
+      >
         <Form.Item label='Team Name' name='teamName'>
           <Input disabled={!canUpdateTeamSettings} />
         </Form.Item>
@@ -81,11 +82,9 @@ const GeneralSettings = () => {
               offset: 0,
               span: 16,
             },
-          }}>
-          <Button
-            type='primary'
-            htmlType='submit'
-            disabled={!canUpdateTeamSettings}>
+          }}
+        >
+          <Button type='primary' htmlType='submit' disabled={!canUpdateTeamSettings}>
             Submit
           </Button>
         </Form.Item>
@@ -95,10 +94,9 @@ const GeneralSettings = () => {
         onClick={async () => {
           confirm({
             title: 'Leave Team?',
-            content:
-              'Leaving the team will prevent you from accessing the teams projects.',
+            content: 'Leaving the team will prevent you from accessing the teams projects.',
             onOk: async () => {
-              const done = await leaveTeam();
+              // const done = await leaveTeam();
               // TODO - notification
               //   if (done) {
               //     notification.success({
@@ -108,11 +106,12 @@ const GeneralSettings = () => {
               //   }
             },
           });
-        }}>
+        }}
+      >
         Leave Team
       </Button>
     </div>
   );
-};
+}
 
 export default GeneralSettings;

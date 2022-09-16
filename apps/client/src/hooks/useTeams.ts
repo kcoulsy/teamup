@@ -1,10 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
-import {
-  Team,
-  User,
-  Role,
-} from './../../../server/node_modules/@prisma/client';
+import { Team, User, Role } from './../../../server/node_modules/@prisma/client';
 import useUser from './useUser';
 
 interface UpdateTeamOpts {
@@ -26,15 +22,15 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
   const { data: userData } = useUser();
   const { data, error, isLoading, refetch } = useQuery<{ teams: TeamType[] }>(
     ['getTeams'],
-    async () => await api('team/', 'GET'),
+    async () => api('team/', 'GET'),
     {
       retry: false,
-      onSuccess: (data) => {
+      onSuccess: (newData) => {
         if (onSuccess) {
-          onSuccess(data.teams);
+          onSuccess(newData.teams);
         }
       },
-    }
+    },
   );
 
   const teams: TeamType[] = data?.teams || [];
@@ -42,14 +38,12 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
   const hasTeam = !!team;
 
   const createTeamMutation = useMutation(
-    (data: { name: string; description: string }) => {
-      return api('team/create', 'POST', data);
-    },
+    (newData: { name: string; description: string }) => api('team/create', 'POST', newData),
     {
       onSuccess: async () => {
         await refetch();
       },
-    }
+    },
   );
 
   const updateRolesMutation = useMutation(
@@ -64,7 +58,7 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
       onSuccess: () => {
         refetch();
       },
-    }
+    },
   );
 
   const hasPermission = (permission: string) => {
@@ -72,9 +66,7 @@ const useTeams = ({ onSuccess }: UseTeamsOptions = {}) => {
     if (!team) return false;
     if (!team.roles) return false;
     return team.roles.some(
-      (role) =>
-        role.userIDs.includes(userData.user.id) &&
-        role.permissions.includes(permission)
+      (role) => role.userIDs.includes(userData.user.id) && role.permissions.includes(permission),
     );
   };
 

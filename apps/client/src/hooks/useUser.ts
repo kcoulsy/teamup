@@ -5,25 +5,25 @@ import { api } from '../services/api';
 const useUser = () => {
   const query = useQuery<{ user: User }>(
     ['getUser'],
-    async () => await api('user/', 'GET'),
+    async () => api('user/', 'GET'),
     {
-      onError: (err) => {
-        console.log(err);
+      onError: () => {
+        // console.log(err);
+        // TODO handle error
       },
       retry: false,
-    }
+    },
   );
 
   const loginMutation = useMutation(
     ['loginUser'],
-    async ({ username, password }: { username: string; password: string }) => {
-      return await api('auth/login', 'POST', { username, password });
-    },
+    async ({ username, password }: { username: string; password: string }) =>
+      api('auth/login', 'POST', { username, password }),
     {
       onSuccess: () => {
         query.refetch();
       },
-    }
+    },
   );
 
   const registerMutation = useMutation(
@@ -37,9 +37,7 @@ const useUser = () => {
       username: string;
       password: string;
       email: string;
-    }) => {
-      return await api('auth/register', 'POST', { username, password, email });
-    },
+    }) => api('auth/register', 'POST', { username, password, email }),
     {
       onSuccess: (data) => {
         // TODO this should be a server side httponly cookie
@@ -48,7 +46,7 @@ const useUser = () => {
         }
         query.refetch();
       },
-    }
+    },
   );
 
   const logout = async () => {

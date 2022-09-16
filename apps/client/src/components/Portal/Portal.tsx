@@ -10,12 +10,12 @@ interface ModalProps {
  */
 class Portal extends React.Component<ModalProps> {
   private modalRoot: HTMLElement;
+
   private el: HTMLDivElement;
 
   constructor(props: ModalProps) {
     super(props);
-    this.modalRoot =
-      document.getElementById('modal-root') || document.createElement('div');
+    this.modalRoot = document.getElementById('modal-root') || document.createElement('div');
     this.el = document.createElement('div');
   }
 
@@ -28,7 +28,8 @@ class Portal extends React.Component<ModalProps> {
   }
 
   render() {
-    return ReactDOM.createPortal(this.props.children, this.el);
+    const { children } = this.props;
+    return ReactDOM.createPortal(children, this.el);
   }
 }
 

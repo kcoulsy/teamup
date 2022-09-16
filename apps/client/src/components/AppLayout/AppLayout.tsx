@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Layout } from 'antd';
-import SideNav from './../SideNav/SideNav';
+import SideNav from '../SideNav/SideNav';
 
 const { Content } = Layout;
 
-export const AppLayout: React.FC = ({ children }) => {
+function AppLayout({ children }: PropsWithChildren<{}>) {
   return (
     <Layout className='app-layout'>
       <SideNav />
@@ -15,6 +15,6 @@ export const AppLayout: React.FC = ({ children }) => {
       </Layout>
     </Layout>
   );
-};
+}
 
 export default AppLayout;

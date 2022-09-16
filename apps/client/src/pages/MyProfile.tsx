@@ -1,7 +1,7 @@
 import React from 'react';
 
-const MyProfile: React.FunctionComponent = () => {
+function MyProfile() {
   return <div>MyProfile Page</div>;
-};
+}
 
 export default MyProfile;
