@@ -15,6 +15,7 @@ const setupPassport = (app: Express) => {
       resave: false,
     })
   );
+
   app.use(passport.session());
 
   passport.use(
